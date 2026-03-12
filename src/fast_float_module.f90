@@ -25,7 +25,9 @@ module fast_float_module
     implicit none(type, external)
     private
 
-    public :: ffc_parse_double, ffc_parse_float
+    public :: ffc_parse_double, ffc_parse_double_range
+    public :: ffc_parse_double_range_sub
+    public :: ffc_parse_float
     public :: ffc_parse_i64, ffc_parse_i32
     public :: ffc_parse_options, ffc_result
     public :: FFC_OUTCOME_OK, FFC_OUTCOME_INVALID_INPUT
@@ -2926,11 +2928,39 @@ contains
         type(fparsed) :: p
         integer :: ps,la; logical :: bj, fast_ok; real(real32) :: dff
 
+        la = len(str)
+        call ffc_parse_double_range_sub(str, 1, la, out, res, options)
+    end function ffc_parse_double
+
+    function ffc_parse_double_range(str, first, last, out, options) result(res)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        real(real64), intent(out) :: out
+        type(ffc_parse_options), intent(in), optional :: &
+            options
+        type(ffc_result) :: res
+        call ffc_parse_double_range_sub(str, first, last, out, res, options)
+    end function ffc_parse_double_range
+
+    subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        real(real64), intent(out) :: out
+        type(ffc_result), intent(out) :: res
+        type(ffc_parse_options), intent(in), optional :: &
+            options
+        type(ffc_parse_options) :: o
+        type(fparsed) :: p
+        integer :: ps,la
+        logical :: bj, fast_ok
+        real(real32) :: dff
+
         out=0.0_real64; dff=0.0_real32
         if (present(options)) then; o=options
         else; o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
         end if
-        la=len(str); ps=1
+        la = last
+        ps = first
         if (iand(o%format,FMT_SKIP)/=0) then
             do while (ps<=la)
                 if (.not.issp(str(ps:ps))) exit; ps=ps+1
@@ -2954,7 +2984,7 @@ contains
             end if
         end if
         call fchars(str,p,.true.,out,dff,DF,res)
-    end function ffc_parse_double
+    end subroutine ffc_parse_double_range_sub
 
     function ffc_parse_float(str,out,options) result(res)
         character(*), intent(in) :: str

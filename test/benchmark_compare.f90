@@ -1,7 +1,8 @@
 program benchmark_compare
     use iso_c_binding, only: c_char, c_double, c_int32_t, c_null_char, c_size_t
     use iso_fortran_env, only: int64, output_unit, real64
-    use fast_float_module, only: FFC_OUTCOME_OK, ffc_parse_double, ffc_result
+    use fast_float_module, only: FFC_OUTCOME_OK, ffc_parse_double
+    use fast_float_module, only: ffc_parse_double_range_sub, ffc_result
     use ffc_c_bridge, only: benchmark_ffc_lines_c, ffc_parse_double_c
     implicit none(type, external)
 
@@ -19,6 +20,7 @@ program benchmark_compare
     logical :: has_file
     type(benchmark_file), allocatable :: files(:)
     type(benchmark_line), allocatable :: lines(:)
+    character(:), allocatable :: packed_text
     character(kind=c_char), allocatable :: packed_data(:)
     integer(c_size_t), allocatable :: lengths(:), offsets(:)
     integer :: nlines, volume
@@ -54,9 +56,9 @@ program benchmark_compare
     end if
 
     do i = 1, size(files)
-        call load_lines(files(i)%path, lines, packed_data, offsets, lengths, nlines, volume)
+        call load_lines(files(i)%path, lines, packed_text, packed_data, offsets, lengths, nlines, volume)
         call verify(lines)
-        call run_benchmark(files(i)%path, lines, packed_data, offsets, lengths, nlines, volume, repeat_count)
+        call run_benchmark(files(i)%path, lines, packed_text, packed_data, offsets, lengths, nlines, volume, repeat_count)
     end do
 
 contains
@@ -84,9 +86,10 @@ contains
         call move_alloc(tmp, files)
     end subroutine add_file
 
-    subroutine load_lines(fname, lines, packed_data, offsets, lengths, nlines, volume)
+    subroutine load_lines(fname, lines, packed_text, packed_data, offsets, lengths, nlines, volume)
         character(*), intent(in) :: fname
         type(benchmark_line), allocatable, intent(out) :: lines(:)
+        character(:), allocatable, intent(out) :: packed_text
         character(kind=c_char), allocatable, intent(out) :: packed_data(:)
         integer(c_size_t), allocatable, intent(out) :: offsets(:), lengths(:)
         integer, intent(out) :: nlines, volume
@@ -108,10 +111,14 @@ contains
 
         allocate(lines(nlines))
         allocate(offsets(nlines), lengths(nlines))
+        allocate(character(len=max(volume, 1)) :: packed_text)
         allocate(packed_data(max(volume, 1)))
         rewind(unit)
 
-        if (volume == 0) packed_data(1) = c_null_char
+        if (volume == 0) then
+            packed_text = ""
+            packed_data(1) = c_null_char
+        end if
         cursor = 1
         do i = 1, nlines
             read(unit, "(a)", iostat=ios) line
@@ -128,6 +135,7 @@ contains
                 lines(i)%text = line(:n)
                 allocate(lines(i)%c_text(n))
                 lines(i)%c_text = [(line(j:j), j=1, n)]
+                packed_text(cursor:cursor+n-1) = line(:n)
                 packed_data(cursor:cursor+n-1) = lines(i)%c_text
                 cursor = cursor + n
             end if
@@ -163,16 +171,19 @@ contains
         end do
     end subroutine verify
 
-    subroutine run_benchmark(name, lines, packed_data, offsets, lengths, nlines, volume, repeat_count)
+    subroutine run_benchmark(name, lines, packed_text, packed_data, offsets, lengths, nlines, volume, repeat_count)
         character(*), intent(in) :: name
         type(benchmark_line), intent(in) :: lines(:)
+        character(*), intent(in) :: packed_text
         character(kind=c_char), intent(in) :: packed_data(:)
         integer(c_size_t), intent(in) :: offsets(:), lengths(:)
         integer, intent(in) :: nlines, volume, repeat_count
 
         real(real64) :: answer, checksum_c, checksum_c_loop, checksum_f
+        real(real64) :: checksum_f_range_sub
         real(real64) :: avg_ns_c, avg_ns_c_loop, avg_ns_f, elapsed_ns
-        real(real64) :: min_ns_c, min_ns_c_loop, min_ns_f, volume_mb
+        real(real64) :: avg_ns_f_range_sub
+        real(real64) :: min_ns_c, min_ns_c_loop, min_ns_f, min_ns_f_range_sub, volume_mb
         real(real64) :: x_f
         real(c_double) :: x_c
         integer :: i, r
@@ -182,12 +193,15 @@ contains
 
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
         min_ns_f = huge(1.0_real64)
+        min_ns_f_range_sub = huge(1.0_real64)
         min_ns_c = huge(1.0_real64)
         min_ns_c_loop = huge(1.0_real64)
         avg_ns_f = 0.0_real64
+        avg_ns_f_range_sub = 0.0_real64
         avg_ns_c = 0.0_real64
         avg_ns_c_loop = 0.0_real64
         checksum_f = 0.0_real64
+        checksum_f_range_sub = 0.0_real64
         checksum_c = 0.0_real64
         checksum_c_loop = 0.0_real64
 
@@ -207,6 +221,26 @@ contains
             checksum_f = answer
         end do
         avg_ns_f = avg_ns_f / real(repeat_count, real64)
+
+        do r = 1, repeat_count
+            answer = 0.0_real64
+            call system_clock(count=count_start)
+            do i = 1, nlines
+                call ffc_parse_double_range_sub( &
+                    packed_text, &
+                    int(offsets(i), kind=kind(i)) + 1, &
+                    int(offsets(i) + lengths(i), kind=kind(i)), &
+                    x_f, f_result)
+                if (f_result%outcome /= FFC_OUTCOME_OK) cycle
+                if (x_f > answer) answer = x_f
+            end do
+            call system_clock(count=count_end)
+            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
+            avg_ns_f_range_sub = avg_ns_f_range_sub + elapsed_ns
+            if (elapsed_ns < min_ns_f_range_sub) min_ns_f_range_sub = elapsed_ns
+            checksum_f_range_sub = answer
+        end do
+        avg_ns_f_range_sub = avg_ns_f_range_sub / real(repeat_count, real64)
 
         do r = 1, repeat_count
             answer = 0.0_real64
@@ -239,9 +273,11 @@ contains
         write(output_unit, "(a)") "# file=" // trim(name)
         write(output_unit, "(a,i0,a,f0.6,a)") "# lines=", nlines, " volume=", volume_mb, " MB"
         call print_result("fortran (fast_float_module)", volume_mb, nlines, min_ns_f, avg_ns_f)
+        call print_result("fortran (range sub)", volume_mb, nlines, min_ns_f_range_sub, avg_ns_f_range_sub)
         call print_result("c (ffc.h, line loop)", volume_mb, nlines, min_ns_c_loop, avg_ns_c_loop)
         call print_result("c (ffc.h)", volume_mb, nlines, min_ns_c, avg_ns_c)
         write(output_unit, "(a,z16.16)") "fortran checksum bits = ", transfer(checksum_f, 0_int64)
+        write(output_unit, "(a,z16.16)") "fortran range subbits = ", transfer(checksum_f_range_sub, 0_int64)
         write(output_unit, "(a,z16.16)") "c loop checksum bits  = ", transfer(checksum_c_loop, 0_int64)
         write(output_unit, "(a,z16.16)") "c checksum bits       = ", transfer(checksum_c, 0_int64)
         write(output_unit, "(a,f8.3,a)") "speed ratio c/fortran = ", min_ns_f / min_ns_c, "x"
