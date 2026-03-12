@@ -1706,7 +1706,7 @@ contains
 
     pure elemental subroutine try_fast_fixed(first, last, str, opts, bj, ok, a)
         integer, intent(in) :: first, last
-        character(*), intent(in) :: str
+        character(len=last), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         logical, intent(out) :: ok
@@ -1905,7 +1905,7 @@ contains
     end function cc5
 
     ! ===== Parse number string =====
-    subroutine pns(first, last, str, opts, bj, a)
+    elemental subroutine pns(first, last, str, opts, bj, a)
         integer, intent(in) :: first, last
         character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
@@ -2064,7 +2064,7 @@ contains
     end subroutine pns
 
     ! ===== Parse inf/nan =====
-    subroutine pin(str,p0,la,isd,vd,vf,res)
+    elemental subroutine pin(str,p0,la,isd,vd,vf,res)
         character(*), intent(in) :: str
         integer, intent(in) :: p0, la
         logical, intent(in) :: isd
@@ -2942,9 +2942,9 @@ contains
         call ffc_parse_double_range_sub(str, first, last, out, res, options)
     end function ffc_parse_double_range
 
-    subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
-        character(*), intent(in) :: str
+    elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
         integer, intent(in) :: first, last
+        character(len=last), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
         type(ffc_parse_options), intent(in), optional :: &
