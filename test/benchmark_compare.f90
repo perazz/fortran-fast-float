@@ -10,9 +10,14 @@ program benchmark_compare
         character(kind=c_char), pointer :: c_text(:) => null()
     end type benchmark_line
 
+    type :: benchmark_file
+        character(:), allocatable :: path
+    end type benchmark_file
+
     character(len=1024) :: filename, arg
     integer :: i, nargs, repeat_count
     logical :: has_file
+    type(benchmark_file), allocatable :: files(:)
     type(benchmark_line), allocatable :: lines(:)
     character(kind=c_char), allocatable :: packed_data(:)
     integer(c_size_t), allocatable :: lengths(:), offsets(:)
@@ -31,6 +36,7 @@ program benchmark_compare
             i = i + 1
             call get_command_argument(i, filename)
             has_file = .true.
+            call add_file(files, trim(filename))
         case ("-r", "--repeat")
             i = i + 1
             call get_command_argument(i, arg)
@@ -47,15 +53,36 @@ program benchmark_compare
         stop 1
     end if
 
-    call load_lines(trim(filename), lines, packed_data, offsets, lengths, nlines, volume)
-    call verify(lines)
-    call run_benchmark(lines, packed_data, offsets, lengths, nlines, volume, repeat_count)
+    do i = 1, size(files)
+        call load_lines(files(i)%path, lines, packed_data, offsets, lengths, nlines, volume)
+        call verify(lines)
+        call run_benchmark(files(i)%path, lines, packed_data, offsets, lengths, nlines, volume, repeat_count)
+    end do
 
 contains
 
     subroutine print_help()
-        write(output_unit, "(a)") "Usage: fpm test --target benchmark_compare -- -f <datafile> [-r repeat]"
+        write(output_unit, "(a)") "Usage: fpm test --target benchmark_compare -- -f <datafile> [-f <datafile> ...] [-r repeat]"
     end subroutine print_help
+
+    subroutine add_file(files, path)
+        type(benchmark_file), allocatable, intent(inout) :: files(:)
+        character(*), intent(in) :: path
+        type(benchmark_file), allocatable :: tmp(:)
+        integer :: n
+
+        if (.not. allocated(files)) then
+            allocate(files(1))
+            files(1)%path = path
+            return
+        end if
+
+        n = size(files)
+        allocate(tmp(n + 1))
+        tmp(1:n) = files
+        tmp(n + 1)%path = path
+        call move_alloc(tmp, files)
+    end subroutine add_file
 
     subroutine load_lines(fname, lines, packed_data, offsets, lengths, nlines, volume)
         character(*), intent(in) :: fname
@@ -136,7 +163,8 @@ contains
         end do
     end subroutine verify
 
-    subroutine run_benchmark(lines, packed_data, offsets, lengths, nlines, volume, repeat_count)
+    subroutine run_benchmark(name, lines, packed_data, offsets, lengths, nlines, volume, repeat_count)
+        character(*), intent(in) :: name
         type(benchmark_line), intent(in) :: lines(:)
         character(kind=c_char), intent(in) :: packed_data(:)
         integer(c_size_t), intent(in) :: offsets(:), lengths(:)
@@ -187,6 +215,8 @@ contains
         end do
         avg_ns_c = avg_ns_c / real(repeat_count, real64)
 
+        write(output_unit, "(a)") ""
+        write(output_unit, "(a)") "# file=" // trim(name)
         write(output_unit, "(a,i0,a,f0.6,a)") "# lines=", nlines, " volume=", volume_mb, " MB"
         call print_result("fortran (fast_float_module)", volume_mb, nlines, min_ns_f, avg_ns_f)
         call print_result("c (ffc.h)", volume_mb, nlines, min_ns_c, avg_ns_c)
