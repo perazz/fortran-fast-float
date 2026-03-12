@@ -1646,6 +1646,62 @@ module fast_float_module
 
 contains
 
+    pure elemental subroutine try_fast_integer(la, str, opts, bj, ok, a)
+        integer, intent(in) :: la
+        character(len=la), intent(in) :: str
+        type(ffc_parse_options), intent(in) :: opts
+        logical, intent(in) :: bj
+        logical, intent(out) :: ok
+        type(fparsed), intent(out) :: a
+        integer(int64) :: mantissa
+        integer :: int_digits, p
+
+        ok = .false.
+        a = fparsed()
+        if (la < 1) return
+        if (opts%decimal_point /= '.') return
+        if (iand(opts%format, FMT_FORT) /= 0) return
+        if (iand(opts%format, FMT_SKIP) /= 0) return
+        if (iand(opts%format, FMT_FIX) == 0) return
+
+        p = 1
+        if (str(p:p) == '-') then
+            a%neg = .true.
+            p = p + 1
+        else if (str(p:p) == '+') then
+            if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
+            p = p + 1
+        end if
+        if (p > la) return
+
+        a%ips = p
+        mantissa = 0_int64
+        int_digits = 0
+        do while (p <= la .and. int_digits < 19)
+            if (.not. isd(str(p:p))) exit
+            mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
+            int_digits = int_digits + 1
+            p = p + 1
+        end do
+
+        if (int_digits == 0) return
+        if (bj .and. int_digits > 1 .and. str(a%ips:a%ips) == '0') return
+        if (p <= la) then
+            if (isd(str(p:p))) return
+            if (str(p:p) == '.' .or. str(p:p) == 'e' .or. str(p:p) == 'E' .or. &
+                str(p:p) == 'd' .or. str(p:p) == 'D' .or. str(p:p) == '+' .or. &
+                str(p:p) == '-') return
+            return
+        end if
+
+        a%ipl = int_digits
+        a%mantissa = mantissa
+        a%exponent = 0_int64
+        a%lastm = p
+        a%valid = .true.
+        ok = .true.
+    end subroutine try_fast_integer
+
     pure elemental subroutine try_fast_fixed(la, str, opts, bj, ok, a)
         integer, intent(in) :: la
         character(len=la), intent(in) :: str
@@ -1847,8 +1903,9 @@ contains
     end function cc5
 
     ! ===== Parse number string =====
-    subroutine pns(str, opts, bj, a)
-        character(*), intent(in) :: str
+    subroutine pns(la, str, opts, bj, a)
+        integer, intent(in) :: la
+        character(len=la), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         type(fparsed), intent(out) :: a
@@ -1856,11 +1913,11 @@ contains
         integer(int64) :: fmt,i,dc,exp,en
         integer(int64), parameter :: m19 = 1000000000000000000_int64
         character :: dp
-        integer :: p,la,sd,eip,bf,le,ic
+        integer :: p,sd,eip,bf,le,ic
         logical :: alp,hdp,ne,hse,hed
 
         fmt=opts%format; dp=opts%decimal_point
-        la=len(str); p=1; a%valid=.false.
+        p=1; a%valid=.false.
         if (p>la) then; a%lastm=p; return; end if
 
         a%neg = (str(p:p)=='-')
@@ -2885,7 +2942,8 @@ contains
         end if
         bj=iand(o%format,FMT_JSON)/=0
         call try_fast_fixed(la-ps+1,str(ps:),o,bj,fast_ok,p)
-        if (.not.fast_ok) call pns(str(ps:),o,bj,p)
+        if (.not.fast_ok) call try_fast_integer(la-ps+1,str(ps:),o,bj,fast_ok,p)
+        if (.not.fast_ok) call pns(la-ps+1,str(ps:),o,bj,p)
         p%lastm=p%lastm+ps-1
         if (p%ips>0) p%ips=p%ips+ps-1
         if (p%fps>0) p%fps=p%fps+ps-1
@@ -2926,7 +2984,7 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        call pns(str(ps:),o,bj,p)
+        call pns(la-ps+1,str(ps:),o,bj,p)
         p%lastm=p%lastm+ps-1
         if (p%ips>0) p%ips=p%ips+ps-1
         if (p%fps>0) p%fps=p%fps+ps-1

@@ -170,8 +170,9 @@ contains
         integer(c_size_t), intent(in) :: offsets(:), lengths(:)
         integer, intent(in) :: nlines, volume, repeat_count
 
-        real(real64) :: answer, checksum_c, checksum_f
-        real(real64) :: avg_ns_c, avg_ns_f, elapsed_ns, min_ns_c, min_ns_f, volume_mb
+        real(real64) :: answer, checksum_c, checksum_c_loop, checksum_f
+        real(real64) :: avg_ns_c, avg_ns_c_loop, avg_ns_f, elapsed_ns
+        real(real64) :: min_ns_c, min_ns_c_loop, min_ns_f, volume_mb
         real(real64) :: x_f
         real(c_double) :: x_c
         integer :: i, r
@@ -182,10 +183,13 @@ contains
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
         min_ns_f = huge(1.0_real64)
         min_ns_c = huge(1.0_real64)
+        min_ns_c_loop = huge(1.0_real64)
         avg_ns_f = 0.0_real64
         avg_ns_c = 0.0_real64
+        avg_ns_c_loop = 0.0_real64
         checksum_f = 0.0_real64
         checksum_c = 0.0_real64
+        checksum_c_loop = 0.0_real64
 
         call system_clock(count_rate=count_rate)
         do r = 1, repeat_count
@@ -205,6 +209,22 @@ contains
         avg_ns_f = avg_ns_f / real(repeat_count, real64)
 
         do r = 1, repeat_count
+            answer = 0.0_real64
+            call system_clock(count=count_start)
+            do i = 1, nlines
+                call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), x_c, c_outcome)
+                if (c_outcome /= FFC_OUTCOME_OK) cycle
+                if (real(x_c, real64) > answer) answer = real(x_c, real64)
+            end do
+            call system_clock(count=count_end)
+            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
+            avg_ns_c_loop = avg_ns_c_loop + elapsed_ns
+            if (elapsed_ns < min_ns_c_loop) min_ns_c_loop = elapsed_ns
+            checksum_c_loop = answer
+        end do
+        avg_ns_c_loop = avg_ns_c_loop / real(repeat_count, real64)
+
+        do r = 1, repeat_count
             call system_clock(count=count_start)
             call benchmark_ffc_lines_c(packed_data, offsets, lengths, nlines, x_c, c_outcome)
             call system_clock(count=count_end)
@@ -219,8 +239,10 @@ contains
         write(output_unit, "(a)") "# file=" // trim(name)
         write(output_unit, "(a,i0,a,f0.6,a)") "# lines=", nlines, " volume=", volume_mb, " MB"
         call print_result("fortran (fast_float_module)", volume_mb, nlines, min_ns_f, avg_ns_f)
+        call print_result("c (ffc.h, line loop)", volume_mb, nlines, min_ns_c_loop, avg_ns_c_loop)
         call print_result("c (ffc.h)", volume_mb, nlines, min_ns_c, avg_ns_c)
         write(output_unit, "(a,z16.16)") "fortran checksum bits = ", transfer(checksum_f, 0_int64)
+        write(output_unit, "(a,z16.16)") "c loop checksum bits  = ", transfer(checksum_c_loop, 0_int64)
         write(output_unit, "(a,z16.16)") "c checksum bits       = ", transfer(checksum_c, 0_int64)
         write(output_unit, "(a,f8.3,a)") "speed ratio c/fortran = ", min_ns_f / min_ns_c, "x"
     end subroutine run_benchmark
