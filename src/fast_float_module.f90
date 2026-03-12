@@ -1702,7 +1702,7 @@ contains
         end do
         if (frac_digits == 0) return
 
-        a%fpl = frac_digits
+        a%fpl      = frac_digits
         a%mantissa = mantissa
         a%exponent = -int(frac_digits, int64)
         a%lastm = p
@@ -1710,22 +1710,22 @@ contains
         ok = .true.
     end subroutine try_fast_fixed
 
-    pure logical function ult(a, b)
+    pure elemental logical function ult(a, b)
         integer(int64), intent(in) :: a, b
         ult = ieor(a, SB64) < ieor(b, SB64)
     end function ult
 
-    pure logical function uge(a, b)
+    pure elemental logical function uge(a, b)
         integer(int64), intent(in) :: a, b
         uge = ieor(a, SB64) >= ieor(b, SB64)
     end function uge
 
-    pure logical function ugt(a, b)
+    pure elemental logical function ugt(a, b)
         integer(int64), intent(in) :: a, b
         ugt = ieor(a, SB64) > ieor(b, SB64)
     end function ugt
 
-    pure subroutine mu64(a, b, res)
+    pure elemental subroutine mu64(a, b, res)
         integer(int64), intent(in) :: a, b
         type(u128), intent(out) :: res
         integer(int64) :: a0,a1,b0,b1,w0,t,w1,w2
@@ -1742,35 +1742,35 @@ contains
         res%hi = a1*b1 + w2 + iand(ishft(w1,-32), M32)
     end subroutine mu64
 
-    pure integer(int64) function gdbb(d)
+    pure elemental integer(int64) function gdbb(d)
         real(real64), intent(in) :: d
         gdbb = transfer(d, 0_int64)
     end function gdbb
 
-    pure integer(int32) function gfbb(f)
+    pure elemental integer(int32) function gfbb(f)
         real(real32), intent(in) :: f
         gfbb = transfer(f, 0_int32)
     end function gfbb
 
-    pure integer function clz(x)
+    pure elemental integer function clz(x)
         integer(int64), intent(in) :: x
         if (x==0) then; clz=64; else; clz=leadz(x); end if
     end function clz
 
-    pure logical function isd(c)
+    pure elemental logical function isd(c)
         character, intent(in) :: c
         integer :: ic
         ic = iachar(c); isd = ic>=48 .and. ic<=57
     end function isd
 
-    pure logical function issp(c)
+    pure elemental logical function issp(c)
         character, intent(in) :: c
         integer :: ic
         ic = iachar(c); issp = .false.
         if (ic>=0 .and. ic<=255) issp = SLUT(ic)
     end function issp
 
-    pure integer function c2dg(c)
+    pure elemental integer function c2dg(c)
         character, intent(in) :: c
         integer :: ic
         ic = iachar(c); c2dg = 255
@@ -1783,12 +1783,11 @@ contains
         integer :: i
         r8 = 0_int64
         do i = 0, 7
-            r8 = ior(r8, ishft( &
-                int(iachar(str(pos+i:pos+i)),int64), 8*i))
+            r8 = ior(r8, ishft( int(iachar(str(pos+i:pos+i)),int64), 8*i))
         end do
     end function r8
 
-    pure logical function is8d(val)
+    pure elemental logical function is8d(val)
         integer(int64), intent(in) :: val
         integer(int64) :: v1, v2
         v1 = val + int(z'4646464646464646', int64)
@@ -1796,7 +1795,7 @@ contains
         is8d = iand(ior(v1,v2), int(z'8080808080808080',int64)) == 0
     end function is8d
 
-    pure integer function p8sw(val) result(res)
+    pure elemental integer function p8sw(val) result(res)
         integer(int64), intent(in) :: val
         integer(int64) :: v
         integer(int64), parameter :: m  = int(z'000000FF000000FF', int64)
@@ -1997,8 +1996,7 @@ contains
                     else
                         p=a%fps; fe=p+a%fpl
                         do while (ult(i,m19).and.p<fe)
-                            i = i*10 + int( &
-                                iachar(str(p:p))-48, int64)
+                            i = i*10 + int( iachar(str(p:p))-48, int64)
                             p=p+1
                         end do
                         exp = int(a%fps-p,int64) + en
@@ -2068,13 +2066,13 @@ contains
     end subroutine pin
 
     ! ===== Eisel-Lemire =====
-    pure integer(int32) function b2b(q)
+    pure elemental integer(int32) function b2b(q)
         integer(int32), intent(in) :: q
         b2b = int(ishft( &
             (152170+65536)*int(q,int64),-16),int32)+63
     end function b2b
 
-    pure subroutine cprd(q, w, f, res)
+    pure elemental subroutine cprd(q, w, f, res)
         integer(int64), intent(in) :: q, w
         type(ifmt), intent(in) :: f
         type(u128), intent(out) :: res
@@ -2093,7 +2091,7 @@ contains
         end if
     end subroutine cprd
 
-    pure subroutine cflt(q, wi, f, res)
+    pure elemental subroutine cflt(q, wi, f, res)
         integer(int64), intent(in) :: q, wi
         type(ifmt), intent(in) :: f
         type(fam), intent(out) :: res
@@ -2159,7 +2157,7 @@ contains
         end if
     end subroutine cflt
 
-    pure subroutine cerrs(q, wi, lz, f, res)
+    pure elemental subroutine cerrs(q, wi, lz, f, res)
         integer(int64), intent(in) :: q, wi
         integer(int32), intent(in) :: lz
         type(ifmt), intent(in) :: f
@@ -2172,7 +2170,7 @@ contains
             int(h,int32)-lz-62+INVALID_AM
     end subroutine cerrs
 
-    pure subroutine cerr(q, wi, f, res)
+    pure elemental subroutine cerr(q, wi, f, res)
         integer(int64), intent(in) :: q, wi
         type(ifmt), intent(in) :: f
         type(fam), intent(out) :: res
@@ -2184,7 +2182,7 @@ contains
         call cerrs(q, pr%hi, lz, f, res)
     end subroutine cerr
 
-    pure subroutine clfp(m,e,ng,isd,vd,vf,f,ok)
+    pure elemental subroutine clfp(m,e,ng,isd,vd,vf,f,ok)
         integer(int64), intent(in) :: m, e
         logical, intent(in) :: ng, isd
         real(real64), intent(inout) :: vd
@@ -2209,7 +2207,7 @@ contains
         end if
     end subroutine clfp
 
-    pure subroutine a2d(ng, am, v)
+    pure elemental subroutine a2d(ng, am, v)
         logical, intent(in) :: ng
         type(fam), intent(in) :: am
         real(real64), intent(out) :: v
@@ -2220,7 +2218,7 @@ contains
         v=transfer(w,0.0_real64)
     end subroutine a2d
 
-    pure subroutine a2f(ng, am, v)
+    pure elemental subroutine a2f(ng, am, v)
         logical, intent(in) :: ng
         type(fam), intent(in) :: am
         real(real32), intent(out) :: v
@@ -2283,7 +2281,7 @@ contains
         end do
     end function svnza
 
-    pure subroutine sca(x,y,r,ov)
+    pure elemental subroutine sca(x,y,r,ov)
         integer(int64), intent(in) :: x,y
         integer(int64), intent(out) :: r
         logical, intent(out) :: ov
@@ -2467,37 +2465,37 @@ contains
         call bp5(bi,e,ok); if (ok) call bp2(bi,e,ok)
     end subroutine bp10
 
-    pure subroutine bimk(v, res)
+    pure elemental subroutine bimk(v, res)
         integer(int64), intent(in) :: v
         type(fbigint), intent(out) :: res
         res%vec%ln=0; call svp(res%vec,v)
         call svn(res%vec)
     end subroutine bimk
 
-    pure subroutine biem(res)
+    pure elemental subroutine biem(res)
         type(fbigint), intent(out) :: res
         res%vec%ln=0
     end subroutine biem
 
-    pure integer function bctl(bi)
+    pure elemental integer function bctl(bi)
         type(fbigint), intent(in) :: bi
         if (bi%vec%ln==0) then; bctl=0
         else; bctl=clz(bi%vec%d(bi%vec%ln)); end if
     end function bctl
 
-    pure integer function bbl(bi)
+    pure elemental integer function bbl(bi)
         type(fbigint), intent(in) :: bi
         bbl=LB*bi%vec%ln-bctl(bi)
     end function bbl
 
-    pure subroutine h64_1(r0,tr,res)
+    pure elemental subroutine h64_1(r0,tr,res)
         integer(int64), intent(in) :: r0
         logical, intent(out) :: tr
         integer(int64), intent(out) :: res
         tr=.false.; res=ishft(r0,clz(r0))
     end subroutine h64_1
 
-    pure subroutine h64_2(r0,r1,tr,res)
+    pure elemental subroutine h64_2(r0,r1,tr,res)
         integer(int64), intent(in) :: r0,r1
         logical, intent(out) :: tr
         integer(int64), intent(out) :: res
@@ -2542,7 +2540,7 @@ contains
     end function bcmp
 
     ! ===== Digit comparison =====
-    pure integer(int32) function scex(mi,e)
+    pure elemental integer(int32) function scex(mi,e)
         integer(int64), intent(in) :: mi
         integer(int32), intent(in) :: e
         integer(int64) :: m
@@ -2552,7 +2550,7 @@ contains
         do while (m>=10); m=m/10; scex=scex+1; end do
     end function scex
 
-    pure subroutine toex(vd,f,res)
+    pure elemental subroutine toex(vd,f,res)
         real(real64), intent(in) :: vd
         type(ifmt), intent(in) :: f
         type(fam), intent(out) :: res
@@ -2567,7 +2565,7 @@ contains
         end if
     end subroutine toex
 
-    pure subroutine toexh(vd,f,res)
+    pure elemental subroutine toexh(vd,f,res)
         real(real64), intent(in) :: vd
         type(ifmt), intent(in) :: f
         type(fam), intent(out) :: res
@@ -2576,7 +2574,7 @@ contains
         res%power2=res%power2-1
     end subroutine toexh
 
-    pure subroutine rdi(am,s)
+    pure elemental subroutine rdi(am,s)
         type(fam), intent(inout) :: am
         integer(int32), intent(in) :: s
         if (s==64) then; am%mantissa=0; else
@@ -2584,7 +2582,7 @@ contains
         end if; am%power2=am%power2+s
     end subroutine rdi
 
-    pure subroutine rtt(am,s,tr)
+    pure elemental subroutine rtt(am,s,tr)
         type(fam), intent(inout) :: am
         integer(int32), intent(in) :: s
         logical, intent(in) :: tr
@@ -2604,7 +2602,7 @@ contains
             am%mantissa=am%mantissa+1
     end subroutine rtt
 
-    pure subroutine rtc(am,s,ord)
+    pure elemental subroutine rtc(am,s,ord)
         type(fam), intent(inout) :: am
         integer(int32), intent(in) :: s
         integer, intent(in) :: ord
@@ -2617,7 +2615,7 @@ contains
             am%mantissa=am%mantissa+1
     end subroutine rtc
 
-    pure subroutine rfn(am,f)
+    pure elemental subroutine rfn(am,f)
         type(fam), intent(inout) :: am
         type(ifmt), intent(in) :: f
         if (uge(am%mantissa,ishft(2_int64,f%meb))) then
@@ -2631,7 +2629,7 @@ contains
         end if
     end subroutine rfn
 
-    pure subroutine rdn(am,f)
+    pure elemental subroutine rdn(am,f)
         type(fam), intent(inout) :: am
         type(ifmt), intent(in) :: f
         integer(int32) :: ms,s
@@ -2646,7 +2644,7 @@ contains
         call rdi(am,ms); call rfn(am,f)
     end subroutine rdn
 
-    pure subroutine rtet(am,tr,f)
+    pure elemental subroutine rtet(am,tr,f)
         type(fam), intent(inout) :: am
         logical, intent(in) :: tr
         type(ifmt), intent(in) :: f
@@ -2662,7 +2660,7 @@ contains
         call rtt(am,ms,tr); call rfn(am,f)
     end subroutine rtet
 
-    pure subroutine rtec(am,ord,f)
+    pure elemental subroutine rtec(am,ord,f)
         type(fam), intent(inout) :: am
         integer, intent(in) :: ord
         type(ifmt), intent(in) :: f
@@ -2698,14 +2696,14 @@ contains
         end do
     end subroutine skz
 
-    pure subroutine an(bi,pw,v)
+    pure elemental subroutine an(bi,pw,v)
         type(fbigint), intent(inout) :: bi
         integer(int64), intent(in) :: pw,v
         logical :: ok
         call bsm(bi%vec,pw,ok); call bsa(bi%vec,v,1,ok)
     end subroutine an
 
-    pure subroutine rubi(bi,cn)
+    pure elemental subroutine rubi(bi,cn)
         type(fbigint), intent(inout) :: bi
         integer, intent(inout) :: cn
         call an(bi,10_int64,1_int64); cn=cn+1
