@@ -1661,8 +1661,9 @@ contains
         ugt = ieor(a, SB64) > ieor(b, SB64)
     end function ugt
 
-    pure type(u128) function mu64(a, b)
+    pure subroutine mu64(a, b, res)
         integer(int64), intent(in) :: a, b
+        type(u128), intent(out) :: res
         integer(int64) :: a0,a1,b0,b1,w0,t,w1,w2
         a0 = iand(a, M32)
         a1 = iand(ishft(a, -32), M32)
@@ -1673,9 +1674,9 @@ contains
         w1 = iand(t, M32)
         w2 = iand(ishft(t,-32), M32)
         w1 = w1 + a0 * b1
-        mu64%lo = a * b
-        mu64%hi = a1*b1 + w2 + iand(ishft(w1,-32), M32)
-    end function mu64
+        res%lo = a * b
+        res%hi = a1*b1 + w2 + iand(ishft(w1,-32), M32)
+    end subroutine mu64
 
     pure integer(int64) function gdbb(d)
         real(real64), intent(in) :: d
@@ -1786,11 +1787,11 @@ contains
     end function cc5
 
     ! ===== Parse number string =====
-    pure function pns(str, opts, bj) result(a)
+    pure subroutine pns(str, opts, bj, a)
         character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
-        type(fparsed) :: a
+        type(fparsed), intent(out) :: a
 
         integer(int64) :: fmt,i,dc,exp,en
         integer(int64), parameter :: m19 = 1000000000000000000_int64
@@ -1942,7 +1943,7 @@ contains
             end if
         end if
         a%exponent=exp; a%mantissa=i
-    end function pns
+    end subroutine pns
 
     ! ===== Parse inf/nan =====
     pure subroutine pin(str,p0,la,isd,vd,vf,res)
@@ -2009,27 +2010,29 @@ contains
             (152170+65536)*int(q,int64),-16),int32)+63
     end function b2b
 
-    pure type(u128) function cprd(q, w, f)
+    pure subroutine cprd(q, w, f, res)
         integer(int64), intent(in) :: q, w
         type(ifmt), intent(in) :: f
+        type(u128), intent(out) :: res
         integer(int64) :: pm, bp
         integer :: idx
         type(u128) :: sp
         bp = int(f%meb+3, int64)
         pm = ishft(not(0_int64), -int(bp))
         idx = 2*int(q-(-342_int64))+1
-        cprd = mu64(w, P5(idx))
-        if (iand(cprd%hi,pm)==pm) then
-            sp = mu64(w, P5(idx+1))
-            cprd%lo = cprd%lo + sp%hi
-            if (ult(cprd%lo, sp%hi)) &
-                cprd%hi = cprd%hi + 1
+        call mu64(w, P5(idx), res)
+        if (iand(res%hi,pm)==pm) then
+            call mu64(w, P5(idx+1), sp)
+            res%lo = res%lo + sp%hi
+            if (ult(res%lo, sp%hi)) &
+                res%hi = res%hi + 1
         end if
-    end function cprd
+    end subroutine cprd
 
-    pure type(fam) function cflt(q, wi, f)
+    pure subroutine cflt(q, wi, f, res)
         integer(int64), intent(in) :: q, wi
         type(ifmt), intent(in) :: f
+        type(fam), intent(out) :: res
         integer(int64) :: w
         integer(int32) :: lz
         type(u128) :: pr
@@ -2037,83 +2040,85 @@ contains
 
         w=wi
         if (w==0.or.q<int(f%smp10,int64)) then
-            cflt=fam(0_int64,0_int32); return
+            res=fam(0_int64,0_int32); return
         end if
         if (q>int(f%lgp10,int64)) then
-            cflt=fam(0_int64,int(f%infp,int32)); return
+            res=fam(0_int64,int(f%infp,int32)); return
         end if
         lz=int(clz(w),int32); w=ishft(w,lz)
-        pr=cprd(q,w,f)
+        call cprd(q,w,f,pr)
         ub=int(ishft(pr%hi,-63)); sa=ub+64-f%meb-3
-        cflt%mantissa=ishft(pr%hi,-sa)
-        cflt%power2=b2b(int(q,int32))+int(ub,int32)- &
+        res%mantissa=ishft(pr%hi,-sa)
+        res%power2=b2b(int(q,int32))+int(ub,int32)- &
             lz-int(f%mine,int32)
 
-        if (cflt%power2<=0) then
-            if (-cflt%power2+1>=64) then
-                cflt=fam(0_int64,0_int32); return
+        if (res%power2<=0) then
+            if (-res%power2+1>=64) then
+                res=fam(0_int64,0_int32); return
             end if
-            cflt%mantissa=ishft(cflt%mantissa, &
-                                cflt%power2-1_int32)
-            cflt%mantissa=cflt%mantissa+ &
-                iand(cflt%mantissa,1_int64)
-            cflt%mantissa=ishft(cflt%mantissa,-1)
-            if (ult(cflt%mantissa, &
+            res%mantissa=ishft(res%mantissa, &
+                               res%power2-1_int32)
+            res%mantissa=res%mantissa+ &
+                iand(res%mantissa,1_int64)
+            res%mantissa=ishft(res%mantissa,-1)
+            if (ult(res%mantissa, &
                     ishft(1_int64,f%meb))) then
-                cflt%power2=0
+                res%power2=0
             else
-                cflt%power2=1
+                res%power2=1
             end if; return
         end if
 
         if (iand(pr%lo,not(1_int64))==0 .and. &
             q>=int(f%minrte,int64) .and. &
             q<=int(f%maxrte,int64) .and. &
-            iand(cflt%mantissa,3_int64)==1) then
-            if (ishft(cflt%mantissa,sa)==pr%hi) &
-                cflt%mantissa=iand(cflt%mantissa, &
-                                   not(1_int64))
+            iand(res%mantissa,3_int64)==1) then
+            if (ishft(res%mantissa,sa)==pr%hi) &
+                res%mantissa=iand(res%mantissa, &
+                                  not(1_int64))
         end if
 
-        cflt%mantissa=cflt%mantissa+ &
-            iand(cflt%mantissa,1_int64)
-        cflt%mantissa=ishft(cflt%mantissa,-1)
+        res%mantissa=res%mantissa+ &
+            iand(res%mantissa,1_int64)
+        res%mantissa=ishft(res%mantissa,-1)
 
-        if (uge(cflt%mantissa,ishft(2_int64,f%meb))) then
-            cflt%mantissa=ishft(1_int64,f%meb)
-            cflt%power2=cflt%power2+1
+        if (uge(res%mantissa,ishft(2_int64,f%meb))) then
+            res%mantissa=ishft(1_int64,f%meb)
+            res%power2=res%power2+1
         end if
 
-        cflt%mantissa=iand(cflt%mantissa, &
+        res%mantissa=iand(res%mantissa, &
             not(ishft(1_int64,f%meb)))
-        if (cflt%power2>=int(f%infp,int32)) then
-            cflt%power2=int(f%infp,int32)
-            cflt%mantissa=0
+        if (res%power2>=int(f%infp,int32)) then
+            res%power2=int(f%infp,int32)
+            res%mantissa=0
         end if
-    end function cflt
+    end subroutine cflt
 
-    pure type(fam) function cerrs(q, wi, lz, f)
+    pure subroutine cerrs(q, wi, lz, f, res)
         integer(int64), intent(in) :: q, wi
         integer(int32), intent(in) :: lz
         type(ifmt), intent(in) :: f
+        type(fam), intent(out) :: res
         integer :: h, b
         h = int(ieor(ishft(wi,-63),1_int64))
-        cerrs%mantissa = ishft(wi, h)
+        res%mantissa = ishft(wi, h)
         b = f%meb - f%mine
-        cerrs%power2 = b2b(int(q,int32))+int(b,int32)- &
+        res%power2 = b2b(int(q,int32))+int(b,int32)- &
             int(h,int32)-lz-62+INVALID_AM
-    end function cerrs
+    end subroutine cerrs
 
-    pure type(fam) function cerr(q, wi, f)
+    pure subroutine cerr(q, wi, f, res)
         integer(int64), intent(in) :: q, wi
         type(ifmt), intent(in) :: f
+        type(fam), intent(out) :: res
         integer(int64) :: w
         integer(int32) :: lz
         type(u128) :: pr
         w=wi; lz=int(clz(w),int32); w=ishft(w,lz)
-        pr=cprd(q,w,f)
-        cerr = cerrs(q, pr%hi, lz, f)
-    end function cerr
+        call cprd(q,w,f,pr)
+        call cerrs(q, pr%hi, lz, f, res)
+    end subroutine cerr
 
     pure subroutine clfp(m,e,ng,isd,vd,vf,f,ok)
         integer(int64), intent(in) :: m, e
@@ -2227,7 +2232,7 @@ contains
         integer(int64), intent(inout) :: c
         integer(int64), intent(out) :: r
         type(u128) :: z; logical :: ov; integer(int64) :: t
-        z=mu64(x,y); call sca(z%lo,c,t,ov)
+        call mu64(x,y,z); call sca(z%lo,c,t,ov)
         z%lo=t; if (ov) z%hi=z%hi+1; c=z%hi; r=z%lo
     end subroutine scm
 
@@ -2398,15 +2403,17 @@ contains
         call bp5(bi,e,ok); if (ok) call bp2(bi,e,ok)
     end subroutine bp10
 
-    pure type(fbigint) function bimk(v)
+    pure subroutine bimk(v, res)
         integer(int64), intent(in) :: v
-        bimk%vec%ln=0; call svp(bimk%vec,v)
-        call svn(bimk%vec)
-    end function bimk
+        type(fbigint), intent(out) :: res
+        res%vec%ln=0; call svp(res%vec,v)
+        call svn(res%vec)
+    end subroutine bimk
 
-    pure type(fbigint) function biem()
-        biem%vec%ln=0
-    end function biem
+    pure subroutine biem(res)
+        type(fbigint), intent(out) :: res
+        res%vec%ln=0
+    end subroutine biem
 
     pure integer function bctl(bi)
         type(fbigint), intent(in) :: bi
@@ -2481,27 +2488,29 @@ contains
         do while (m>=10); m=m/10; scex=scex+1; end do
     end function scex
 
-    pure type(fam) function toex(vd,f)
+    pure subroutine toex(vd,f,res)
         real(real64), intent(in) :: vd
         type(ifmt), intent(in) :: f
+        type(fam), intent(out) :: res
         integer(int64) :: b; integer(int32) :: bi
         bi=int(f%meb-f%mine,int32); b=gdbb(vd)
         if (iand(b,f%emask)==0) then
-            toex%power2=1-bi; toex%mantissa=iand(b,f%mmask)
+            res%power2=1-bi; res%mantissa=iand(b,f%mmask)
         else
-            toex%power2=int(ishft(iand(b,f%emask), &
+            res%power2=int(ishft(iand(b,f%emask), &
                 -f%meb),int32)-bi
-            toex%mantissa=ior(iand(b,f%mmask),f%hbm)
+            res%mantissa=ior(iand(b,f%mmask),f%hbm)
         end if
-    end function toex
+    end subroutine toex
 
-    pure type(fam) function toexh(vd,f)
+    pure subroutine toexh(vd,f,res)
         real(real64), intent(in) :: vd
         type(ifmt), intent(in) :: f
-        toexh=toex(vd,f)
-        toexh%mantissa=ishft(toexh%mantissa,1)+1
-        toexh%power2=toexh%power2-1
-    end function toexh
+        type(fam), intent(out) :: res
+        call toex(vd,f,res)
+        res%mantissa=ishft(res%mantissa,1)+1
+        res%power2=res%power2-1
+    end subroutine toexh
 
     pure subroutine rdi(am,s)
         type(fam), intent(inout) :: am
@@ -2730,7 +2739,7 @@ contains
         integer(int32) :: te,p2e; integer :: p5e,ord
         logical :: ok
         ab=ai; call rdn(ab,f); call a2d(.false.,ab,bv)
-        th=toexh(bv,f); td=bimk(th%mantissa)
+        call toexh(bv,f,th); call bimk(th%mantissa,td)
         te=th%power2; p2e=te-ev; p5e=int(-ev)
         if (p5e/=0) call bp5(td,p5e,ok)
         if (p2e>0) then; call bp2(td,int(p2e),ok)
@@ -2739,21 +2748,22 @@ contains
         ord=bcmp(bm,td); res=ai; call rtec(res,ord,f)
     end subroutine ndc
 
-    pure type(fam) function dcomp(str,num,ai,f)
+    pure subroutine dcomp(str,num,ai,f,res)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: num
         type(fam), intent(in) :: ai
         type(ifmt), intent(in) :: f
+        type(fam), intent(out) :: res
         type(fam) :: am; integer(int32) :: se,ev
         integer :: dg; type(fbigint) :: bm
         am=ai; am%power2=am%power2-INVALID_AM
         se=scex(num%mantissa,int(num%exponent,int32))
-        bm=biem()
+        call biem(bm)
         call pm(str,num,f%maxd,bm,dg)
         ev=se+1-int(dg,int32)
-        if (ev>=0) then; call pdc(str,bm,ev,f,dcomp)
-        else; call ndc(str,bm,am,ev,f,dcomp); end if
-    end function dcomp
+        if (ev>=0) then; call pdc(str,bm,ev,f,res)
+        else; call ndc(str,bm,am,ev,f,res); end if
+    end subroutine dcomp
 
     ! ===== Core dispatch =====
     pure subroutine fchars(str,p,isd,vd,vf,f,res)
@@ -2776,14 +2786,14 @@ contains
         end block
         end if
 
-        am=cflt(p%exponent,p%mantissa,f)
+        call cflt(p%exponent,p%mantissa,f,am)
         if (p%tmd.and.am%power2>=0) then
-            ap=cflt(p%exponent,p%mantissa+1,f)
+            call cflt(p%exponent,p%mantissa+1,f,ap)
             eq=am%mantissa==ap%mantissa .and. &
                am%power2==ap%power2
-            if (.not.eq) am=cerr(p%exponent,p%mantissa,f)
+            if (.not.eq) call cerr(p%exponent,p%mantissa,f,am)
         end if
-        if (am%power2<0) am=dcomp(str,p,am,f)
+        if (am%power2<0) call dcomp(str,p,am,f,am)
 
         if (isd) then; call a2d(p%neg,am,vd)
         else; call a2f(p%neg,am,vf); end if
@@ -2820,7 +2830,7 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        p=pns(str(ps:),o,bj)
+        call pns(str(ps:),o,bj,p)
         p%lastm=p%lastm+ps-1
         if (p%ips>0) p%ips=p%ips+ps-1
         if (p%fps>0) p%fps=p%fps+ps-1
@@ -2861,7 +2871,7 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        p=pns(str(ps:),o,bj)
+        call pns(str(ps:),o,bj,p)
         p%lastm=p%lastm+ps-1
         if (p%ips>0) p%ips=p%ips+ps-1
         if (p%fps>0) p%fps=p%fps+ps-1
