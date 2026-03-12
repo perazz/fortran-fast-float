@@ -1646,6 +1646,70 @@ module fast_float_module
 
 contains
 
+    pure subroutine try_fast_fixed(str, opts, bj, ok, a)
+        character(*), intent(in) :: str
+        type(ffc_parse_options), intent(in) :: opts
+        logical, intent(in) :: bj
+        logical, intent(out) :: ok
+        type(fparsed), intent(out) :: a
+        integer(int64) :: mantissa
+        integer :: frac_digits, int_digits, la, p
+
+        la = len(str)
+        ok = .false.
+        a = fparsed()
+        if (la < 4) return
+        if (opts%decimal_point /= '.') return
+        if (iand(opts%format, FMT_FORT) /= 0) return
+        if (iand(opts%format, FMT_SKIP) /= 0) return
+        if (iand(opts%format, FMT_SCI) == 0) return
+        if (iand(opts%format, FMT_FIX) == 0) return
+
+        p = 1
+        if (str(p:p) == '-') then
+            a%neg = .true.
+            p = p + 1
+        else if (str(p:p) == '+') then
+            if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
+            p = p + 1
+        end if
+        if (p + 2 > la) return
+
+        a%ips = p
+        mantissa = 0_int64
+        int_digits = 0
+        do while (p <= la .and. int_digits < 3)
+            if (.not.isd(str(p:p))) exit
+            mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
+            int_digits = int_digits + 1
+            p = p + 1
+        end do
+        a%ipl = int_digits
+        if (int_digits == 0) return
+        if (bj .and. int_digits > 1 .and. str(a%ips:a%ips) == '0') return
+        if (p > la .or. str(p:p) /= '.') return
+
+        p = p + 1
+        if (p > la) return
+        if (la - p + 1 > 15) return
+        a%fps = p
+        frac_digits = la - p + 1
+        call lp8(str, p, la, mantissa)
+        do while (p <= la)
+            if (.not.isd(str(p:p))) return
+            mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
+            p = p + 1
+        end do
+        if (frac_digits == 0) return
+
+        a%fpl = frac_digits
+        a%mantissa = mantissa
+        a%exponent = -int(frac_digits, int64)
+        a%lastm = p
+        a%valid = .true.
+        ok = .true.
+    end subroutine try_fast_fixed
+
     pure logical function ult(a, b)
         integer(int64), intent(in) :: a, b
         ult = ieor(a, SB64) < ieor(b, SB64)
@@ -1787,7 +1851,7 @@ contains
     end function cc5
 
     ! ===== Parse number string =====
-    pure subroutine pns(str, opts, bj, a)
+    subroutine pns(str, opts, bj, a)
         character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
@@ -1946,7 +2010,7 @@ contains
     end subroutine pns
 
     ! ===== Parse inf/nan =====
-    pure subroutine pin(str,p0,la,isd,vd,vf,res)
+    subroutine pin(str,p0,la,isd,vd,vf,res)
         character(*), intent(in) :: str
         integer, intent(in) :: p0, la
         logical, intent(in) :: isd
@@ -2766,7 +2830,7 @@ contains
     end subroutine dcomp
 
     ! ===== Core dispatch =====
-    pure subroutine fchars(str,p,isd,vd,vf,f,res)
+    subroutine fchars(str,p,isd,vd,vf,f,res)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: p
         logical, intent(in) :: isd
@@ -2813,7 +2877,7 @@ contains
         type(ffc_result) :: res
         type(ffc_parse_options) :: o
         type(fparsed) :: p
-        integer :: ps,la; logical :: bj; real(real32) :: dff
+        integer :: ps,la; logical :: bj, fast_ok; real(real32) :: dff
 
         out=0.0_real64; dff=0.0_real32
         if (present(options)) then; o=options
@@ -2830,7 +2894,8 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        call pns(str(ps:),o,bj,p)
+        call try_fast_fixed(str(ps:),o,bj,fast_ok,p)
+        if (.not.fast_ok) call pns(str(ps:),o,bj,p)
         p%lastm=p%lastm+ps-1
         if (p%ips>0) p%ips=p%ips+ps-1
         if (p%fps>0) p%fps=p%fps+ps-1

@@ -160,7 +160,6 @@ contains
         checksum_c = 0.0_real64
 
         call system_clock(count_rate=count_rate)
-
         do r = 1, repeat_count
             answer = 0.0_real64
             call system_clock(count=count_start)
