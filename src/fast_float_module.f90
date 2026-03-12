@@ -1820,28 +1820,26 @@ contains
         end do
     end subroutine lp8
 
-    pure logical function cc3(str, pos, e3)
-        character(*), intent(in) :: str
-        integer, intent(in) :: pos
+    pure logical function cc3(str, e3)
+        character(3), intent(in) :: str
         character(3), intent(in) :: e3
         integer :: i
         cc3 = .true.
         do i = 0, 2
-            if (ior(iachar(str(pos+i:pos+i)),32) /= iachar(e3(i+1:i+1))) then
+            if (ior(iachar(str(i+1:i+1)),32) /= iachar(e3(i+1:i+1))) then
                 cc3 = .false.
                 return
             end if
         end do
     end function cc3
 
-    pure logical function cc5(str, pos, e5)
-        character(*), intent(in) :: str
-        integer, intent(in) :: pos
+    pure logical function cc5(str, e5)
+        character(5), intent(in) :: str
         character(5), intent(in) :: e5
         integer :: i
         cc5 = .true.
         do i = 0, 4
-            if (ior(iachar(str(pos+i:pos+i)),32) /= &
+            if (ior(iachar(str(i+1:i+1)),32) /= &
                 iachar(e5(i+1:i+1))) then
                 cc5 = .false.; return
             end if
@@ -2024,7 +2022,7 @@ contains
         ms=(str(p:p)=='-')
         if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
         if (la-p+1>=3) then
-            if (cc3(str,p,'nan')) then
+            if (cc3(str(p:),'nan')) then
                 p=p+3; res%pos=p
                 if (isd) then
                     vd=ieee_value(0.0_real64,ieee_quiet_nan)
@@ -2045,10 +2043,10 @@ contains
                     end block
                 end if; end if; return
             end if
-            if (cc3(str,p,'inf')) then
+            if (cc3(str(p:),'inf')) then
                 res%pos=p+3
                 if (la-p+1>=8) then
-                    if (cc5(str,p+3,'inity')) res%pos=p+8
+                    if (cc5(str(p+3:),'inity')) res%pos=p+8
                 end if
                 if (isd) then
                     vd = ieee_value(0.0_real64, &
