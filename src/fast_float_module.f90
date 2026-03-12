@@ -58,6 +58,8 @@ module fast_float_module
     integer(int64), parameter :: SB64 = ishft(1_int64, 63)
     integer(int64), parameter :: M32 = &
         int(z'00000000FFFFFFFF', int64)
+        
+    integer, private :: i
 
     type :: ffc_result
         sequence
@@ -104,6 +106,7 @@ module fast_float_module
         smp10=-64, lgp10=38, maxd=114)
 
     type :: fparsed
+        sequence
         integer(int64) :: exponent = 0
         integer(int64) :: mantissa = 0
         integer :: lastm = 0
@@ -115,6 +118,7 @@ module fast_float_module
     end type fparsed
 
     type :: fam
+        sequence
         integer(int64) :: mantissa = 0
         integer(int32) :: power2 = 0
     end type fam
@@ -1445,43 +1449,8 @@ module fast_float_module
     integer(int64), parameter :: P5(P5CNT) = &
         [ P5_1, P5_2, P5_3, P5_4, P5_5, P5_6, P5_7 ]
 
-    real(real64), parameter :: DPOW10(0:22) = [ &
-        1.0d0, &
-        1.0d1, &
-        1.0d2, &
-        1.0d3, &
-        1.0d4, &
-        1.0d5, &
-        1.0d6, &
-        1.0d7, &
-        1.0d8, &
-        1.0d9, &
-        1.0d10, &
-        1.0d11, &
-        1.0d12, &
-        1.0d13, &
-        1.0d14, &
-        1.0d15, &
-        1.0d16, &
-        1.0d17, &
-        1.0d18, &
-        1.0d19, &
-        1.0d20, &
-        1.0d21, &
-        1.0d22 ]
-
-    real(real32), parameter :: FPOW10(0:10) = [ &
-        1.0e0_real32, &
-        1.0e1_real32, &
-        1.0e2_real32, &
-        1.0e3_real32, &
-        1.0e4_real32, &
-        1.0e5_real32, &
-        1.0e6_real32, &
-        1.0e7_real32, &
-        1.0e8_real32, &
-        1.0e9_real32, &
-        1.0e10_real32 ]
+    real(real64),   parameter ::  DPOW10(-22:22) = [ (10**real(i,real64), i=-22, 22) ]
+    real(real32),   parameter ::  FPOW10(-10:10) = [ (10**real(i,real32), i=-10, 10) ]
 
     integer(int64), parameter :: DMAXM(0:23) = [ &
         9007199254740992_int64, &
@@ -1625,7 +1594,6 @@ module fast_float_module
         int(z'02c06b9d16c407a7', int64) ]
 
 
-    integer, private :: i
     logical, parameter :: SLUT(0:255) = [((i>=9 .and. i<=13).or.i==32,i=0,255)]  
 
     integer, parameter :: C2D(0:255) = [ &
@@ -1645,6 +1613,11 @@ module fast_float_module
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, &
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, &
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 ]
+
+    interface fchars
+        module procedure fchars_64
+        module procedure fchars_32
+    end interface fchars
 
 contains
 
@@ -1831,6 +1804,7 @@ contains
     pure elemental integer function c2dg(c)
         character, intent(in) :: c
         integer :: ic
+        ! Clamp IC since 
         ic = iachar(c); c2dg = 255
         if (ic>=0 .and. ic<=255) c2dg = C2D(ic)
     end function c2dg
@@ -2066,12 +2040,15 @@ contains
         real(real32), intent(out) :: vf
         type(ffc_result), intent(out) :: res
         integer :: p
-        logical :: ms
-        p=p0; res%pos=p; res%outcome=FFC_OUTCOME_OK
-        vd=0.0_real64; vf=0.0_real32
-        if (p>la) then
-            res%outcome=FFC_OUTCOME_INVALID_INPUT; return
+        logical :: ms        
+        res%pos=p0        
+        if (p0>la) then
+            res%outcome=FFC_OUTCOME_INVALID_INPUT
+            return
+        else
+            res%outcome=FFC_OUTCOME_OK
         end if
+        p=p0
         ms=(str(p:p)=='-')
         if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
         if (la-p+1>=3) then
@@ -2102,12 +2079,10 @@ contains
                     if (cc5(str(p+3:),'inity')) res%pos=p+8
                 end if
                 if (isd) then
-                    vd = ieee_value(0.0_real64, &
-                                    ieee_positive_inf)
+                    vd = ieee_value(0.0_real64, ieee_positive_inf)
                     if (ms) vd=-vd
                 else
-                    vf = ieee_value(0.0_real32, &
-                                    ieee_positive_inf)
+                    vf = ieee_value(0.0_real32, ieee_positive_inf)
                     if (ms) vf=-vf
                 end if; return
             end if
@@ -2118,8 +2093,7 @@ contains
     ! ===== Eisel-Lemire =====
     pure elemental integer(int32) function b2b(q)
         integer(int32), intent(in) :: q
-        b2b = int(ishft( &
-            (152170+65536)*int(q,int64),-16),int32)+63
+        b2b = int(ishft((152170+65536)*int(q,int64),-16),int32)+63
     end function b2b
 
     pure elemental subroutine cprd(q, w, f, res)
@@ -2232,52 +2206,54 @@ contains
         call cerrs(q, pr%hi, lz, f, res)
     end subroutine cerr
 
-    pure elemental subroutine clfp(m,e,ng,isd,vd,vf,f,ok)
+    pure elemental subroutine clfp_core(m,e,ng,isd,vd,vf,f,ok)
         integer(int64), intent(in) :: m, e
         logical, intent(in) :: ng, isd
         real(real64), intent(inout) :: vd
         real(real32), intent(inout) :: vf
         type(ifmt), intent(in) :: f
         logical, intent(out) :: ok
-        ok=.false.
-        if (e<int(f%minfp,int64).or. &
-            e>int(f%maxfp,int64)) return
-        if (ugt(m, f%maxm)) return
-        ok=.true.
-        if (isd) then
-            vd=real(m,real64)
-            if (e<0) then; vd=vd/DPOW10(-int(e))
-            else; vd=vd*DPOW10(int(e)); end if
+
+        ok= e>=int(f%minfp,int64).and. e<=int(f%maxfp,int64) .and. (.not.ugt(m, f%maxm))
+        if (.not.ok) return
+
+        if (isd) then 
+            if (e<0) then     
+                vd=real(m,real64)/DPOW10(-e)
+            else
+                vd=real(m,real64)*DPOW10(e)
+            end if
             if (ng) vd=-vd
         else
-            vf=real(m,real32)
-            if (e<0) then; vf=vf/FPOW10(-int(e))
-            else; vf=vf*FPOW10(int(e)); end if
+            if (e<0) then     
+                vf=real(m,real32)/FPOW10(-e)
+            else
+                vf=real(m,real32)*FPOW10(e)
+            end if
             if (ng) vf=-vf
-        end if
-    end subroutine clfp
+        endif
 
-    pure elemental subroutine a2d(ng, am, v)
+    end subroutine clfp_core
+
+    pure elemental real(real64) function a2d(ng, am) result(v)
         logical, intent(in) :: ng
         type(fam), intent(in) :: am
-        real(real64), intent(out) :: v
         integer(int64) :: w
         w=am%mantissa
         w=ior(w,ishft(int(am%power2,int64),52))
         if (ng) w=ior(w,ishft(1_int64,63))
         v=transfer(w,0.0_real64)
-    end subroutine a2d
+    end function a2d
 
-    pure elemental subroutine a2f(ng, am, v)
+    pure elemental real(real32) function a2f(ng, am) result(v)
         logical, intent(in) :: ng
         type(fam), intent(in) :: am
-        real(real32), intent(out) :: v
         integer(int32) :: w
         w=int(am%mantissa,int32)
         w=ior(w,ishft(am%power2,23))
         if (ng) w=ior(w,ishft(1_int32,31))
         v=transfer(w,0.0_real32)
-    end subroutine a2f
+    end function a2f
 
     ! ===== Bigint ops =====
     pure elemental subroutine svp(sv,v)
@@ -2845,7 +2821,7 @@ contains
         type(fam) :: th; type(fbigint) :: td
         integer(int32) :: te,p2e; integer :: p5e,ord
         logical :: ok
-        ab=ai; call rdn(ab,f); call a2d(.false.,ab,bv)
+        ab=ai; call rdn(ab,f); bv = a2d(.false.,ab)
         call toexh(bv,f,th); call bimk(th%mantissa,td)
         te=th%power2; p2e=te-ev; p5e=int(-ev)
         if (p5e/=0) call bp5(td,p5e,ok)
@@ -2873,7 +2849,7 @@ contains
     end subroutine dcomp
 
     ! ===== Core dispatch =====
-    pure elemental subroutine fchars(str,p,isd,vd,vf,f,res)
+    pure elemental subroutine fchars_core(str,p,isd,vd,vf,f,res)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: p
         logical, intent(in) :: isd
@@ -2883,11 +2859,11 @@ contains
         type(ffc_result), intent(out) :: res
         type(fam) :: am,ap; logical :: eq, cfok
 
-        res%outcome=FFC_OUTCOME_OK; res%pos=p%lastm
+        res%outcome=FFC_OUTCOME_OK
+        res%pos    =p%lastm
 
         if (.not.p%tmd) then
-            call clfp(p%mantissa,p%exponent,p%neg,isd, &
-                     vd,vf,f,cfok)
+            call clfp_core(p%mantissa,p%exponent,p%neg,isd,vd,vf,f,cfok)
             if (cfok) return
         end if
 
@@ -2900,14 +2876,38 @@ contains
         end if
         if (am%power2<0) call dcomp(str,p,am,f,am)
 
-        if (isd) then; call a2d(p%neg,am,vd)
-        else; call a2f(p%neg,am,vf); end if
+        if (isd) then
+            vd = a2d(p%neg,am)
+        else
+            vf = a2f(p%neg,am)
+        end if
 
-        if ((p%mantissa/=0.and.am%mantissa==0.and. &
-             am%power2==0).or. &
+        if ((p%mantissa/=0.and.am%mantissa==0.and.am%power2==0) .or. &
             am%power2==int(f%infp,int32)) &
             res%outcome=FFC_OUTCOME_OUT_OF_RANGE
-    end subroutine fchars
+    end subroutine fchars_core
+
+    pure elemental subroutine fchars_64(str,p,vd,f,res)
+        character(*), intent(in) :: str
+        type(fparsed), intent(in) :: p
+        real(real64), intent(inout) :: vd
+        type(ifmt), intent(in) :: f
+        type(ffc_result), intent(out) :: res
+
+        real(real32) :: vf
+        call fchars_core(str,p,.true.,vd,vf,f,res)      
+        
+    end subroutine fchars_64
+
+    pure elemental subroutine fchars_32(str,p,vf,f,res)
+        character(*), intent(in) :: str
+        type(fparsed), intent(in) :: p
+        real(real32), intent(inout) :: vf
+        type(ifmt), intent(in) :: f
+        type(ffc_result), intent(out) :: res
+        real(real64) :: vd
+        call fchars_core(str,p,.false.,vd,vf,f,res)
+    end subroutine fchars_32
 
     ! ===== PUBLIC =====
     function ffc_parse_double(str, out, options) result(res)
@@ -2975,7 +2975,7 @@ contains
                 return
             end if
         end if
-        call fchars(str,p,.true.,out,dff,DF,res)
+        call fchars(str,p,out,DF,res)
     end subroutine ffc_parse_double_range_sub
 
     function ffc_parse_float(str,out,options) result(res)
@@ -3013,7 +3013,7 @@ contains
                 return
             end if
         end if
-        call fchars(str,p,.false.,ddd,out,FF,res)
+        call fchars(str,p,out,FF,res)
     end function ffc_parse_float
 
     function ffc_parse_i64(str,base,out) result(res)
