@@ -1646,9 +1646,9 @@ module fast_float_module
 
 contains
 
-    pure elemental subroutine try_fast_integer(la, str, opts, bj, ok, a)
-        integer, intent(in) :: la
-        character(len=la), intent(in) :: str
+    pure elemental subroutine try_fast_integer(first, last, str, opts, bj, ok, a)
+        integer, intent(in) :: first, last
+        character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         logical, intent(out) :: ok
@@ -1658,13 +1658,13 @@ contains
 
         ok = .false.
         a = fparsed()
-        if (la < 1) return
+        if (first > last) return
         if (opts%decimal_point /= '.') return
         if (iand(opts%format, FMT_FORT) /= 0) return
         if (iand(opts%format, FMT_SKIP) /= 0) return
         if (iand(opts%format, FMT_FIX) == 0) return
 
-        p = 1
+        p = first
         if (str(p:p) == '-') then
             a%neg = .true.
             p = p + 1
@@ -1672,12 +1672,12 @@ contains
             if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
             p = p + 1
         end if
-        if (p > la) return
+        if (p > last) return
 
         a%ips = p
         mantissa = 0_int64
         int_digits = 0
-        do while (p <= la .and. int_digits < 19)
+        do while (p <= last .and. int_digits < 19)
             if (.not. isd(str(p:p))) exit
             mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
             int_digits = int_digits + 1
@@ -1686,7 +1686,7 @@ contains
 
         if (int_digits == 0) return
         if (bj .and. int_digits > 1 .and. str(a%ips:a%ips) == '0') return
-        if (p <= la) then
+        if (p <= last) then
             if (isd(str(p:p))) return
             if (str(p:p) == '.' .or. str(p:p) == 'e' .or. str(p:p) == 'E' .or. &
                 str(p:p) == 'd' .or. str(p:p) == 'D' .or. str(p:p) == '+' .or. &
@@ -1702,9 +1702,9 @@ contains
         ok = .true.
     end subroutine try_fast_integer
 
-    pure elemental subroutine try_fast_fixed(la, str, opts, bj, ok, a)
-        integer, intent(in) :: la
-        character(len=la), intent(in) :: str
+    pure elemental subroutine try_fast_fixed(first, last, str, opts, bj, ok, a)
+        integer, intent(in) :: first, last
+        character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         logical, intent(out) :: ok
@@ -1714,14 +1714,14 @@ contains
 
         ok = .false.
         a = fparsed()
-        if (la < 4) return
+        if (last - first + 1 < 4) return
         if (opts%decimal_point /= '.') return
         if (iand(opts%format, FMT_FORT) /= 0) return
         if (iand(opts%format, FMT_SKIP) /= 0) return
         if (iand(opts%format, FMT_SCI) == 0) return
         if (iand(opts%format, FMT_FIX) == 0) return
 
-        p = 1
+        p = first
         if (str(p:p) == '-') then
             a%neg = .true.
             p = p + 1
@@ -1729,12 +1729,12 @@ contains
             if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
             p = p + 1
         end if
-        if (p + 2 > la) return
+        if (p + 2 > last) return
 
         a%ips = p
         mantissa = 0_int64
         int_digits = 0
-        do while (p <= la .and. int_digits < 3)
+        do while (p <= last .and. int_digits < 3)
             if (.not.isd(str(p:p))) exit
             mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
             int_digits = int_digits + 1
@@ -1743,15 +1743,15 @@ contains
         a%ipl = int_digits
         if (int_digits == 0) return
         if (bj .and. int_digits > 1 .and. str(a%ips:a%ips) == '0') return
-        if (p > la .or. str(p:p) /= '.') return
+        if (p > last .or. str(p:p) /= '.') return
 
         p = p + 1
-        if (p > la) return
-        if (la - p + 1 > 15) return
+        if (p > last) return
+        if (last - p + 1 > 15) return
         a%fps = p
-        frac_digits = la - p + 1
-        call lp8(p, la, str, mantissa)
-        do while (p <= la)
+        frac_digits = last - p + 1
+        call lp8(p, last, str, mantissa)
+        do while (p <= last)
             if (.not.isd(str(p:p))) return
             mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
             p = p + 1
@@ -1903,9 +1903,9 @@ contains
     end function cc5
 
     ! ===== Parse number string =====
-    subroutine pns(la, str, opts, bj, a)
-        integer, intent(in) :: la
-        character(len=la), intent(in) :: str
+    subroutine pns(first, last, str, opts, bj, a)
+        integer, intent(in) :: first, last
+        character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         type(fparsed), intent(out) :: a
@@ -1917,8 +1917,8 @@ contains
         logical :: alp,hdp,ne,hse,hed
 
         fmt=opts%format; dp=opts%decimal_point
-        p=1; a%valid=.false.
-        if (p>la) then; a%lastm=p; return; end if
+        p=first; a%valid=.false.
+        if (p>last) then; a%lastm=p; return; end if
 
         a%neg = (str(p:p)=='-')
         alp = iand(fmt, FMT_PLUS)/=0
@@ -1926,7 +1926,7 @@ contains
         if (str(p:p)=='-' .or. &
             (alp.and..not.bj.and.str(p:p)=='+')) then
             p=p+1
-            if (p>la) then; a%lastm=p; return; end if
+            if (p>last) then; a%lastm=p; return; end if
             if (bj) then
                 if (.not.isd(str(p:p))) then
                     a%lastm=p; return
@@ -1938,7 +1938,7 @@ contains
         end if
 
         sd=p; i=0_int64
-        do while (p<=la)
+        do while (p<=last)
             if (.not.isd(str(p:p))) exit
             ic = iachar(str(p:p))-48
             i = 10*i + int(ic,int64); p=p+1
@@ -1956,12 +1956,12 @@ contains
 
         exp=0_int64
         hdp = .false.
-        if (p<=la) hdp = (str(p:p)==dp)
+        if (p<=last) hdp = (str(p:p)==dp)
 
         if (hdp) then
             p=p+1; bf=p
-            call lp8(p, la, str, i)
-            do while (p<=la)
+            call lp8(p, last, str, i)
+            do while (p<=last)
                 if (.not.isd(str(p:p))) exit
                 ic=iachar(str(p:p))-48
                 i=i*10+int(ic,int64); p=p+1
@@ -1979,7 +1979,7 @@ contains
         end if
 
         en=0_int64; hse=.false.
-        if (p<=la) then
+        if (p<=last) then
             hse = (iand(fmt,FMT_SCI)/=0 .and. &
                    (str(p:p)=='e'.or.str(p:p)=='E')) .or. &
                   (iand(fmt,FMT_FORT)/=0 .and. &
@@ -1991,7 +1991,7 @@ contains
             if (str(p:p)=='e'.or.str(p:p)=='E'.or. &
                 str(p:p)=='d'.or.str(p:p)=='D') p=p+1
             ne=.false.
-            if (p<=la) then
+            if (p<=last) then
                 if (str(p:p)=='-') then
                     ne=.true.; p=p+1
                 else if (str(p:p)=='+') then
@@ -1999,14 +1999,14 @@ contains
                 end if
             end if
             hed=.false.
-            if (p<=la) hed=isd(str(p:p))
+            if (p<=last) hed=isd(str(p:p))
             if (.not.hed) then
                 if (iand(fmt,FMT_FIX)==0) then
                     a%lastm=p; return
                 end if
                 p=le
             else
-                do while (p<=la)
+                do while (p<=last)
                     if (.not.isd(str(p:p))) exit
                     ic=iachar(str(p:p))-48
                     if (en<268435456_int64) &
@@ -2028,14 +2028,14 @@ contains
             block
                 integer :: sp
                 sp=sd
-                do while (sp<=la)
+                do while (sp<=last)
                     if (str(sp:sp)/='0'.and.str(sp:sp)/=dp) &
                         exit
                     if (str(sp:sp)=='0') dc=dc-1
                     sp=sp+1
                 end do
             end block
-            if (dc>19) then
+        if (dc>19) then
                 a%tmd=.true.; i=0; p=a%ips
                 block
                     integer :: ie, fe
@@ -2941,12 +2941,9 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        call try_fast_fixed(la-ps+1,str(ps:),o,bj,fast_ok,p)
-        if (.not.fast_ok) call try_fast_integer(la-ps+1,str(ps:),o,bj,fast_ok,p)
-        if (.not.fast_ok) call pns(la-ps+1,str(ps:),o,bj,p)
-        p%lastm=p%lastm+ps-1
-        if (p%ips>0) p%ips=p%ips+ps-1
-        if (p%fps>0) p%fps=p%fps+ps-1
+        call try_fast_fixed(ps,la,str,o,bj,fast_ok,p)
+        if (.not.fast_ok) call try_fast_integer(ps,la,str,o,bj,fast_ok,p)
+        if (.not.fast_ok) call pns(ps,la,str,o,bj,p)
         if (.not.p%valid) then
             if (iand(o%format,FMT_NOIN)/=0) then
                 res%outcome=FFC_OUTCOME_INVALID_INPUT
@@ -2984,10 +2981,7 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        call pns(la-ps+1,str(ps:),o,bj,p)
-        p%lastm=p%lastm+ps-1
-        if (p%ips>0) p%ips=p%ips+ps-1
-        if (p%fps>0) p%fps=p%fps+ps-1
+        call pns(ps,la,str,o,bj,p)
         if (.not.p%valid) then
             if (iand(o%format,FMT_NOIN)/=0) then
                 res%outcome=FFC_OUTCOME_INVALID_INPUT
