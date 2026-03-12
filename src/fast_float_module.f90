@@ -1777,13 +1777,12 @@ contains
         if (ic>=0 .and. ic<=255) c2dg = C2D(ic)
     end function c2dg
 
-    pure integer(int64) function r8(str, pos)
-        character(*), intent(in) :: str
-        integer, intent(in) :: pos
+    pure integer(int64) function r8(str)
+        character(8), intent(in) :: str
         integer :: i
         r8 = 0_int64
         do i = 0, 7
-            r8 = ior(r8, ishft( int(iachar(str(pos+i:pos+i)),int64), 8*i))
+            r8 = ior(r8, ishft(int(iachar(str(i+1:i+1)), int64), 8*i))
         end do
     end function r8
 
@@ -1814,7 +1813,7 @@ contains
         integer(int64), intent(inout) :: i
         integer(int64) :: val
         do while (last - pos + 1 >= 8)
-            val = r8(str, pos)
+            val = r8(str(pos:))
             if (.not. is8d(val)) exit
             i = i * 100000000_int64 + int(p8sw(val), int64)
             pos = pos + 8
@@ -2727,7 +2726,7 @@ contains
                 do while (pe-p+1>=8 .and. stp-ct>=8 &
                           .and. md-dg>=8)
                     v=v*100000000_int64 + &
-                        int(p8sw(r8(str,p)),int64)
+                        int(p8sw(r8(str(p:))),int64)
                     p=p+8; ct=ct+8; dg=dg+8
                 end do
                 do while (ct<stp.and.p<=pe.and.dg<md)
@@ -2755,7 +2754,7 @@ contains
                 do while (pe-p+1>=8 .and. stp-ct>=8 &
                           .and. md-dg>=8)
                     v=v*100000000_int64 + &
-                        int(p8sw(r8(str,p)),int64)
+                        int(p8sw(r8(str(p:))),int64)
                     p=p+8; ct=ct+8; dg=dg+8
                 end do
                 do while (ct<stp.and.p<=pe.and.dg<md)
