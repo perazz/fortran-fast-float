@@ -1646,16 +1646,16 @@ module fast_float_module
 
 contains
 
-    pure subroutine try_fast_fixed(str, opts, bj, ok, a)
-        character(*), intent(in) :: str
+    pure elemental subroutine try_fast_fixed(la, str, opts, bj, ok, a)
+        integer, intent(in) :: la
+        character(len=la), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         logical, intent(out) :: ok
         type(fparsed), intent(out) :: a
         integer(int64) :: mantissa
-        integer :: frac_digits, int_digits, la, p
+        integer :: frac_digits, int_digits, p
 
-        la = len(str)
         ok = .false.
         a = fparsed()
         if (la < 4) return
@@ -1694,7 +1694,7 @@ contains
         if (la - p + 1 > 15) return
         a%fps = p
         frac_digits = la - p + 1
-        call lp8(str, p, la, mantissa)
+        call lp8(p, la, str, mantissa)
         do while (p <= la)
             if (.not.isd(str(p:p))) return
             mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
@@ -1806,10 +1806,10 @@ contains
         res = int(iand(v, int(z'FFFFFFFF',int64)), int32)
     end function p8sw
 
-    pure subroutine lp8(str, pos, last, i)
-        character(*), intent(in) :: str
-        integer, intent(inout) :: pos
+    pure elemental subroutine lp8(pos, last, str, i)
         integer, intent(in) :: last
+        integer, intent(inout) :: pos
+        character(len=last), intent(in) :: str
         integer(int64), intent(inout) :: i
         integer(int64) :: val
         do while (last - pos + 1 >= 8)
@@ -1903,7 +1903,7 @@ contains
 
         if (hdp) then
             p=p+1; bf=p
-            call lp8(str, p, la, i)
+            call lp8(p, la, str, i)
             do while (p<=la)
                 if (.not.isd(str(p:p))) exit
                 ic=iachar(str(p:p))-48
@@ -2227,13 +2227,13 @@ contains
     end subroutine a2f
 
     ! ===== Bigint ops =====
-    pure subroutine svp(sv,v)
+    pure elemental subroutine svp(sv,v)
         type(fsv), intent(inout) :: sv
         integer(int64), intent(in) :: v
         sv%ln=sv%ln+1; sv%d(sv%ln)=v
     end subroutine svp
 
-    pure subroutine svtp(sv,v,ok)
+    pure elemental subroutine svtp(sv,v,ok)
         type(fsv), intent(inout) :: sv
         integer(int64), intent(in) :: v
         logical, intent(out) :: ok
@@ -2242,7 +2242,7 @@ contains
         else; ok=.false.; end if
     end subroutine svtp
 
-    pure subroutine svtr(sv,nl,ok)
+    pure elemental subroutine svtr(sv,nl,ok)
         type(fsv), intent(inout) :: sv
         integer, intent(in) :: nl
         logical, intent(out) :: ok
@@ -2253,20 +2253,20 @@ contains
         end if; sv%ln=nl; ok=.true.
     end subroutine svtr
 
-    pure subroutine svn(sv)
+    pure elemental subroutine svn(sv)
         type(fsv), intent(inout) :: sv
         do while (sv%ln>0)
             if (sv%d(sv%ln)/=0) exit; sv%ln=sv%ln-1
         end do
     end subroutine svn
 
-    pure integer(int64) function svri(sv,i)
+    pure elemental integer(int64) function svri(sv,i)
         type(fsv), intent(in) :: sv
         integer, intent(in) :: i
         svri = sv%d(sv%ln-i)
     end function svri
 
-    pure logical function svnza(sv,i)
+    pure elemental logical function svnza(sv,i)
         type(fsv), intent(in) :: sv
         integer, intent(in) :: i
         integer :: j
@@ -2286,7 +2286,7 @@ contains
         s=x+y; ov=ult(s,x); r=s
     end subroutine sca
 
-    pure subroutine scm(x,y,c,r)
+    pure elemental subroutine scm(x,y,c,r)
         integer(int64), intent(in) :: x,y
         integer(int64), intent(inout) :: c
         integer(int64), intent(out) :: r
@@ -2295,7 +2295,7 @@ contains
         z%lo=t; if (ov) z%hi=z%hi+1; c=z%hi; r=z%lo
     end subroutine scm
 
-    pure subroutine bsa(sv,y,st,ok)
+    pure elemental subroutine bsa(sv,y,st,ok)
         type(fsv), intent(inout) :: sv
         integer(int64), intent(in) :: y
         integer, intent(in) :: st
@@ -2310,7 +2310,7 @@ contains
         ok=.true.
     end subroutine bsa
 
-    pure subroutine bsm(sv,y,ok)
+    pure elemental subroutine bsm(sv,y,ok)
         type(fsv), intent(inout) :: sv
         integer(int64), intent(in) :: y
         logical, intent(out) :: ok
@@ -2506,7 +2506,7 @@ contains
         end if
     end subroutine h64_2
 
-    pure subroutine bh64(bi,tr,res)
+    pure elemental subroutine bh64(bi,tr,res)
         type(fbigint), intent(in) :: bi
         logical, intent(out) :: tr
         integer(int64), intent(out) :: res
@@ -2520,7 +2520,7 @@ contains
         end if
     end subroutine bh64
 
-    pure integer function bcmp(a,b)
+    pure elemental integer function bcmp(a,b)
         type(fbigint), intent(in) :: a,b
         integer :: j
         if (a%vec%ln>b%vec%ln) then; bcmp=1; return
@@ -2673,18 +2673,13 @@ contains
         call rtc(am,ms,ord); call rfn(am,f)
     end subroutine rtec
 
-    pure logical function istr(str,fi,la)
-        character(*), intent(in) :: str
+    pure elemental logical function istr(str,fi,la)
+        character(len=*), intent(in) :: str
         integer, intent(in) :: fi,la
-        integer :: p
-        istr=.false.
-        do p=fi,la
-            if (str(p:p)/='0') then; istr=.true.; return
-            end if
-        end do
+        istr = verify(str(fi:la),'0')>0
     end function istr
 
-    pure subroutine skz(str,p,la)
+    pure elemental subroutine skz(str,p,la)
         character(*), intent(in) :: str
         integer, intent(inout) :: p
         integer, intent(in) :: la
@@ -2706,7 +2701,7 @@ contains
         call an(bi,10_int64,1_int64); cn=cn+1
     end subroutine rubi
 
-    pure subroutine pm(str,num,md,rb,dg)
+    pure elemental subroutine pm(str,num,md,rb,dg)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: num
         integer, intent(in) :: md
@@ -2772,7 +2767,7 @@ contains
         if (ct/=0) call an(rb,P10U64(ct),v)
     end subroutine pm
 
-    pure subroutine pdc(str,bm,ev,f,res)
+    pure elemental subroutine pdc(str,bm,ev,f,res)
         character(*), intent(in) :: str
         type(fbigint), intent(inout) :: bm
         integer(int32), intent(in) :: ev
@@ -2786,7 +2781,7 @@ contains
         call rtet(res,tr,f)
     end subroutine pdc
 
-    pure subroutine ndc(str,bm,ai,ev,f,res)
+    pure elemental subroutine ndc(str,bm,ai,ev,f,res)
         character(*), intent(in) :: str
         type(fbigint), intent(inout) :: bm
         type(fam), intent(in) :: ai
@@ -2807,7 +2802,7 @@ contains
         ord=bcmp(bm,td); res=ai; call rtec(res,ord,f)
     end subroutine ndc
 
-    pure subroutine dcomp(str,num,ai,f,res)
+    pure elemental subroutine dcomp(str,num,ai,f,res)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: num
         type(fam), intent(in) :: ai
@@ -2825,7 +2820,7 @@ contains
     end subroutine dcomp
 
     ! ===== Core dispatch =====
-    subroutine fchars(str,p,isd,vd,vf,f,res)
+    pure elemental subroutine fchars(str,p,isd,vd,vf,f,res)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: p
         logical, intent(in) :: isd
@@ -2889,7 +2884,7 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        call try_fast_fixed(str(ps:),o,bj,fast_ok,p)
+        call try_fast_fixed(la-ps+1,str(ps:),o,bj,fast_ok,p)
         if (.not.fast_ok) call pns(str(ps:),o,bj,p)
         p%lastm=p%lastm+ps-1
         if (p%ips>0) p%ips=p%ips+ps-1
@@ -2968,7 +2963,7 @@ contains
             if (str(p:p)/='0') exit; p=p+1
         end do
         hlz=(p>sn); sd=p; i=0
-        if (base==10) call lp8(str,p,la,i)
+        if (base==10) call lp8(p,la,str,i)
         do while (p<=la)
             d=c2dg(str(p:p)); if (d>=base) exit
             i=int(base,int64)*i+int(d,int64); p=p+1
