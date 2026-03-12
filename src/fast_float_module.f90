@@ -20,7 +20,7 @@
 !> @since     Mon, 10 Mar 2026
 !   *************************************************************
 module fast_float_module
-    use iso_fortran_env, only: int32, int64, real32, real64
+    use iso_fortran_env, only: int8, int32, int64, real32, real64
     use ieee_arithmetic
     implicit none(type, external)
     private
@@ -35,9 +35,9 @@ module fast_float_module
     public :: FFC_PRESET_GENERAL, FFC_PRESET_JSON
     public :: FFC_PRESET_FORTRAN
 
-    integer, parameter :: FFC_OUTCOME_OK           = 0
-    integer, parameter :: FFC_OUTCOME_INVALID_INPUT = 1
-    integer, parameter :: FFC_OUTCOME_OUT_OF_RANGE  = 2
+    integer(int8), parameter :: FFC_OUTCOME_OK            = 0
+    integer(int8), parameter :: FFC_OUTCOME_INVALID_INPUT = 1
+    integer(int8), parameter :: FFC_OUTCOME_OUT_OF_RANGE  = 2
 
     integer(int64), parameter :: FMT_SCI  = ishft(1_int64, 0)
     integer(int64), parameter :: FMT_FIX  = ishft(1_int64, 2)
@@ -62,7 +62,7 @@ module fast_float_module
     type :: ffc_result
         sequence
         integer :: pos = 0
-        integer :: outcome = FFC_OUTCOME_OK
+        integer(int8) :: outcome = FFC_OUTCOME_OK
     end type ffc_result
 
     type :: ffc_parse_options
@@ -1650,7 +1650,7 @@ contains
 
     pure elemental subroutine try_fast_integer(first, last, str, opts, bj, ok, a)
         integer, intent(in) :: first, last
-        character(*), intent(in) :: str
+        character(len=*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         logical, intent(out) :: ok
@@ -1706,7 +1706,7 @@ contains
 
     pure elemental subroutine try_fast_fixed(first, last, str, opts, bj, ok, a)
         integer, intent(in) :: first, last
-        character(len=last), intent(in) :: str
+        character(len=*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         logical, intent(out) :: ok
@@ -1835,13 +1835,13 @@ contains
         if (ic>=0 .and. ic<=255) c2dg = C2D(ic)
     end function c2dg
 
-    pure integer(int64) function r8(str)
-        character(8), intent(in) :: str
+    pure elemental integer(int64) function r8(str)
+        character(len=8), intent(in) :: str
         integer :: i
         r8 = 0_int64
         do i = 0, 7
             r8 = ior(r8, ishft(int(iachar(str(i+1:i+1)), int64), 8*i))
-        end do
+        end do        
     end function r8
 
     pure elemental logical function is8d(val)
@@ -1867,7 +1867,7 @@ contains
     pure elemental subroutine lp8(pos, last, str, i)
         integer, intent(in) :: last
         integer, intent(inout) :: pos
-        character(len=last), intent(in) :: str
+        character(len=*), intent(in) :: str
         integer(int64), intent(inout) :: i
         integer(int64) :: val
         do while (last - pos + 1 >= 8)
@@ -1915,7 +1915,7 @@ contains
         integer(int64) :: fmt,i,dc,exp,en
         integer(int64), parameter :: m19 = 1000000000000000000_int64
         character :: dp
-        integer :: p,sd,eip,bf,le,ic
+        integer :: p,sd,eip,bf,le,ic,ie,fe,sp
         logical :: alp,hdp,ne,hse,hed
 
         fmt=opts%format; dp=opts%decimal_point
@@ -1943,7 +1943,7 @@ contains
         do while (p<=last)
             if (.not.isd(str(p:p))) exit
             ic = iachar(str(p:p))-48
-            i = 10*i + int(ic,int64); p=p+1
+            i = 10*i + ic; p=p+1
         end do
 
         eip=p; dc=int(eip-sd,int64)
@@ -2027,37 +2027,31 @@ contains
         a%lastm=p; a%valid=.true.
 
         if (dc > 19) then
-            block
-                integer :: sp
-                sp=sd
-                do while (sp<=last)
-                    if (str(sp:sp)/='0'.and.str(sp:sp)/=dp) &
-                        exit
-                    if (str(sp:sp)=='0') dc=dc-1
-                    sp=sp+1
-                end do
-            end block
-        if (dc>19) then
+            sp=sd
+            do while (sp<=last)
+                if (str(sp:sp)/='0'.and.str(sp:sp)/=dp) &
+                    exit
+                if (str(sp:sp)=='0') dc=dc-1
+                sp=sp+1
+            end do
+            if (dc>19) then
                 a%tmd=.true.; i=0; p=a%ips
-                block
-                    integer :: ie, fe
-                    ie=p+a%ipl
-                    do while (ult(i,m19).and.p<ie)
-                        i = i*10 + int( &
-                            iachar(str(p:p))-48, int64)
+                ie=p+a%ipl
+                do while (ult(i,m19).and.p<ie)
+                    i = i*10 + int( &
+                        iachar(str(p:p))-48, int64)
+                    p=p+1
+                end do
+                if (uge(i,m19)) then
+                    exp = int(eip-p,int64) + en
+                else
+                    p=a%fps; fe=p+a%fpl
+                    do while (ult(i,m19).and.p<fe)
+                        i = i*10 + int( iachar(str(p:p))-48, int64)
                         p=p+1
                     end do
-                    if (uge(i,m19)) then
-                        exp = int(eip-p,int64) + en
-                    else
-                        p=a%fps; fe=p+a%fpl
-                        do while (ult(i,m19).and.p<fe)
-                            i = i*10 + int( iachar(str(p:p))-48, int64)
-                            p=p+1
-                        end do
-                        exp = int(a%fps-p,int64) + en
-                    end if
-                end block
+                    exp = int(a%fps-p,int64) + en
+                end if
             end if
         end if
         a%exponent=exp; a%mantissa=i
@@ -2887,16 +2881,14 @@ contains
         real(real32), intent(inout) :: vf
         type(ifmt), intent(in) :: f
         type(ffc_result), intent(out) :: res
-        type(fam) :: am,ap; logical :: eq
+        type(fam) :: am,ap; logical :: eq, cfok
 
         res%outcome=FFC_OUTCOME_OK; res%pos=p%lastm
 
         if (.not.p%tmd) then
-            block; logical :: cfok
             call clfp(p%mantissa,p%exponent,p%neg,isd, &
                      vd,vf,f,cfok)
             if (cfok) return
-        end block
         end if
 
         call cflt(p%exponent,p%mantissa,f,am)
@@ -2944,7 +2936,7 @@ contains
 
     elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
         integer, intent(in) :: first, last
-        character(len=last), intent(in) :: str
+        character(len=*), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
         type(ffc_parse_options), intent(in), optional :: &
@@ -3038,13 +3030,13 @@ contains
             res%outcome=FFC_OUTCOME_INVALID_INPUT
             res%pos=p; return
         end if
-        ng=(str(p:p)=='-')
-        if (str(p:p)=='-') p=p+1
+        ng = str(p:p)=='-'
+        if (ng) p=p+1
         sn=p
         do while (p<=la)
             if (str(p:p)/='0') exit; p=p+1
         end do
-        hlz=(p>sn); sd=p; i=0
+        hlz=p>sn; sd=p; i=0
         if (base==10) call lp8(p,la,str,i)
         do while (p<=la)
             d=c2dg(str(p:p)); if (d>=base) exit

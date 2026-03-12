@@ -19,6 +19,10 @@ implicit-typing = false
 implicit-external = false
 source-form = "free"
 
+[dependencies]
+stdlib = "*"
+str2real = { git = "https://github.com/Carltoffel/Fortran-String-to-Real" }
+
 [[test]]
 name = "check"
 source-dir = "test"

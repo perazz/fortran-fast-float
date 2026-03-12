@@ -4,6 +4,8 @@ program benchmark_compare
     use fast_float_module, only: FFC_OUTCOME_OK, ffc_parse_double
     use fast_float_module, only: ffc_parse_double_range_sub, ffc_result
     use ffc_c_bridge, only: benchmark_ffc_lines_c, ffc_parse_double_c
+    use str2real_m, only: str2real
+    use stdlib_str2num, only: to_num
     implicit none(type, external)
 
     type :: benchmark_line
@@ -180,11 +182,12 @@ contains
         integer, intent(in) :: nlines, volume, repeat_count
 
         real(real64) :: answer, checksum_c, checksum_c_loop, checksum_f
-        real(real64) :: checksum_f_range_sub
-        real(real64) :: avg_ns_c, avg_ns_c_loop, avg_ns_f, elapsed_ns
+        real(real64) :: checksum_f_range_sub, checksum_stdlib, checksum_str2real
+        real(real64) :: avg_ns_c, avg_ns_c_loop, avg_ns_f, avg_ns_stdlib, avg_ns_str2real, elapsed_ns
         real(real64) :: avg_ns_f_range_sub
-        real(real64) :: min_ns_c, min_ns_c_loop, min_ns_f, min_ns_f_range_sub, volume_mb
-        real(real64) :: x_f
+        real(real64) :: min_ns_c, min_ns_c_loop, min_ns_f, min_ns_f_range_sub
+        real(real64) :: min_ns_stdlib, min_ns_str2real, volume_mb
+        real(real64) :: x_f, x_stdlib, x_str2real
         real(c_double) :: x_c
         integer :: i, r
         integer(c_int32_t) :: c_outcome
@@ -194,14 +197,20 @@ contains
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
         min_ns_f = huge(1.0_real64)
         min_ns_f_range_sub = huge(1.0_real64)
+        min_ns_stdlib = huge(1.0_real64)
+        min_ns_str2real = huge(1.0_real64)
         min_ns_c = huge(1.0_real64)
         min_ns_c_loop = huge(1.0_real64)
         avg_ns_f = 0.0_real64
         avg_ns_f_range_sub = 0.0_real64
+        avg_ns_stdlib = 0.0_real64
+        avg_ns_str2real = 0.0_real64
         avg_ns_c = 0.0_real64
         avg_ns_c_loop = 0.0_real64
         checksum_f = 0.0_real64
         checksum_f_range_sub = 0.0_real64
+        checksum_stdlib = 0.0_real64
+        checksum_str2real = 0.0_real64
         checksum_c = 0.0_real64
         checksum_c_loop = 0.0_real64
 
@@ -246,6 +255,37 @@ contains
             answer = 0.0_real64
             call system_clock(count=count_start)
             do i = 1, nlines
+                x_stdlib = 0.0_real64
+                x_stdlib = to_num(lines(i)%text, x_stdlib)
+                if (x_stdlib > answer) answer = x_stdlib
+            end do
+            call system_clock(count=count_end)
+            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
+            avg_ns_stdlib = avg_ns_stdlib + elapsed_ns
+            if (elapsed_ns < min_ns_stdlib) min_ns_stdlib = elapsed_ns
+            checksum_stdlib = answer
+        end do
+        avg_ns_stdlib = avg_ns_stdlib / real(repeat_count, real64)
+
+        do r = 1, repeat_count
+            answer = 0.0_real64
+            call system_clock(count=count_start)
+            do i = 1, nlines
+                x_str2real = str2real(lines(i)%text)
+                if (x_str2real > answer) answer = x_str2real
+            end do
+            call system_clock(count=count_end)
+            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
+            avg_ns_str2real = avg_ns_str2real + elapsed_ns
+            if (elapsed_ns < min_ns_str2real) min_ns_str2real = elapsed_ns
+            checksum_str2real = answer
+        end do
+        avg_ns_str2real = avg_ns_str2real / real(repeat_count, real64)
+
+        do r = 1, repeat_count
+            answer = 0.0_real64
+            call system_clock(count=count_start)
+            do i = 1, nlines
                 call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), x_c, c_outcome)
                 if (c_outcome /= FFC_OUTCOME_OK) cycle
                 if (real(x_c, real64) > answer) answer = real(x_c, real64)
@@ -274,10 +314,14 @@ contains
         write(output_unit, "(a,i0,a,f0.6,a)") "# lines=", nlines, " volume=", volume_mb, " MB"
         call print_result("fortran (fast_float_module)", volume_mb, nlines, min_ns_f, avg_ns_f)
         call print_result("fortran (range sub)", volume_mb, nlines, min_ns_f_range_sub, avg_ns_f_range_sub)
+        call print_result("fortran (stdlib to_num)", volume_mb, nlines, min_ns_stdlib, avg_ns_stdlib)
+        call print_result("fortran (str2real)", volume_mb, nlines, min_ns_str2real, avg_ns_str2real)
         call print_result("c (ffc.h, line loop)", volume_mb, nlines, min_ns_c_loop, avg_ns_c_loop)
         call print_result("c (ffc.h)", volume_mb, nlines, min_ns_c, avg_ns_c)
         write(output_unit, "(a,z16.16)") "fortran checksum bits = ", transfer(checksum_f, 0_int64)
         write(output_unit, "(a,z16.16)") "fortran range subbits = ", transfer(checksum_f_range_sub, 0_int64)
+        write(output_unit, "(a,z16.16)") "stdlib checksum bits  = ", transfer(checksum_stdlib, 0_int64)
+        write(output_unit, "(a,z16.16)") "str2real checksum bits= ", transfer(checksum_str2real, 0_int64)
         write(output_unit, "(a,z16.16)") "c loop checksum bits  = ", transfer(checksum_c_loop, 0_int64)
         write(output_unit, "(a,z16.16)") "c checksum bits       = ", transfer(checksum_c, 0_int64)
         write(output_unit, "(a,f8.3,a)") "speed ratio c/fortran = ", min_ns_f / min_ns_c, "x"
