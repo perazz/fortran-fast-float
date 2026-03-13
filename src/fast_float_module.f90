@@ -34,7 +34,7 @@ module fast_float_module
     public :: FFC_OUTCOME_OK, FFC_OUTCOME_INVALID_INPUT
     public :: FFC_OUTCOME_OUT_OF_RANGE
     public :: FFC_PRESET_GENERAL, FFC_PRESET_JSON
-    public :: FFC_PRESET_FORTRAN
+    public :: FFC_PRESET_FORTRAN, DEFAULT_PARSING
 
     interface ffc_parse_double
         module procedure ffc_pd, ffc_pd_opts
@@ -82,14 +82,16 @@ module fast_float_module
     integer, private :: i
 
     type :: ffc_result
-        integer :: pos = 0
-        integer(int8) :: outcome = FFC_OUTCOME_OK
+        integer :: pos 
+        integer(int8) :: outcome 
     end type ffc_result
 
     type :: ffc_parse_options
         integer(int64) :: format = FFC_PRESET_GENERAL
         character :: decimal_point = '.'
     end type ffc_parse_options
+    
+    type(ffc_parse_options), parameter :: DEFAULT_PARSING = ffc_parse_options(FFC_PRESET_GENERAL,'.')
 
     type :: u128
         integer(int64) :: lo = 0_int64
@@ -2044,16 +2046,15 @@ contains
         type(ffc_result), intent(out) :: res
         integer :: p, pp
         logical :: ms
-        res%pos=p0
         if (p0>la) then
-            res%outcome=FFC_OUTCOME_INVALID_INPUT
+            res = ffc_result(p0,FFC_OUTCOME_INVALID_INPUT)
             return
         else
-            res%outcome=FFC_OUTCOME_OK
+            res = ffc_result(p0,FFC_OUTCOME_OK)
         end if
         p=p0
-        ms=(str(p:p)=='-')
-        if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
+        ms=str(p:p)=='-'
+        if (ms.or.str(p:p)=='+') p=p+1
         if (la-p+1>=3) then
             if (cc3(str(p:),'nan')) then
                 p=p+3; res%pos=p
@@ -2967,27 +2968,24 @@ contains
     end subroutine fchars_32
 
     ! ===== PUBLIC =====
-    function ffc_pd(str, out) result(res)
+    type(ffc_result) function ffc_pd(str, out) result(res)
         character(*), intent(in) :: str
         real(real64), intent(out) :: out
-        type(ffc_result) :: res
-        call ffc_parse_double_range_sub(str, 1, len(str), out, res)
+        call ffc_parse_double_range_sub(str, 1, len(str), out, res, DEFAULT_PARSING)
     end function ffc_pd
 
-    function ffc_pd_opts(str, out, options) result(res)
+    type(ffc_result) function ffc_pd_opts(str, out, options) result(res)
         character(*), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_parse_options), intent(in) :: options
-        type(ffc_result) :: res
         call ffc_parse_double_range_sub(str, 1, len(str), out, res, options)
     end function ffc_pd_opts
 
-    function ffc_pdr(str, first, last, out) result(res)
+    type(ffc_result) function ffc_pdr(str, first, last, out) result(res)
         character(*), intent(in) :: str
         integer, intent(in) :: first, last
         real(real64), intent(out) :: out
-        type(ffc_result) :: res
-        call ffc_parse_double_range_sub(str, first, last, out, res)
+        call ffc_parse_double_range_sub(str, first, last, out, res, DEFAULT_PARSING)
     end function ffc_pdr
 
     function ffc_pdr_opts(str, first, last, out, options) result(res)
@@ -2999,22 +2997,16 @@ contains
         call ffc_parse_double_range_sub(str, first, last, out, res, options)
     end function ffc_pdr_opts
 
-    elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
+    elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, o)
         integer, intent(in), value :: first, last
         character(len=*), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
-        type(ffc_parse_options), intent(in), optional :: options
-        type(ffc_parse_options) :: o
+        type(ffc_parse_options), intent(in) :: o
         type(fparsed) :: p
         integer :: ps
         logical :: bj, fast_ok
         
-        if (present(options)) then
-            o=options
-        else
-            o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
-        end if
         ps = first
         if (iand(o%format,FMT_SKIP)/=0) then
             do while (ps<=last)
@@ -3046,7 +3038,7 @@ contains
         character(*), intent(in) :: str
         real(real32), intent(out) :: out
         type(ffc_result) :: res
-        res = ffc_pf_opts(str, out, ffc_parse_options(FFC_PRESET_GENERAL, '.'))
+        res = ffc_pf_opts(str, out, DEFAULT_PARSING)
     end function ffc_pf
 
     function ffc_pf_opts(str, out, options) result(res)

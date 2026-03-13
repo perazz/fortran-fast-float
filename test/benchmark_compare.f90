@@ -1,7 +1,7 @@
 program benchmark_compare
     use iso_c_binding, only: c_char, c_double, c_int32_t, c_null_char, c_size_t
     use iso_fortran_env, only: int64, output_unit, real64
-    use fast_float_module, only: FFC_OUTCOME_OK, ffc_parse_double
+    use fast_float_module, only: FFC_OUTCOME_OK, ffc_parse_double, DEFAULT_PARSING
     use fast_float_module, only: ffc_parse_double_range_sub, ffc_result
     use ffc_c_bridge, only: benchmark_ffc_lines_c, ffc_parse_double_c
     use str2real_m, only: str2real
@@ -181,38 +181,31 @@ contains
         integer(c_size_t), intent(in) :: offsets(:), lengths(:)
         integer, intent(in) :: nlines, volume, repeat_count
 
-        real(real64) :: answer, checksum_c, checksum_c_loop, checksum_f
-        real(real64) :: checksum_f_range_sub, checksum_stdlib, checksum_str2real
-        real(real64) :: avg_ns_c, avg_ns_c_loop, avg_ns_f, avg_ns_stdlib, avg_ns_str2real, elapsed_ns
-        real(real64) :: avg_ns_f_range_sub
-        real(real64) :: min_ns_c, min_ns_c_loop, min_ns_f, min_ns_f_range_sub
-        real(real64) :: min_ns_stdlib, min_ns_str2real, volume_mb
-        real(real64) :: x_f, x_stdlib, x_str2real
+        ! Benchmark case indices
+        integer, parameter :: B_FFC = 1, B_RSUB = 2, B_STDLIB = 3
+        integer, parameter :: B_S2R = 4, B_CLOOP = 5, B_C = 6, NCASES = 6
+
+        character(len=40), parameter :: labels(NCASES) = [ character(len=40) :: &
+            "fortran (fast_float_module)", "fortran (range sub)", &
+            "fortran (stdlib to_num)", "fortran (str2real)", &
+            "c (ffc.h, line loop)", "c (ffc.h)" ]
+        character(len=24), parameter :: cksum_labels(NCASES) = [ character(len=24) :: &
+            "fortran checksum bits = ", "fortran range subbits = ", &
+            "stdlib checksum bits  = ", "str2real checksum bits= ", &
+            "c loop checksum bits  = ", "c checksum bits       = " ]
+
+        real(real64) :: min_ns(NCASES), avg_ns(NCASES), checksum(NCASES)
+        real(real64) :: answer, elapsed_ns, volume_mb, x_f, x_stdlib, x_str2real
         real(c_double) :: x_c
-        integer :: i, r
+        integer :: i, k, r
         integer(c_int32_t) :: c_outcome
         integer(int64) :: count_end, count_rate, count_start
         type(ffc_result) :: f_result
 
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
-        min_ns_f = huge(1.0_real64)
-        min_ns_f_range_sub = huge(1.0_real64)
-        min_ns_stdlib = huge(1.0_real64)
-        min_ns_str2real = huge(1.0_real64)
-        min_ns_c = huge(1.0_real64)
-        min_ns_c_loop = huge(1.0_real64)
-        avg_ns_f = 0.0_real64
-        avg_ns_f_range_sub = 0.0_real64
-        avg_ns_stdlib = 0.0_real64
-        avg_ns_str2real = 0.0_real64
-        avg_ns_c = 0.0_real64
-        avg_ns_c_loop = 0.0_real64
-        checksum_f = 0.0_real64
-        checksum_f_range_sub = 0.0_real64
-        checksum_stdlib = 0.0_real64
-        checksum_str2real = 0.0_real64
-        checksum_c = 0.0_real64
-        checksum_c_loop = 0.0_real64
+        min_ns = huge(1.0_real64)
+        avg_ns = 0.0_real64
+        checksum = 0.0_real64
 
         call system_clock(count_rate=count_rate)
         do r = 1, repeat_count
@@ -224,12 +217,9 @@ contains
                 if (x_f > answer) answer = x_f
             end do
             call system_clock(count=count_end)
-            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
-            avg_ns_f = avg_ns_f + elapsed_ns
-            if (elapsed_ns < min_ns_f) min_ns_f = elapsed_ns
-            checksum_f = answer
+            call tally(B_FFC, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
         end do
-        avg_ns_f = avg_ns_f / real(repeat_count, real64)
 
         do r = 1, repeat_count
             answer = 0.0_real64
@@ -239,17 +229,14 @@ contains
                     packed_text, &
                     int(offsets(i), kind=kind(i)) + 1, &
                     int(offsets(i) + lengths(i), kind=kind(i)), &
-                    x_f, f_result)
+                    x_f, f_result, DEFAULT_PARSING)
                 if (f_result%outcome /= FFC_OUTCOME_OK) cycle
                 if (x_f > answer) answer = x_f
             end do
             call system_clock(count=count_end)
-            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
-            avg_ns_f_range_sub = avg_ns_f_range_sub + elapsed_ns
-            if (elapsed_ns < min_ns_f_range_sub) min_ns_f_range_sub = elapsed_ns
-            checksum_f_range_sub = answer
+            call tally(B_RSUB, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
         end do
-        avg_ns_f_range_sub = avg_ns_f_range_sub / real(repeat_count, real64)
 
         do r = 1, repeat_count
             answer = 0.0_real64
@@ -260,12 +247,9 @@ contains
                 if (x_stdlib > answer) answer = x_stdlib
             end do
             call system_clock(count=count_end)
-            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
-            avg_ns_stdlib = avg_ns_stdlib + elapsed_ns
-            if (elapsed_ns < min_ns_stdlib) min_ns_stdlib = elapsed_ns
-            checksum_stdlib = answer
+            call tally(B_STDLIB, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
         end do
-        avg_ns_stdlib = avg_ns_stdlib / real(repeat_count, real64)
 
         do r = 1, repeat_count
             answer = 0.0_real64
@@ -275,12 +259,9 @@ contains
                 if (x_str2real > answer) answer = x_str2real
             end do
             call system_clock(count=count_end)
-            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
-            avg_ns_str2real = avg_ns_str2real + elapsed_ns
-            if (elapsed_ns < min_ns_str2real) min_ns_str2real = elapsed_ns
-            checksum_str2real = answer
+            call tally(B_S2R, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
         end do
-        avg_ns_str2real = avg_ns_str2real / real(repeat_count, real64)
 
         do r = 1, repeat_count
             answer = 0.0_real64
@@ -291,41 +272,43 @@ contains
                 if (real(x_c, real64) > answer) answer = real(x_c, real64)
             end do
             call system_clock(count=count_end)
-            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
-            avg_ns_c_loop = avg_ns_c_loop + elapsed_ns
-            if (elapsed_ns < min_ns_c_loop) min_ns_c_loop = elapsed_ns
-            checksum_c_loop = answer
+            call tally(B_CLOOP, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
         end do
-        avg_ns_c_loop = avg_ns_c_loop / real(repeat_count, real64)
 
         do r = 1, repeat_count
             call system_clock(count=count_start)
             call benchmark_ffc_lines_c(packed_data, offsets, lengths, nlines, x_c, c_outcome)
             call system_clock(count=count_end)
-            elapsed_ns = real(count_end - count_start, real64) / real(count_rate, real64) * 1.0e9_real64
-            avg_ns_c = avg_ns_c + elapsed_ns
-            if (elapsed_ns < min_ns_c) min_ns_c = elapsed_ns
-            checksum_c = real(x_c, real64)
+            call tally(B_C, real(x_c, real64), count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
         end do
-        avg_ns_c = avg_ns_c / real(repeat_count, real64)
+
+        avg_ns = avg_ns / real(repeat_count, real64)
 
         write(output_unit, "(a)") ""
         write(output_unit, "(a)") "# file=" // trim(name)
         write(output_unit, "(a,i0,a,f0.6,a)") "# lines=", nlines, " volume=", volume_mb, " MB"
-        call print_result("fortran (fast_float_module)", volume_mb, nlines, min_ns_f, avg_ns_f)
-        call print_result("fortran (range sub)", volume_mb, nlines, min_ns_f_range_sub, avg_ns_f_range_sub)
-        call print_result("fortran (stdlib to_num)", volume_mb, nlines, min_ns_stdlib, avg_ns_stdlib)
-        call print_result("fortran (str2real)", volume_mb, nlines, min_ns_str2real, avg_ns_str2real)
-        call print_result("c (ffc.h, line loop)", volume_mb, nlines, min_ns_c_loop, avg_ns_c_loop)
-        call print_result("c (ffc.h)", volume_mb, nlines, min_ns_c, avg_ns_c)
-        write(output_unit, "(a,z16.16)") "fortran checksum bits = ", transfer(checksum_f, 0_int64)
-        write(output_unit, "(a,z16.16)") "fortran range subbits = ", transfer(checksum_f_range_sub, 0_int64)
-        write(output_unit, "(a,z16.16)") "stdlib checksum bits  = ", transfer(checksum_stdlib, 0_int64)
-        write(output_unit, "(a,z16.16)") "str2real checksum bits= ", transfer(checksum_str2real, 0_int64)
-        write(output_unit, "(a,z16.16)") "c loop checksum bits  = ", transfer(checksum_c_loop, 0_int64)
-        write(output_unit, "(a,z16.16)") "c checksum bits       = ", transfer(checksum_c, 0_int64)
-        write(output_unit, "(a,f8.3,a)") "speed ratio c/fortran = ", min_ns_f / min_ns_c, "x"
+        do k = 1, NCASES
+            call print_result(labels(k), volume_mb, nlines, min_ns(k), avg_ns(k))
+        end do
+        do k = 1, NCASES
+            write(output_unit, "(a,z16.16)") cksum_labels(k), transfer(checksum(k), 0_int64)
+        end do
+        write(output_unit, "(a,f8.3,a)") "speed ratio c/fortran = ", min_ns(B_FFC) / min_ns(B_C), "x"
     end subroutine run_benchmark
+
+    subroutine tally(idx, cksum_val, t0, t1, rate, elapsed_ns, avg_ns, min_ns, checksum)
+        integer, intent(in) :: idx
+        real(real64), intent(in) :: cksum_val
+        integer(int64), intent(in) :: t0, t1, rate
+        real(real64), intent(out) :: elapsed_ns
+        real(real64), intent(inout) :: avg_ns(:), min_ns(:), checksum(:)
+        elapsed_ns = real(t1 - t0, real64) / real(rate, real64) * 1.0e9_real64
+        avg_ns(idx) = avg_ns(idx) + elapsed_ns
+        if (elapsed_ns < min_ns(idx)) min_ns(idx) = elapsed_ns
+        checksum(idx) = cksum_val
+    end subroutine tally
 
     subroutine print_result(name, volume_mb, nlines, min_ns, avg_ns)
         character(*), intent(in) :: name
