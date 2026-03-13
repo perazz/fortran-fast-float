@@ -1628,7 +1628,7 @@ contains
     !> Bails out to pns for: scientific notation, Fortran 'd/D' format,
     !> custom decimal point, or numbers with >19 total digits.
     pure elemental subroutine try_fast(first, last, str, opts, bj, ok, a)
-        integer, intent(in) :: first, last
+        integer, intent(in), value :: first, last
         character(len=*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
@@ -1832,7 +1832,7 @@ contains
     end function p8sw
 
     pure elemental subroutine lp8(pos, last, str, i)
-        integer, intent(in) :: last
+        integer, intent(in), value :: last
         integer, intent(inout) :: pos
         character(len=*), intent(in) :: str
         integer(int64), intent(inout) :: i
@@ -1873,7 +1873,7 @@ contains
 
     ! ===== Parse number string =====
     elemental subroutine pns(first, last, str, opts, bj, a)
-        integer, intent(in) :: first, last
+        integer, intent(in), value :: first, last
         character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
@@ -2027,7 +2027,7 @@ contains
     ! ===== Parse inf/nan =====
     elemental subroutine pin_32(str,p0,la,vf,res)
         character(*), intent(in) :: str
-        integer, intent(in) :: p0, la
+        integer, intent(in), value :: p0, la
         real(real32), intent(out) :: vf
         type(ffc_result), intent(out) :: res
         integer :: p, pp
@@ -2073,7 +2073,7 @@ contains
 
     elemental subroutine pin_64(str,p0,la,vd,res)
         character(*), intent(in) :: str
-        integer, intent(in) :: p0, la
+        integer, intent(in), value :: p0, la
         real(real64), intent(out) :: vd
         type(ffc_result), intent(out) :: res
         integer :: p,pp
@@ -2751,7 +2751,7 @@ contains
     pure elemental subroutine skz(str,p,la)
         character(*), intent(in) :: str
         integer, intent(inout) :: p
-        integer, intent(in) :: la
+        integer, intent(in), value :: la
         do while (p<=la)
             if (str(p:p)/='0') return; p=p+1
         end do
@@ -2960,12 +2960,7 @@ contains
         real(real64), intent(out) :: out
         type(ffc_parse_options), intent(in), optional :: options
         type(ffc_result) :: res
-        type(ffc_parse_options) :: o
-        type(fparsed) :: p
-        integer :: ps,la; logical :: bj, fast_ok; real(real32) :: dff
-
-        la = len(str)
-        call ffc_parse_double_range_sub(str, 1, la, out, res, options)
+        call ffc_parse_double_range_sub(str, 1, len(str), out, res, options)
     end function ffc_parse_double
 
     function ffc_parse_double_range(str, first, last, out, options) result(res)
@@ -3030,7 +3025,6 @@ contains
         type(fparsed) :: p
         integer :: ps,la; logical :: bj
 
-        out=0.0_real32
         if (present(options)) then; o=options
         else; o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
         end if
@@ -3041,19 +3035,20 @@ contains
             end do
         end if
         if (ps>la) then
-            res%outcome=FFC_OUTCOME_INVALID_INPUT
-            res%pos=ps; return
+            res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+            out = 0.0_real32
+            return
         end if
         bj=iand(o%format,FMT_JSON)/=0
         call pns(ps,la,str,o,bj,p)
         if (.not.p%valid) then
             if (iand(o%format,FMT_NOIN)/=0) then
-                res%outcome=FFC_OUTCOME_INVALID_INPUT
-                res%pos=ps; return
+                res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+                out = 0.0_real32
             else
                 call pin_32(str,ps,la,out,res)
-                return
             end if
+            return
         end if
         call fchars(str,p,out,FF,res)
     end function ffc_parse_float
