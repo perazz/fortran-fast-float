@@ -36,6 +36,18 @@ module fast_float_module
     public :: FFC_PRESET_GENERAL, FFC_PRESET_JSON
     public :: FFC_PRESET_FORTRAN
 
+    interface ffc_parse_double
+        module procedure ffc_pd, ffc_pd_opts
+    end interface ffc_parse_double
+
+    interface ffc_parse_double_range
+        module procedure ffc_pdr, ffc_pdr_opts
+    end interface ffc_parse_double_range
+
+    interface ffc_parse_float
+        module procedure ffc_pf, ffc_pf_opts
+    end interface ffc_parse_float
+
     integer(int8), parameter :: FFC_OUTCOME_OK            = 0
     integer(int8), parameter :: FFC_OUTCOME_INVALID_INPUT = 1
     integer(int8), parameter :: FFC_OUTCOME_OUT_OF_RANGE  = 2
@@ -2955,27 +2967,37 @@ contains
     end subroutine fchars_32
 
     ! ===== PUBLIC =====
-    function ffc_parse_double(str, out, options) result(res)
+    function ffc_pd(str, out) result(res)
         character(*), intent(in) :: str
         real(real64), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: options
         type(ffc_result) :: res
-        type(ffc_parse_options) :: o
-        type(fparsed) :: p
-        integer :: ps,la; logical :: bj, fast_ok; real(real32) :: dff
+        call ffc_parse_double_range_sub(str, 1, len(str), out, res)
+    end function ffc_pd
 
-        la = len(str)
-        call ffc_parse_double_range_sub(str, 1, la, out, res, options)
-    end function ffc_parse_double
+    function ffc_pd_opts(str, out, options) result(res)
+        character(*), intent(in) :: str
+        real(real64), intent(out) :: out
+        type(ffc_parse_options), intent(in) :: options
+        type(ffc_result) :: res
+        call ffc_parse_double_range_sub(str, 1, len(str), out, res, options)
+    end function ffc_pd_opts
 
-    function ffc_parse_double_range(str, first, last, out, options) result(res)
+    function ffc_pdr(str, first, last, out) result(res)
         character(*), intent(in) :: str
         integer, intent(in) :: first, last
         real(real64), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: options
+        type(ffc_result) :: res
+        call ffc_parse_double_range_sub(str, first, last, out, res)
+    end function ffc_pdr
+
+    function ffc_pdr_opts(str, first, last, out, options) result(res)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        real(real64), intent(out) :: out
+        type(ffc_parse_options), intent(in) :: options
         type(ffc_result) :: res
         call ffc_parse_double_range_sub(str, first, last, out, res, options)
-    end function ffc_parse_double_range
+    end function ffc_pdr_opts
 
     elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
         integer, intent(in), value :: first, last
@@ -3020,22 +3042,23 @@ contains
         call fchars(str,p,out,DF,res)
     end subroutine ffc_parse_double_range_sub
 
-    function ffc_parse_float(str,out,options) result(res)
+    function ffc_pf(str, out) result(res)
         character(*), intent(in) :: str
         real(real32), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: &
-            options
         type(ffc_result) :: res
-        type(ffc_parse_options) :: o
-        type(fparsed) :: p
-        integer :: ps,la; logical :: bj
+        res = ffc_pf_opts(str, out, ffc_parse_options(FFC_PRESET_GENERAL, '.'))
+    end function ffc_pf
 
-        out=0.0_real32
-        if (present(options)) then; o=options
-        else; o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
-        end if
+    function ffc_pf_opts(str, out, options) result(res)
+        character(*), intent(in) :: str
+        real(real32), intent(out) :: out
+        type(ffc_parse_options), intent(in) :: options
+        type(ffc_result) :: res
+        type(fparsed) :: p
+        integer :: ps, la; logical :: bj
+
         la=len(str); ps=1
-        if (iand(o%format,FMT_SKIP)/=0) then
+        if (iand(options%format,FMT_SKIP)/=0) then
             do while (ps<=la)
                 if (.not.issp(str(ps:ps))) exit; ps=ps+1
             end do
@@ -3044,10 +3067,10 @@ contains
             res%outcome=FFC_OUTCOME_INVALID_INPUT
             res%pos=ps; return
         end if
-        bj=iand(o%format,FMT_JSON)/=0
-        call pns(ps,la,str,o,bj,p)
+        bj=iand(options%format,FMT_JSON)/=0
+        call pns(ps,la,str,options,bj,p)
         if (.not.p%valid) then
-            if (iand(o%format,FMT_NOIN)/=0) then
+            if (iand(options%format,FMT_NOIN)/=0) then
                 res%outcome=FFC_OUTCOME_INVALID_INPUT
                 res%pos=ps; return
             else
@@ -3056,7 +3079,7 @@ contains
             end if
         end if
         call fchars(str,p,out,FF,res)
-    end function ffc_parse_float
+    end function ffc_pf_opts
 
     function ffc_parse_i64(str,base,out) result(res)
         character(*), intent(in) :: str
