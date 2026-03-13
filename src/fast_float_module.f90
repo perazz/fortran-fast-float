@@ -36,10 +36,27 @@ module fast_float_module
     public :: FFC_PRESET_GENERAL, FFC_PRESET_JSON
     public :: FFC_PRESET_FORTRAN
 
+    interface ffc_parse_double
+        module procedure ffc_pd, ffc_pd_opts
+    end interface ffc_parse_double
+
+    interface ffc_parse_double_range
+        module procedure ffc_pdr, ffc_pdr_opts
+    end interface ffc_parse_double_range
+
+    interface ffc_parse_double_range_sub
+        module procedure ffc_pdrs, ffc_pdrs_opts
+    end interface ffc_parse_double_range_sub
+
+    interface ffc_parse_float
+        module procedure ffc_pf, ffc_pf_opts
+    end interface ffc_parse_float
+
     integer(int8), parameter :: FFC_OUTCOME_OK            = 0
     integer(int8), parameter :: FFC_OUTCOME_INVALID_INPUT = 1
     integer(int8), parameter :: FFC_OUTCOME_OUT_OF_RANGE  = 2
 
+    ! Formatted parsing
     integer(int64), parameter :: FMT_SCI  = ishft(1_int64, 0)
     integer(int64), parameter :: FMT_FIX  = ishft(1_int64, 2)
     integer(int64), parameter :: FMT_NOIN = ishft(1_int64, 4)
@@ -47,13 +64,9 @@ module fast_float_module
     integer(int64), parameter :: FMT_FORT = ishft(1_int64, 6)
     integer(int64), parameter :: FMT_PLUS = ishft(1_int64, 7)
     integer(int64), parameter :: FMT_SKIP = ishft(1_int64, 8)
-
-    integer(int64), parameter :: FFC_PRESET_GENERAL = &
-        ior(FMT_FIX, FMT_SCI)
-    integer(int64), parameter :: FFC_PRESET_JSON = &
-        ior(ior(FMT_JSON,FFC_PRESET_GENERAL),FMT_NOIN)
-    integer(int64), parameter :: FFC_PRESET_FORTRAN = &
-        ior(FMT_FORT, FFC_PRESET_GENERAL)
+    integer(int64), parameter :: FFC_PRESET_GENERAL = ior(FMT_FIX, FMT_SCI)
+    integer(int64), parameter :: FFC_PRESET_JSON    = ior(ior(FMT_JSON,FFC_PRESET_GENERAL),FMT_NOIN)
+    integer(int64), parameter :: FFC_PRESET_FORTRAN = ior(FMT_FORT, FFC_PRESET_GENERAL)
 
     integer(int32), parameter :: INVALID_AM = -32768_int32
     integer(int64), parameter :: SB64 = ishft(1_int64, 63)
@@ -70,21 +83,25 @@ module fast_float_module
     integer, private :: i
 
     type :: ffc_result
-        integer :: pos = 0
-        integer(int8) :: outcome = FFC_OUTCOME_OK
+        integer       :: pos = 0
+        integer(int8) :: outcome = FFC_OUTCOME_OK 
     end type ffc_result
 
     type :: ffc_parse_options
         integer(int64) :: format = FFC_PRESET_GENERAL
         character :: decimal_point = '.'
     end type ffc_parse_options
+    
+    type(ffc_parse_options), parameter :: DEFAULT_PARSING = ffc_parse_options(FFC_PRESET_GENERAL,'.')
 
     type :: u128
+        sequence
         integer(int64) :: lo = 0_int64
         integer(int64) :: hi = 0_int64
     end type u128
 
     type :: ifmt
+        sequence
         integer :: meb, mine, infp, sidx
         integer :: minrte, maxrte, minfp, maxfp
         integer(int64) :: maxm, emask, mmask, hbm
@@ -112,6 +129,7 @@ module fast_float_module
         smp10=-64, lgp10=38, maxd=114)
 
     type :: fparsed
+        sequence
         integer(int64) :: exponent = 0
         integer(int64) :: mantissa = 0
         integer :: lastm = 0
@@ -1641,10 +1659,9 @@ contains
         ok = .false.
         a = fparsed()
         if (first > last) return
-        if (opts%decimal_point /= '.') return
-        if (iand(opts%format, FMT_FORT) /= 0) return
-        if (iand(opts%format, FMT_SKIP) /= 0) return
-        if (iand(opts%format, FMT_FIX) == 0) return
+        if (iand(opts%format, ior(FMT_FORT, FMT_SKIP)) /= 0 .or. &
+            iand(opts%format, FMT_FIX) == 0 .or. &
+            opts%decimal_point /= '.') return
 
         if (str(first:first) == '-') then
             a%neg = .true.
@@ -2034,15 +2051,15 @@ contains
         type(ffc_result), intent(out) :: res
         integer :: pp
         logical :: ms
-        res%pos=p
+        
         if (p>la) then
-            res%outcome=FFC_OUTCOME_INVALID_INPUT
+            res = ffc_result(p, FFC_OUTCOME_INVALID_INPUT)
             return
         else
-            res%outcome=FFC_OUTCOME_OK
+            res = ffc_result(p, FFC_OUTCOME_OK)
         end if
-        ms=(str(p:p)=='-')
-        if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
+        ms = str(p:p)=='-'
+        if (ms.or.str(p:p)=='+') p=p+1
         if (la-p+1>=3) then
             if (cc3(str(p:),'nan')) then
                 p=p+3; res%pos=p
@@ -2053,11 +2070,14 @@ contains
                         pp=p+1
                         do while (pp<=la)
                             if (str(pp:pp)==')') then
-                                res%pos=pp+1; exit
-                            end if; pp=pp+1
+                                res%pos=pp+1
+                                exit
+                            end if
+                            pp=pp+1
                         end do
                     end if
-                end if; return
+                end if
+                return
             end if
             if (cc3(str(p:),'inf')) then
                 res%pos=p+3
@@ -2082,10 +2102,10 @@ contains
         logical :: ms
         res%pos=p
         if (p>la) then
-            res%outcome=FFC_OUTCOME_INVALID_INPUT
+            res = ffc_result(p, FFC_OUTCOME_INVALID_INPUT)
             return
         else
-            res%outcome=FFC_OUTCOME_OK
+            res = ffc_result(p, FFC_OUTCOME_OK)
         end if
         ms=(str(p:p)=='-')
         if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
@@ -2145,16 +2165,15 @@ contains
         end if
     end subroutine cprd
 
-    pure elemental subroutine cflt(q, wi, f, res)
-        integer(int64), intent(in) :: q, wi
+    pure elemental subroutine cflt(q, w, f, res)
+        integer(int64), intent(in) :: q
+        integer(int64), value :: w
         type(ifmt), intent(in) :: f
         type(fam), intent(out) :: res
-        integer(int64) :: w
         integer(int32) :: lz
         type(u128) :: pr
         integer :: ub, sa
 
-        w=wi
         if (w==0.or.q<int(f%smp10,int64)) then
             res=fam(0_int64,0_int32)
             return
@@ -2205,8 +2224,7 @@ contains
             res%power2=res%power2+1
         end if
 
-        res%mantissa=iand(res%mantissa, &
-            not(ishft(1_int64,f%meb)))
+        res%mantissa=iand(res%mantissa, not(ishft(1_int64,f%meb)))
         if (res%power2>=int(f%infp,int32)) then
             res%power2=int(f%infp,int32)
             res%mantissa=0
@@ -2898,8 +2916,7 @@ contains
         type(ffc_result), intent(out) :: res
         type(fam) :: am,ap; logical :: eq, cfok
 
-        res%outcome=FFC_OUTCOME_OK
-        res%pos    =p%lastm
+        res = ffc_result(p%lastm, FFC_OUTCOME_OK)
 
         if (.not.p%tmd) then
             call clfp_64(p%mantissa,p%exponent,p%neg,vd,f,cfok)
@@ -2931,8 +2948,7 @@ contains
         type(ffc_result), intent(out) :: res
         type(fam) :: am,ap; logical :: eq, cfok
 
-        res%outcome=FFC_OUTCOME_OK
-        res%pos    =p%lastm
+        res = ffc_result(p%lastm, FFC_OUTCOME_OK)
 
         if (.not.p%tmd) then
             call clfp_32(p%mantissa,p%exponent,p%neg,vf,f,cfok)
@@ -2956,40 +2972,58 @@ contains
     end subroutine fchars_32
 
     ! ===== PUBLIC =====
-    function ffc_parse_double(str, out, options) result(res)
+
+    function ffc_pd(str, out) result(res)
         character(*), intent(in) :: str
         real(real64), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: options
         type(ffc_result) :: res
-        call ffc_parse_double_range_sub(str, 1, len(str), out, res, options)
-    end function ffc_parse_double
+        call ffc_pdrs_opts(str, 1, len(str), out, res, DEFAULT_PARSING)
+    end function ffc_pd
 
-    function ffc_parse_double_range(str, first, last, out, options) result(res)
+    function ffc_pd_opts(str, out, options) result(res)
+        character(*), intent(in) :: str
+        real(real64), intent(out) :: out
+        type(ffc_parse_options), intent(in) :: options
+        type(ffc_result) :: res
+        call ffc_pdrs_opts(str, 1, len(str), out, res, options)
+    end function ffc_pd_opts
+
+    function ffc_pdr(str, first, last, out) result(res)
         character(*), intent(in) :: str
         integer, intent(in) :: first, last
         real(real64), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: options
         type(ffc_result) :: res
-        call ffc_parse_double_range_sub(str, first, last, out, res, options)
-    end function ffc_parse_double_range
+        call ffc_pdrs_opts(str, first, last, out, res, DEFAULT_PARSING)
+    end function ffc_pdr
 
-    elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
+    function ffc_pdr_opts(str, first, last, out, options) result(res)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        real(real64), intent(out) :: out
+        type(ffc_parse_options), intent(in) :: options
+        type(ffc_result) :: res
+        call ffc_pdrs_opts(str, first, last, out, res, options)
+    end function ffc_pdr_opts
+
+    elemental subroutine ffc_pdrs(str, first, last, out, res)
+        character(len=*), intent(in) :: str
+        integer, intent(in) :: first, last
+        real(real64), intent(out) :: out
+        type(ffc_result), intent(out) :: res
+        call ffc_pdrs_opts(str, first, last, out, res, DEFAULT_PARSING)
+    end subroutine ffc_pdrs
+
+    elemental subroutine ffc_pdrs_opts(str, first, last, out, res, opts)
         integer, value :: first
         integer, intent(in), value :: last
         character(len=*), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
-        type(ffc_parse_options), intent(in), optional :: options
-        type(ffc_parse_options) :: o
+        type(ffc_parse_options), intent(in) :: opts
         type(fparsed) :: p
         logical :: bj, fast_ok
 
-        if (present(options)) then
-            o=options
-        else
-            o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
-        end if
-        if (iand(o%format,FMT_SKIP)/=0) then
+        if (iand(opts%format,FMT_SKIP)/=0) then
             do while (first<=last)
                 if (.not.issp(str(first:first))) exit
                 first=first+1
@@ -2998,38 +3032,40 @@ contains
         if (first>last) then
             res = ffc_result(first,FFC_OUTCOME_INVALID_INPUT)
             out = 0.0_real64
-            return
-        end if
-        bj = iand(o%format,FMT_JSON)/=0
-        call try_fast(first,last,str,o,bj,fast_ok,p)
-        if (.not.fast_ok) call pns(first,last,str,o,bj,p)
-        if (.not.p%valid) then
-            if (iand(o%format,FMT_NOIN)/=0) then
-                res = ffc_result(first,FFC_OUTCOME_INVALID_INPUT)
-                out = 0.0_real64
-            else
-                call pin_64(str,first,last,out,res)
-            end if
-            return
-        end if
-        call fchars(str,p,out,DF,res)
-    end subroutine ffc_parse_double_range_sub
+        else
+            bj = iand(opts%format,FMT_JSON)/=0
+            call try_fast(first,last,str,opts,bj,fast_ok,p)
+            if (.not.fast_ok) call pns(first,last,str,opts,bj,p)
+            if (.not.p%valid) then
+                if (iand(opts%format,FMT_NOIN)/=0) then
+                    res = ffc_result(first,FFC_OUTCOME_INVALID_INPUT)
+                    out = 0.0_real64
+                else
+                    call pin_64(str,first,last,out,res)
+                end if
+                return
+            endif
+            call fchars(str,p,out,DF,res)
+        endif
+    end subroutine ffc_pdrs_opts
 
-    function ffc_parse_float(str,out,options) result(res)
+    function ffc_pf(str,out) result(res)
         character(*), intent(in) :: str
         real(real32), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: &
-            options
         type(ffc_result) :: res
-        type(ffc_parse_options) :: o
+        res = ffc_pf_opts(str,out,DEFAULT_PARSING)
+    end function ffc_pf
+
+    function ffc_pf_opts(str,out,options) result(res)
+        character(*), intent(in) :: str
+        real(real32), intent(out) :: out
+        type(ffc_parse_options), intent(in) :: options
+        type(ffc_result) :: res
         type(fparsed) :: p
         integer :: ps,la; logical :: bj
 
-        if (present(options)) then; o=options
-        else; o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
-        end if
         la=len(str); ps=1
-        if (iand(o%format,FMT_SKIP)/=0) then
+        if (iand(options%format,FMT_SKIP)/=0) then
             do while (ps<=la)
                 if (.not.issp(str(ps:ps))) exit; ps=ps+1
             end do
@@ -3039,10 +3075,10 @@ contains
             out = 0.0_real32
             return
         end if
-        bj=iand(o%format,FMT_JSON)/=0
-        call pns(ps,la,str,o,bj,p)
+        bj=iand(options%format,FMT_JSON)/=0
+        call pns(ps,la,str,options,bj,p)
         if (.not.p%valid) then
-            if (iand(o%format,FMT_NOIN)/=0) then
+            if (iand(options%format,FMT_NOIN)/=0) then
                 res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
                 out = 0.0_real32
             else
@@ -3051,7 +3087,7 @@ contains
             return
         end if
         call fchars(str,p,out,FF,res)
-    end function ffc_parse_float
+    end function ffc_pf_opts
 
     function ffc_parse_i64(str,base,out) result(res)
         character(*), intent(in) :: str
@@ -3062,10 +3098,11 @@ contains
         logical :: ng,hlz
         integer(int64) :: i
 
-        out=0; la=len(str); p=1
+        la=len(str); p=1
         if (p>la.or.base<2.or.base>36) then
-            res%outcome=FFC_OUTCOME_INVALID_INPUT
-            res%pos=p; return
+            res = ffc_result(p, FFC_OUTCOME_INVALID_INPUT)
+            out = 0 
+            return
         end if
         ng = str(p:p)=='-'
         if (ng) p=p+1
@@ -3079,32 +3116,42 @@ contains
             d=c2dg(str(p:p)); if (d>=base) exit
             i=int(base,int64)*i+int(d,int64); p=p+1
         end do
+        
         dc=p-sd
+        
         if (dc==0) then
-            if (hlz) then
-                out=0; res%outcome=FFC_OUTCOME_OK; res%pos=p
+            out = 0
+            if (hlz) then                
+                res = ffc_result(p, FFC_OUTCOME_OK)
             else
-                res%outcome=FFC_OUTCOME_INVALID_INPUT
-                res%pos=1
-            end if; return
+                res = ffc_result(1, FFC_OUTCOME_INVALID_INPUT)
+            end if
+            return
         end if
-        res%pos=p; md=MXDG64(base)
-        if (dc>md) then
-            res%outcome=FFC_OUTCOME_OUT_OF_RANGE; return
-        end if
-        if (dc==md.and.ult(i,MSAFE64(base))) then
-            res%outcome=FFC_OUTCOME_OUT_OF_RANGE; return
+        
+        md=MXDG64(base)
+        if (dc>md .or. (dc==md.and.ult(i,MSAFE64(base)))) then
+            res = ffc_result(p,FFC_OUTCOME_OUT_OF_RANGE)
+            out = 0
+            return
         end if
         if (.not.ng) then
             if (ugt(i,int(z'7FFFFFFFFFFFFFFF',int64))) then
-                res%outcome=FFC_OUTCOME_OUT_OF_RANGE; return
-            end if; out=i
+                out = 0
+                res = ffc_result(p,FFC_OUTCOME_OUT_OF_RANGE)
+                return
+            end if
+            out=i
         else
             if (ugt(i,ishft(1_int64,63))) then
-                res%outcome=FFC_OUTCOME_OUT_OF_RANGE; return
-            end if; out=not(i)+1
+                out = 0
+                res = ffc_result(p,FFC_OUTCOME_OUT_OF_RANGE)
+                return                
+            end if
+            out=not(i)+1
         end if
-        res%outcome=FFC_OUTCOME_OK
+        res = ffc_result(p,FFC_OUTCOME_OK)
+        
     end function ffc_parse_i64
 
     function ffc_parse_i32(str,base,out) result(res)
@@ -3113,12 +3160,17 @@ contains
         integer(int32), intent(out) :: out
         type(ffc_result) :: res
         integer(int64) :: v
-        out=0; res=ffc_parse_i64(str,base,v)
-        if (res%outcome/=FFC_OUTCOME_OK) return
-        if (v>int(z'7FFFFFFF',int64) .or. &
-            v<int(z'FFFFFFFF80000000',int64)) then
-            res%outcome=FFC_OUTCOME_OUT_OF_RANGE; return
-        end if; out=int(v,int32)
+        res=ffc_parse_i64(str,base,v)
+        if (res%outcome/=FFC_OUTCOME_OK) then 
+            out=0
+            return
+        elseif (v>int(z'7FFFFFFF',int64) .or. v <int(z'FFFFFFFF80000000',int64)) then
+            res%outcome=FFC_OUTCOME_OUT_OF_RANGE
+            out = 0
+            return
+        else
+            out=int(v,int32)
+        end if        
     end function ffc_parse_i32
 
 end module fast_float_module
