@@ -2978,44 +2978,44 @@ contains
     end function ffc_parse_double_range
 
     elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
-        integer, intent(in) :: first, last
+        integer, intent(in), value :: first, last
         character(len=*), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
         type(ffc_parse_options), intent(in), optional :: options
         type(ffc_parse_options) :: o
         type(fparsed) :: p
-        integer :: ps,la
+        integer :: ps
         logical :: bj, fast_ok
-
-        out=0.0_real64
+        
         if (present(options)) then
             o=options
         else
             o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
         end if
-        la = last
         ps = first
         if (iand(o%format,FMT_SKIP)/=0) then
-            do while (ps<=la)
-                if (.not.issp(str(ps:ps))) exit; ps=ps+1
+            do while (ps<=last)
+                if (.not.issp(str(ps:ps))) exit
+                ps=ps+1
             end do
         end if
-        if (ps>la) then
-            res%outcome=FFC_OUTCOME_INVALID_INPUT
-            res%pos=ps; return
+        if (ps>last) then
+            res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+            out = 0.0_real64
+            return
         end if
-        bj=iand(o%format,FMT_JSON)/=0
-        call try_fast(ps,la,str,o,bj,fast_ok,p)
-        if (.not.fast_ok) call pns(ps,la,str,o,bj,p)
+        bj = iand(o%format,FMT_JSON)/=0
+        call try_fast(ps,last,str,o,bj,fast_ok,p)
+        if (.not.fast_ok) call pns(ps,last,str,o,bj,p)
         if (.not.p%valid) then
             if (iand(o%format,FMT_NOIN)/=0) then
-                res%outcome=FFC_OUTCOME_INVALID_INPUT
-                res%pos=ps; return
+                res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+                out = 0.0_real64
             else
-                call pin_64(str,ps,la,out,res)
-                return
+                call pin_64(str,ps,last,out,res)                
             end if
+            return
         end if
         call fchars(str,p,out,DF,res)
     end subroutine ffc_parse_double_range_sub
