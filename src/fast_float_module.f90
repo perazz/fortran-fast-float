@@ -21,6 +21,7 @@
 !   *************************************************************
 module fast_float_module
     use iso_fortran_env, only: int8, int32, int64, real32, real64
+    use iso_c_binding, only: c_int128_t
     use ieee_arithmetic
     implicit none(type, external)
     private
@@ -56,46 +57,51 @@ module fast_float_module
 
     integer(int32), parameter :: INVALID_AM = -32768_int32
     integer(int64), parameter :: SB64 = ishft(1_int64, 63)
-    integer(int64), parameter :: M32 = &
-        int(z'00000000FFFFFFFF', int64)
+    integer(int64), parameter :: M32 = int(z'00000000FFFFFFFF', int64)
+
+    ! 128-bit integer support: compile-time detection
+    logical, parameter :: HAS_INT128 = c_int128_t > 0
+    integer, parameter :: IK128 = merge(c_int128_t, int64, HAS_INT128)
+
+    ! Compile-time endianness detection
+    integer(int32), parameter :: ENDIAN_TAG = transfer([1_int8, 0_int8, 0_int8, 0_int8], 0_int32)
+    logical, parameter :: LITTLE_ENDIAN = ENDIAN_TAG == 1_int32
         
     integer, private :: i
 
     type :: ffc_result
-        sequence
         integer :: pos = 0
         integer(int8) :: outcome = FFC_OUTCOME_OK
     end type ffc_result
 
     type :: ffc_parse_options
-        sequence
         integer(int64) :: format = FFC_PRESET_GENERAL
         character :: decimal_point = '.'
     end type ffc_parse_options
 
     type :: u128
-        sequence
         integer(int64) :: lo = 0_int64
         integer(int64) :: hi = 0_int64
     end type u128
 
     type :: ifmt
-        sequence
         integer :: meb, mine, infp, sidx
         integer :: minrte, maxrte, minfp, maxfp
         integer(int64) :: maxm, emask, mmask, hbm
         integer :: smp10, lgp10, maxd
     end type ifmt
 
+    ! Double precision format parameters
     type(ifmt), parameter :: DF = ifmt( &
         meb=52, mine=-1023, infp=2047, sidx=63, &
         minrte=-4, maxrte=23, minfp=-22, maxfp=22, &
-        maxm=ishft(2_int64, 52), &
+        maxm =ishft(2_int64, 52), &
         emask=int(z'7FF0000000000000', int64), &
         mmask=int(z'000FFFFFFFFFFFFF', int64), &
-        hbm=int(z'0010000000000000', int64), &
+        hbm  =int(z'0010000000000000', int64), &
         smp10=-342, lgp10=308, maxd=769)
 
+    ! Float format parameters
     type(ifmt), parameter :: FF = ifmt( &
         meb=23, mine=-127, infp=255, sidx=31, &
         minrte=-17, maxrte=10, minfp=-10, maxfp=10, &
@@ -106,7 +112,6 @@ module fast_float_module
         smp10=-64, lgp10=38, maxd=114)
 
     type :: fparsed
-        sequence
         integer(int64) :: exponent = 0
         integer(int64) :: mantissa = 0
         integer :: lastm = 0
@@ -118,7 +123,6 @@ module fast_float_module
     end type fparsed
 
     type :: fam
-        sequence
         integer(int64) :: mantissa = 0
         integer(int32) :: power2 = 0
     end type fam
@@ -1594,8 +1598,6 @@ module fast_float_module
         int(z'02c06b9d16c407a7', int64) ]
 
 
-    logical, parameter :: SLUT(0:255) = [((i>=9 .and. i<=13).or.i==32,i=0,255)]  
-
     integer, parameter :: C2D(0:255) = [ &
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, &
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, &
@@ -1621,7 +1623,11 @@ module fast_float_module
 
 contains
 
-    pure elemental subroutine try_fast_integer(first, last, str, opts, bj, ok, a)
+    !> Unified fast path for integers and simple fixed-point decimals.
+    !> Handles: "123", "-42", "3.14", "-65.613616999999977"
+    !> Bails out to pns for: scientific notation, Fortran 'd/D' format,
+    !> custom decimal point, or numbers with >19 total digits.
+    pure elemental subroutine try_fast(first, last, str, opts, bj, ok, a)
         integer, intent(in) :: first, last
         character(len=*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
@@ -1629,7 +1635,7 @@ contains
         logical, intent(out) :: ok
         type(fparsed), intent(out) :: a
         integer(int64) :: mantissa
-        integer :: int_digits, p
+        integer :: int_digits, frac_digits, p, ic
 
         ok = .false.
         a = fparsed()
@@ -1649,86 +1655,47 @@ contains
         end if
         if (p > last) return
 
+        ! Parse integer digits
         a%ips = p
         mantissa = 0_int64
         int_digits = 0
         do while (p <= last .and. int_digits < 19)
-            if (.not. isd(str(p:p))) exit
-            mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
+            ic = iachar(str(p:p)) - 48
+            if (ic < 0 .or. ic > 9) exit
+            mantissa = 10_int64 * mantissa + int(ic, int64)
             int_digits = int_digits + 1
             p = p + 1
         end do
-
         if (int_digits == 0) return
         if (bj .and. int_digits > 1 .and. str(a%ips:a%ips) == '0') return
-        if (p <= last) then
-            if (isd(str(p:p))) return
-            if (str(p:p) == '.' .or. str(p:p) == 'e' .or. str(p:p) == 'E' .or. &
-                str(p:p) == 'd' .or. str(p:p) == 'D' .or. str(p:p) == '+' .or. &
-                str(p:p) == '-') return
+        a%ipl = int_digits
+
+        ! Check what follows the integer part
+        if (p > last) then
+            ! Pure integer: consumed entire string
+            a%mantissa = mantissa
+            a%exponent = 0_int64
+            a%lastm = p
+            a%valid = .true.
+            ok = .true.
             return
         end if
 
-        a%ipl = int_digits
-        a%mantissa = mantissa
-        a%exponent = 0_int64
-        a%lastm = p
-        a%valid = .true.
-        ok = .true.
-    end subroutine try_fast_integer
-
-    pure elemental subroutine try_fast_fixed(first, last, str, opts, bj, ok, a)
-        integer, intent(in) :: first, last
-        character(len=*), intent(in) :: str
-        type(ffc_parse_options), intent(in) :: opts
-        logical, intent(in) :: bj
-        logical, intent(out) :: ok
-        type(fparsed), intent(out) :: a
-        integer(int64) :: mantissa
-        integer :: frac_digits, int_digits, p
-
-        ok = .false.
-        a = fparsed()
-        if (last - first + 1 < 4) return
-        if (opts%decimal_point /= '.') return
-        if (iand(opts%format, FMT_FORT) /= 0) return
-        if (iand(opts%format, FMT_SKIP) /= 0) return
+        ! If next char is not '.', bail out (exponent, trailing chars, etc.)
+        if (str(p:p) /= '.') return
         if (iand(opts%format, FMT_SCI) == 0) return
-        if (iand(opts%format, FMT_FIX) == 0) return
 
-        p = first
-        if (str(p:p) == '-') then
-            a%neg = .true.
-            p = p + 1
-        else if (str(p:p) == '+') then
-            if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
-            p = p + 1
-        end if
-        if (p + 2 > last) return
-
-        a%ips = p
-        mantissa = 0_int64
-        int_digits = 0
-        do while (p <= last .and. int_digits < 3)
-            if (.not.isd(str(p:p))) exit
-            mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
-            int_digits = int_digits + 1
-            p = p + 1
-        end do
-        a%ipl = int_digits
-        if (int_digits == 0) return
-        if (bj .and. int_digits > 1 .and. str(a%ips:a%ips) == '0') return
-        if (p > last .or. str(p:p) /= '.') return
-
+        ! Parse fractional part
         p = p + 1
         if (p > last) return
-        if (last - p + 1 > 15) return
-        a%fps = p
         frac_digits = last - p + 1
+        if (int_digits + frac_digits > 19) return
+        a%fps = p
         call lp8(p, last, str, mantissa)
         do while (p <= last)
-            if (.not.isd(str(p:p))) return
-            mantissa = 10_int64 * mantissa + int(iachar(str(p:p)) - 48, int64)
+            ic = iachar(str(p:p)) - 48
+            if (ic < 0 .or. ic > 9) return
+            mantissa = 10_int64 * mantissa + int(ic, int64)
             p = p + 1
         end do
         if (frac_digits == 0) return
@@ -1739,7 +1706,7 @@ contains
         a%lastm = p
         a%valid = .true.
         ok = .true.
-    end subroutine try_fast_fixed
+    end subroutine try_fast
 
     pure elemental logical function ult(a, b)
         integer(int64), intent(in) :: a, b
@@ -1759,18 +1726,38 @@ contains
     pure elemental subroutine mu64(a, b, res)
         integer(int64), intent(in) :: a, b
         type(u128), intent(out) :: res
-        integer(int64) :: a0,a1,b0,b1,w0,t,w1,w2
-        a0 = iand(a, M32)
-        a1 = iand(ishft(a, -32), M32)
-        b0 = iand(b, M32)
-        b1 = iand(ishft(b, -32), M32)
-        w0 = a0 * b0
-        t  = a1*b0 + iand(ishft(w0,-32), M32)
-        w1 = iand(t, M32)
-        w2 = iand(ishft(t,-32), M32)
-        w1 = w1 + a0 * b1
-        res%lo = a * b
-        res%hi = a1*b1 + w2 + iand(ishft(w1,-32), M32)
+        if (HAS_INT128) then
+            block
+                integer(IK128) :: za, zb, z
+                if (LITTLE_ENDIAN) then
+                    za = transfer([a, 0_int64], za)
+                    zb = transfer([b, 0_int64], zb)
+                    z  = za * zb
+                    res = transfer(z, res)
+                else
+                    za = transfer([0_int64, a], za)
+                    zb = transfer([0_int64, b], zb)
+                    z  = za * zb
+                    res%lo = int(z, int64)
+                    res%hi = int(ishft(z, -64), int64)
+                end if
+            end block
+        else
+            block
+                integer(int64) :: a0,a1,b0,b1,w0,t,w1,w2
+                a0 = iand(a, M32)
+                a1 = iand(ishft(a, -32), M32)
+                b0 = iand(b, M32)
+                b1 = iand(ishft(b, -32), M32)
+                w0 = a0 * b0
+                t  = a1*b0 + iand(ishft(w0,-32), M32)
+                w1 = iand(t, M32)
+                w2 = iand(ishft(t,-32), M32)
+                w1 = w1 + a0 * b1
+                res%lo = a * b
+                res%hi = a1*b1 + w2 + iand(ishft(w1,-32), M32)
+            end block
+        end if
     end subroutine mu64
 
     pure elemental integer(int64) function gdbb(d)
@@ -1785,7 +1772,7 @@ contains
 
     pure elemental integer function clz(x)
         integer(int64), intent(in) :: x
-        if (x==0) then; clz=64; else; clz=leadz(x); end if
+        clz = merge(64,leadz(x),x==0)
     end function clz
 
     pure elemental logical function isd(c)
@@ -1797,8 +1784,8 @@ contains
     pure elemental logical function issp(c)
         character, intent(in) :: c
         integer :: ic
-        ic = iachar(c); issp = .false.
-        if (ic>=0 .and. ic<=255) issp = SLUT(ic)
+        ic = iachar(c)
+        issp = (ic>=9 .and. ic<=13).or.ic==32
     end function issp
 
     pure elemental integer function c2dg(c)
@@ -1809,13 +1796,19 @@ contains
         if (ic>=0 .and. ic<=255) c2dg = C2D(ic)
     end function c2dg
 
+    ! Reinterpret 8 characters as a single int64 (little-endian byte order).
+    ! p8sw/is8d expect LE layout: str(1:1) in LSB, str(8:8) in MSB.
     pure elemental integer(int64) function r8(str)
         character(len=8), intent(in) :: str
-        integer :: i
-        r8 = 0_int64
-        do i = 0, 7
-            r8 = ior(r8, ishft(int(iachar(str(i+1:i+1)), int64), 8*i))
-        end do        
+        integer :: j
+        if (LITTLE_ENDIAN) then
+            r8 = transfer(str, 0_int64)
+        else
+            r8 = iachar(str(1:1), kind=int64)
+            do j = 2, 8
+                r8 = ior(r8, ishft(int(iachar(str(j:j)), int64), 8*(j-1)))
+            end do
+        end if
     end function r8
 
     pure elemental logical function is8d(val)
@@ -2032,14 +2025,58 @@ contains
     end subroutine pns
 
     ! ===== Parse inf/nan =====
-    elemental subroutine pin(str,p0,la,isd,vd,vf,res)
+    elemental subroutine pin_32(str,p0,la,vf,res)
         character(*), intent(in) :: str
         integer, intent(in) :: p0, la
-        logical, intent(in) :: isd
-        real(real64), intent(out) :: vd
         real(real32), intent(out) :: vf
         type(ffc_result), intent(out) :: res
-        integer :: p
+        integer :: p, pp
+        logical :: ms
+        res%pos=p0
+        if (p0>la) then
+            res%outcome=FFC_OUTCOME_INVALID_INPUT
+            return
+        else
+            res%outcome=FFC_OUTCOME_OK
+        end if
+        p=p0
+        ms=(str(p:p)=='-')
+        if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
+        if (la-p+1>=3) then
+            if (cc3(str(p:),'nan')) then
+                p=p+3; res%pos=p
+                vf=ieee_value(0.0_real32,ieee_quiet_nan)
+                if (ms) vf=-vf
+                if (p<=la) then
+                    if (str(p:p)=='(') then
+                        pp=p+1
+                        do while (pp<=la)
+                            if (str(pp:pp)==')') then
+                                res%pos=pp+1; exit
+                            end if; pp=pp+1
+                        end do
+                    end if
+                end if; return
+            end if
+            if (cc3(str(p:),'inf')) then
+                res%pos=p+3
+                if (la-p+1>=8) then
+                    if (cc5(str(p+3:),'inity')) res%pos=p+8
+                end if
+                vf = ieee_value(0.0_real32, ieee_positive_inf)
+                if (ms) vf=-vf
+                return
+            end if
+        end if
+        res%outcome=FFC_OUTCOME_INVALID_INPUT
+    end subroutine pin_32
+
+    elemental subroutine pin_64(str,p0,la,vd,res)
+        character(*), intent(in) :: str
+        integer, intent(in) :: p0, la
+        real(real64), intent(out) :: vd
+        type(ffc_result), intent(out) :: res
+        integer :: p,pp
         logical :: ms        
         res%pos=p0        
         if (p0>la) then
@@ -2054,41 +2091,34 @@ contains
         if (la-p+1>=3) then
             if (cc3(str(p:),'nan')) then
                 p=p+3; res%pos=p
-                if (isd) then
-                    vd=ieee_value(0.0_real64,ieee_quiet_nan)
-                    if (ms) vd=-vd
-                else
-                    vf=ieee_value(0.0_real32,ieee_quiet_nan)
-                    if (ms) vf=-vf
-                end if
-                if (p<=la) then; if (str(p:p)=='(') then
-                    block
-                        integer :: pp
-                        pp=p+1
+                vd=ieee_value(0.0_real64,ieee_quiet_nan)
+                if (ms) vd=-vd
+                if (p<=la) then
+                    if (str(p:p)=='(') then
+                    pp=p+1
                         do while (pp<=la)
                             if (str(pp:pp)==')') then
-                                res%pos=pp+1; exit
-                            end if; pp=pp+1
+                                res%pos=pp+1
+                                exit
+                            end if
+                            pp=pp+1
                         end do
-                    end block
-                end if; end if; return
+                    end if
+                end if
+                return
             end if
             if (cc3(str(p:),'inf')) then
                 res%pos=p+3
                 if (la-p+1>=8) then
                     if (cc5(str(p+3:),'inity')) res%pos=p+8
                 end if
-                if (isd) then
-                    vd = ieee_value(0.0_real64, ieee_positive_inf)
-                    if (ms) vd=-vd
-                else
-                    vf = ieee_value(0.0_real32, ieee_positive_inf)
-                    if (ms) vf=-vf
-                end if; return
+                vd = ieee_value(0.0_real64, ieee_positive_inf)
+                if (ms) vd=-vd
+                return
             end if
         end if
         res%outcome=FFC_OUTCOME_INVALID_INPUT
-    end subroutine pin
+    end subroutine pin_64
 
     ! ===== Eisel-Lemire =====
     pure elemental integer(int32) function b2b(q)
@@ -2110,8 +2140,7 @@ contains
         if (iand(res%hi,pm)==pm) then
             call mu64(w, P5(idx+1), sp)
             res%lo = res%lo + sp%hi
-            if (ult(res%lo, sp%hi)) &
-                res%hi = res%hi + 1
+            if (ult(res%lo, sp%hi)) res%hi = res%hi + 1
         end if
     end subroutine cprd
 
@@ -2126,10 +2155,12 @@ contains
 
         w=wi
         if (w==0.or.q<int(f%smp10,int64)) then
-            res=fam(0_int64,0_int32); return
+            res=fam(0_int64,0_int32)
+            return
         end if
         if (q>int(f%lgp10,int64)) then
-            res=fam(0_int64,int(f%infp,int32)); return
+            res=fam(0_int64,int(f%infp,int32))
+            return
         end if
         lz=int(clz(w),int32); w=ishft(w,lz)
         call cprd(q,w,f,pr)
@@ -2140,7 +2171,8 @@ contains
 
         if (res%power2<=0) then
             if (-res%power2+1>=64) then
-                res=fam(0_int64,0_int32); return
+                res=fam(0_int64,0_int32)
+                return
             end if
             res%mantissa=ishft(res%mantissa, &
                                res%power2-1_int32)
@@ -2164,8 +2196,7 @@ contains
                                   not(1_int64))
         end if
 
-        res%mantissa=res%mantissa+ &
-            iand(res%mantissa,1_int64)
+        res%mantissa=res%mantissa+ iand(res%mantissa,1_int64)
         res%mantissa=ishft(res%mantissa,-1)
 
         if (uge(res%mantissa,ishft(2_int64,f%meb))) then
@@ -2206,34 +2237,43 @@ contains
         call cerrs(q, pr%hi, lz, f, res)
     end subroutine cerr
 
-    pure elemental subroutine clfp_core(m,e,ng,isd,vd,vf,f,ok)
+    pure elemental subroutine clfp_64(m,e,ng,vd,f,ok)
         integer(int64), intent(in) :: m, e
-        logical, intent(in) :: ng, isd
+        logical, intent(in) :: ng
         real(real64), intent(inout) :: vd
+        type(ifmt), intent(in) :: f
+        logical, intent(out) :: ok
+
+        ok = e>=int(f%minfp,int64) .and. e<=int(f%maxfp,int64) .and. m<=f%maxm
+        if (.not.ok) return
+
+        if (e<0) then
+            vd = real(m/DPOW10(-e),real64)
+        else
+            vd = real(m*DPOW10(e),real64)
+        end if
+        if (ng) vd = -vd
+
+    end subroutine clfp_64
+
+    pure elemental subroutine clfp_32(m,e,ng,vf,f,ok)
+        integer(int64), intent(in) :: m, e
+        logical, intent(in) :: ng
         real(real32), intent(inout) :: vf
         type(ifmt), intent(in) :: f
         logical, intent(out) :: ok
 
-        ok= e>=int(f%minfp,int64).and. e<=int(f%maxfp,int64) .and. (.not.ugt(m, f%maxm))
+        ok = e>=int(f%minfp,int64) .and. e<=int(f%maxfp,int64) .and. m<=f%maxm
         if (.not.ok) return
 
-        if (isd) then 
-            if (e<0) then     
-                vd=real(m,real64)/DPOW10(-e)
-            else
-                vd=real(m,real64)*DPOW10(e)
-            end if
-            if (ng) vd=-vd
+        if (e<0) then
+            vf = real(m,real32)/FPOW10(-e)
         else
-            if (e<0) then     
-                vf=real(m,real32)/FPOW10(-e)
-            else
-                vf=real(m,real32)*FPOW10(e)
-            end if
-            if (ng) vf=-vf
-        endif
+            vf = real(m,real32)*FPOW10(e)
+        end if
+        if (ng) vf = -vf
 
-    end subroutine clfp_core
+    end subroutine clfp_32
 
     pure elemental real(real64) function a2d(ng, am) result(v)
         logical, intent(in) :: ng
@@ -2465,23 +2505,23 @@ contains
         logical, intent(out) :: bp5_ok
         integer :: er; logical :: ok
         integer, parameter :: ss=27
-        integer(int64), parameter :: mn = &
-            7450580596923828125_int64
-        er=ei; bp5_ok=.true.
+        integer(int64), parameter :: mn = 7450580596923828125_int64
+        er=ei; bp5_ok=.false.
         do while (er>=P5LS)
             call blgm(bi%vec,P5L,5,ok)
-            if (.not.ok) then; bp5_ok=.false.; return; end if
+            if (.not.ok) return
             er=er-P5LS
         end do
         do while (er>=ss)
             call bsm(bi%vec,mn,ok)
-            if (.not.ok) then; bp5_ok=.false.; return; end if
+            if (.not.ok) return
             er=er-ss
         end do
         if (er/=0) then
             call bsm(bi%vec,P5S(er),ok)
-            if (.not.ok) then; bp5_ok=.false.; return; end if
+            if (.not.ok) return
         end if
+        bp5_ok = .true.
     end subroutine bp5
 
     pure subroutine bp10(bi,e,ok)
@@ -2848,13 +2888,11 @@ contains
         else; call ndc(str,bm,am,ev,f,res); end if
     end subroutine dcomp
 
-    ! ===== Core dispatch =====
-    pure elemental subroutine fchars_core(str,p,isd,vd,vf,f,res)
+    ! ===== Specialized conversion: double precision =====
+    pure elemental subroutine fchars_64(str,p,vd,f,res)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: p
-        logical, intent(in) :: isd
         real(real64), intent(inout) :: vd
-        real(real32), intent(inout) :: vf
         type(ifmt), intent(in) :: f
         type(ffc_result), intent(out) :: res
         type(fam) :: am,ap; logical :: eq, cfok
@@ -2863,7 +2901,7 @@ contains
         res%pos    =p%lastm
 
         if (.not.p%tmd) then
-            call clfp_core(p%mantissa,p%exponent,p%neg,isd,vd,vf,f,cfok)
+            call clfp_64(p%mantissa,p%exponent,p%neg,vd,f,cfok)
             if (cfok) return
         end if
 
@@ -2876,45 +2914,51 @@ contains
         end if
         if (am%power2<0) call dcomp(str,p,am,f,am)
 
-        if (isd) then
-            vd = a2d(p%neg,am)
-        else
-            vf = a2f(p%neg,am)
-        end if
+        vd = a2d(p%neg,am)
 
         if ((p%mantissa/=0.and.am%mantissa==0.and.am%power2==0) .or. &
             am%power2==int(f%infp,int32)) &
             res%outcome=FFC_OUTCOME_OUT_OF_RANGE
-    end subroutine fchars_core
-
-    pure elemental subroutine fchars_64(str,p,vd,f,res)
-        character(*), intent(in) :: str
-        type(fparsed), intent(in) :: p
-        real(real64), intent(inout) :: vd
-        type(ifmt), intent(in) :: f
-        type(ffc_result), intent(out) :: res
-
-        real(real32) :: vf
-        call fchars_core(str,p,.true.,vd,vf,f,res)      
-        
     end subroutine fchars_64
 
+    ! ===== Specialized conversion: single precision =====
     pure elemental subroutine fchars_32(str,p,vf,f,res)
         character(*), intent(in) :: str
         type(fparsed), intent(in) :: p
         real(real32), intent(inout) :: vf
         type(ifmt), intent(in) :: f
         type(ffc_result), intent(out) :: res
-        real(real64) :: vd
-        call fchars_core(str,p,.false.,vd,vf,f,res)
+        type(fam) :: am,ap; logical :: eq, cfok
+
+        res%outcome=FFC_OUTCOME_OK
+        res%pos    =p%lastm
+
+        if (.not.p%tmd) then
+            call clfp_32(p%mantissa,p%exponent,p%neg,vf,f,cfok)
+            if (cfok) return
+        end if
+
+        call cflt(p%exponent,p%mantissa,f,am)
+        if (p%tmd.and.am%power2>=0) then
+            call cflt(p%exponent,p%mantissa+1,f,ap)
+            eq=am%mantissa==ap%mantissa .and. &
+               am%power2==ap%power2
+            if (.not.eq) call cerr(p%exponent,p%mantissa,f,am)
+        end if
+        if (am%power2<0) call dcomp(str,p,am,f,am)
+
+        vf = a2f(p%neg,am)
+
+        if ((p%mantissa/=0.and.am%mantissa==0.and.am%power2==0) .or. &
+            am%power2==int(f%infp,int32)) &
+            res%outcome=FFC_OUTCOME_OUT_OF_RANGE
     end subroutine fchars_32
 
     ! ===== PUBLIC =====
     function ffc_parse_double(str, out, options) result(res)
         character(*), intent(in) :: str
         real(real64), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: &
-            options
+        type(ffc_parse_options), intent(in), optional :: options
         type(ffc_result) :: res
         type(ffc_parse_options) :: o
         type(fparsed) :: p
@@ -2928,8 +2972,7 @@ contains
         character(*), intent(in) :: str
         integer, intent(in) :: first, last
         real(real64), intent(out) :: out
-        type(ffc_parse_options), intent(in), optional :: &
-            options
+        type(ffc_parse_options), intent(in), optional :: options
         type(ffc_result) :: res
         call ffc_parse_double_range_sub(str, first, last, out, res, options)
     end function ffc_parse_double_range
@@ -2939,17 +2982,17 @@ contains
         character(len=*), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
-        type(ffc_parse_options), intent(in), optional :: &
-            options
+        type(ffc_parse_options), intent(in), optional :: options
         type(ffc_parse_options) :: o
         type(fparsed) :: p
         integer :: ps,la
         logical :: bj, fast_ok
-        real(real32) :: dff
 
-        out=0.0_real64; dff=0.0_real32
-        if (present(options)) then; o=options
-        else; o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
+        out=0.0_real64
+        if (present(options)) then
+            o=options
+        else
+            o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
         end if
         la = last
         ps = first
@@ -2963,15 +3006,14 @@ contains
             res%pos=ps; return
         end if
         bj=iand(o%format,FMT_JSON)/=0
-        call try_fast_fixed(ps,la,str,o,bj,fast_ok,p)
-        if (.not.fast_ok) call try_fast_integer(ps,la,str,o,bj,fast_ok,p)
+        call try_fast(ps,la,str,o,bj,fast_ok,p)
         if (.not.fast_ok) call pns(ps,la,str,o,bj,p)
         if (.not.p%valid) then
             if (iand(o%format,FMT_NOIN)/=0) then
                 res%outcome=FFC_OUTCOME_INVALID_INPUT
                 res%pos=ps; return
             else
-                call pin(str,ps,la,.true.,out,dff,res)
+                call pin_64(str,ps,la,out,res)
                 return
             end if
         end if
@@ -2986,9 +3028,9 @@ contains
         type(ffc_result) :: res
         type(ffc_parse_options) :: o
         type(fparsed) :: p
-        integer :: ps,la; logical :: bj; real(real64) :: ddd
+        integer :: ps,la; logical :: bj
 
-        out=0.0_real32; ddd=0.0_real64
+        out=0.0_real32
         if (present(options)) then; o=options
         else; o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
         end if
@@ -3009,7 +3051,7 @@ contains
                 res%outcome=FFC_OUTCOME_INVALID_INPUT
                 res%pos=ps; return
             else
-                call pin(str,ps,la,.false.,ddd,out,res)
+                call pin_32(str,ps,la,out,res)
                 return
             end if
         end if
