@@ -2042,7 +2042,8 @@ contains
                         pp=p+1
                         do while (pp<=la)
                             if (str(pp:pp)==')') then
-                                res%pos=pp+1; exit
+                                res%pos=pp+1
+                                exit
                             end if; pp=pp+1
                         end do
                     end if
