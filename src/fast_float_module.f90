@@ -1628,14 +1628,15 @@ contains
     !> Bails out to pns for: scientific notation, Fortran 'd/D' format,
     !> custom decimal point, or numbers with >19 total digits.
     pure elemental subroutine try_fast(first, last, str, opts, bj, ok, a)
-        integer, intent(in), value :: first, last
+        integer, value :: first
+        integer, intent(in), value :: last
         character(len=*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
         logical, intent(out) :: ok
         type(fparsed), intent(out) :: a
         integer(int64) :: mantissa
-        integer :: int_digits, frac_digits, p, ic
+        integer :: int_digits, frac_digits, ic
 
         ok = .false.
         a = fparsed()
@@ -1645,65 +1646,64 @@ contains
         if (iand(opts%format, FMT_SKIP) /= 0) return
         if (iand(opts%format, FMT_FIX) == 0) return
 
-        p = first
-        if (str(p:p) == '-') then
+        if (str(first:first) == '-') then
             a%neg = .true.
-            p = p + 1
-        else if (str(p:p) == '+') then
+            first = first + 1
+        else if (str(first:first) == '+') then
             if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
-            p = p + 1
+            first = first + 1
         end if
-        if (p > last) return
+        if (first > last) return
 
         ! Parse integer digits
-        a%ips = p
+        a%ips = first
         mantissa = 0_int64
         int_digits = 0
-        do while (p <= last .and. int_digits < 19)
-            ic = iachar(str(p:p)) - 48
+        do while (first <= last .and. int_digits < 19)
+            ic = iachar(str(first:first)) - 48
             if (ic < 0 .or. ic > 9) exit
             mantissa = 10_int64 * mantissa + int(ic, int64)
             int_digits = int_digits + 1
-            p = p + 1
+            first = first + 1
         end do
         if (int_digits == 0) return
         if (bj .and. int_digits > 1 .and. str(a%ips:a%ips) == '0') return
         a%ipl = int_digits
 
         ! Check what follows the integer part
-        if (p > last) then
+        if (first > last) then
             ! Pure integer: consumed entire string
             a%mantissa = mantissa
             a%exponent = 0_int64
-            a%lastm = p
+            a%lastm = first
             a%valid = .true.
             ok = .true.
             return
         end if
 
         ! If next char is not '.', bail out (exponent, trailing chars, etc.)
-        if (str(p:p) /= '.') return
+        if (str(first:first) /= '.') return
         if (iand(opts%format, FMT_SCI) == 0) return
 
         ! Parse fractional part
-        p = p + 1
-        if (p > last) return
-        frac_digits = last - p + 1
+        first = first + 1
+        if (first > last) return
+        frac_digits = last - first + 1
         if (int_digits + frac_digits > 19) return
-        a%fps = p
-        call lp8(p, last, str, mantissa)
-        do while (p <= last)
-            ic = iachar(str(p:p)) - 48
+        a%fps = first
+        call lp8(first, last, str, mantissa)
+        do while (first <= last)
+            ic = iachar(str(first:first)) - 48
             if (ic < 0 .or. ic > 9) return
             mantissa = 10_int64 * mantissa + int(ic, int64)
-            p = p + 1
+            first = first + 1
         end do
         if (frac_digits == 0) return
 
         a%fpl      = frac_digits
         a%mantissa = mantissa
         a%exponent = -int(frac_digits, int64)
-        a%lastm = p
+        a%lastm = first
         a%valid = .true.
         ok = .true.
     end subroutine try_fast
@@ -1872,8 +1872,9 @@ contains
     end function cc5
 
     ! ===== Parse number string =====
-    elemental subroutine pns(first, last, str, opts, bj, a)
-        integer, intent(in), value :: first, last
+    elemental subroutine pns(p, last, str, opts, bj, a)
+        integer, value :: p
+        integer, intent(in), value :: last
         character(*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
@@ -1882,11 +1883,11 @@ contains
         integer(int64) :: fmt,i,dc,exp,en
         integer(int64), parameter :: m19 = 1000000000000000000_int64
         character :: dp
-        integer :: p,sd,eip,bf,le,ic,ie,fe,sp
+        integer :: sd,eip,bf,le,ic,ie,fe,sp
         logical :: alp,hdp,ne,hse,hed
 
         fmt=opts%format; dp=opts%decimal_point
-        p=first; a%valid=.false.
+        a%valid=.false.
         if (p>last) then; a%lastm=p; return; end if
 
         a%neg = (str(p:p)=='-')
@@ -2025,21 +2026,21 @@ contains
     end subroutine pns
 
     ! ===== Parse inf/nan =====
-    elemental subroutine pin_32(str,p0,la,vf,res)
+    elemental subroutine pin_32(str,p,la,vf,res)
         character(*), intent(in) :: str
-        integer, intent(in), value :: p0, la
+        integer, value :: p
+        integer, intent(in), value :: la
         real(real32), intent(out) :: vf
         type(ffc_result), intent(out) :: res
-        integer :: p, pp
+        integer :: pp
         logical :: ms
-        res%pos=p0
-        if (p0>la) then
+        res%pos=p
+        if (p>la) then
             res%outcome=FFC_OUTCOME_INVALID_INPUT
             return
         else
             res%outcome=FFC_OUTCOME_OK
         end if
-        p=p0
         ms=(str(p:p)=='-')
         if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
         if (la-p+1>=3) then
@@ -2071,21 +2072,21 @@ contains
         res%outcome=FFC_OUTCOME_INVALID_INPUT
     end subroutine pin_32
 
-    elemental subroutine pin_64(str,p0,la,vd,res)
+    elemental subroutine pin_64(str,p,la,vd,res)
         character(*), intent(in) :: str
-        integer, intent(in), value :: p0, la
+        integer, value :: p
+        integer, intent(in), value :: la
         real(real64), intent(out) :: vd
         type(ffc_result), intent(out) :: res
-        integer :: p,pp
-        logical :: ms        
-        res%pos=p0        
-        if (p0>la) then
+        integer :: pp
+        logical :: ms
+        res%pos=p
+        if (p>la) then
             res%outcome=FFC_OUTCOME_INVALID_INPUT
             return
         else
             res%outcome=FFC_OUTCOME_OK
         end if
-        p=p0
         ms=(str(p:p)=='-')
         if (str(p:p)=='-'.or.str(p:p)=='+') p=p+1
         if (la-p+1>=3) then
@@ -2973,42 +2974,41 @@ contains
     end function ffc_parse_double_range
 
     elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, options)
-        integer, intent(in), value :: first, last
+        integer, value :: first
+        integer, intent(in), value :: last
         character(len=*), intent(in) :: str
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
         type(ffc_parse_options), intent(in), optional :: options
         type(ffc_parse_options) :: o
         type(fparsed) :: p
-        integer :: ps
         logical :: bj, fast_ok
-        
+
         if (present(options)) then
             o=options
         else
             o=ffc_parse_options(FFC_PRESET_GENERAL,'.')
         end if
-        ps = first
         if (iand(o%format,FMT_SKIP)/=0) then
-            do while (ps<=last)
-                if (.not.issp(str(ps:ps))) exit
-                ps=ps+1
+            do while (first<=last)
+                if (.not.issp(str(first:first))) exit
+                first=first+1
             end do
         end if
-        if (ps>last) then
-            res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+        if (first>last) then
+            res = ffc_result(first,FFC_OUTCOME_INVALID_INPUT)
             out = 0.0_real64
             return
         end if
         bj = iand(o%format,FMT_JSON)/=0
-        call try_fast(ps,last,str,o,bj,fast_ok,p)
-        if (.not.fast_ok) call pns(ps,last,str,o,bj,p)
+        call try_fast(first,last,str,o,bj,fast_ok,p)
+        if (.not.fast_ok) call pns(first,last,str,o,bj,p)
         if (.not.p%valid) then
             if (iand(o%format,FMT_NOIN)/=0) then
-                res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+                res = ffc_result(first,FFC_OUTCOME_INVALID_INPUT)
                 out = 0.0_real64
             else
-                call pin_64(str,ps,last,out,res)                
+                call pin_64(str,first,last,out,res)
             end if
             return
         end if
