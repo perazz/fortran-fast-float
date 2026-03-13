@@ -1510,27 +1510,7 @@ module fast_float_module
         1_int64, &
         0_int64 ]
 
-    integer(int64), parameter :: P10U64(0:19) = [ &
-        1_int64, &
-        10_int64, &
-        100_int64, &
-        1000_int64, &
-        10000_int64, &
-        100000_int64, &
-        1000000_int64, &
-        10000000_int64, &
-        100000000_int64, &
-        1000000000_int64, &
-        10000000000_int64, &
-        100000000000_int64, &
-        1000000000000_int64, &
-        10000000000000_int64, &
-        100000000000000_int64, &
-        1000000000000000_int64, &
-        10000000000000000_int64, &
-        100000000000000000_int64, &
-        1000000000000000000_int64, &
-        int(z'8AC7230489E80000', int64) ]
+    integer(int64), parameter :: P10U64(0:19) = [ [(10_int64**i,i=0,18)], int(z'8AC7230489E80000', int64) ]
 
     integer, parameter :: MXDG64(2:36) = [ &
         64, 41, 32, 28, 25, 23, 22, 21, 20, 19, 18, 18, 17, 17, 16, 16, 16, 16, &
@@ -1641,18 +1621,17 @@ contains
     !> Handles: "123", "-42", "3.14", "-65.613616999999977"
     !> Bails out to pns for: scientific notation, Fortran 'd/D' format,
     !> custom decimal point, or numbers with >19 total digits.
-    pure elemental subroutine try_fast(first, last, str, opts, bj, ok, a)
+    pure elemental subroutine try_fast(first, last, str, opts, bj, a)
         integer, intent(in) :: first, last
         character(len=*), intent(in) :: str
         type(ffc_parse_options), intent(in) :: opts
         logical, intent(in) :: bj
-        logical, intent(out) :: ok
         type(fparsed), intent(out) :: a
         integer(int64) :: mantissa
         integer :: int_digits, frac_digits, p, ic
 
-        ok = .false.
-        a = fparsed()
+        !a = fparsed()
+        a%valid = .false.
         if (first > last) return
         if (opts%decimal_point /= '.') return
         if (iand(opts%format, FMT_FORT) /= 0) return
@@ -1691,7 +1670,6 @@ contains
             a%exponent = 0_int64
             a%lastm = p
             a%valid = .true.
-            ok = .true.
             return
         end if
 
@@ -1719,7 +1697,6 @@ contains
         a%exponent = -int(frac_digits, int64)
         a%lastm = p
         a%valid = .true.
-        ok = .true.
     end subroutine try_fast
 
     pure elemental logical function ult(a, b)
@@ -2998,40 +2975,39 @@ contains
     end function ffc_pdr_opts
 
     elemental subroutine ffc_parse_double_range_sub(str, first, last, out, res, o)
-        integer, intent(in), value :: first, last
         character(len=*), intent(in) :: str
+        integer, value :: first
+        integer, intent(in), value :: last
         real(real64), intent(out) :: out
         type(ffc_result), intent(out) :: res
         type(ffc_parse_options), intent(in) :: o
         type(fparsed) :: p
-        integer :: ps
-        logical :: bj, fast_ok
+        logical :: bj
         
-        ps = first
         if (iand(o%format,FMT_SKIP)/=0) then
-            do while (ps<=last)
-                if (.not.issp(str(ps:ps))) exit
-                ps=ps+1
+            do while (first<=last)
+                if (.not.issp(str(first:first))) exit
+                first=first+1
             end do
         end if
-        if (ps>last) then
-            res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+        if (first>last) then
+            res = ffc_result(first,FFC_OUTCOME_INVALID_INPUT)
             out = 0.0_real64
             return
         end if
         bj = iand(o%format,FMT_JSON)/=0
-        call try_fast(ps,last,str,o,bj,fast_ok,p)
-        if (.not.fast_ok) call pns(ps,last,str,o,bj,p)
+        call try_fast(first,last,str,o,bj,p)
+        if (.not.p%valid) call pns(first,last,str,o,bj,p)
         if (.not.p%valid) then
             if (iand(o%format,FMT_NOIN)/=0) then
-                res = ffc_result(ps,FFC_OUTCOME_INVALID_INPUT)
+                res = ffc_result(first,FFC_OUTCOME_INVALID_INPUT)
                 out = 0.0_real64
             else
-                call pin_64(str,ps,last,out,res)                
+                call pin_64(str,first,last,out,res)                
             end if
-            return
-        end if
-        call fchars(str,p,out,DF,res)
+        else
+            call fchars(str,p,out,DF,res)
+        end if        
     end subroutine ffc_parse_double_range_sub
 
     function ffc_pf(str, out) result(res)
