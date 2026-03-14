@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /Users/federico/code/fortran-fast-float/data/ 2>/dev/null || echo \"No data dir found\"; find /Users/federico/code/fortran-fast-float -name \"*.txt\" -maxdepth 2 2>/dev/null | head -20)",
+      "Bash(REPEAT_COUNT=10 ./run_benchmarks.sh 10)",
+      "Bash(fpm test:*)",
+      "Bash(gfortran --version | head -1 && gcc --version | head -1)",
+      "Bash(/tmp/test_mu64.f90:*)",
+      "Bash(gfortran -O3 -S -o /tmp/test_mu64.s /tmp/test_mu64.f90)",
+      "Read(//tmp/**)",
+      "Bash(cat > /tmp/test_mu64_interop.f90 << 'EOF'\nmodule test_mod\n    use iso_fortran_env, only: int64\n    use iso_c_binding, only: c_int64_t\n    implicit none\n    type :: u128\n        integer\\(int64\\) :: lo, hi\n    end type\n    interface\n        pure subroutine mu64_hw\\(a, b, lo, hi\\) bind\\(c, name=\"ffc_mul_u64_hw\"\\)\n            import :: c_int64_t\n            integer\\(c_int64_t\\), intent\\(in\\), value :: a, b\n            integer\\(c_int64_t\\), intent\\(out\\) :: lo, hi\n        end subroutine mu64_hw\n    end interface\ncontains\n    pure elemental subroutine mu64\\(a, b, res\\)\n        integer\\(int64\\), intent\\(in\\) :: a, b\n        type\\(u128\\), intent\\(out\\) :: res\n        call mu64_hw\\(a, b, res%lo, res%hi\\)\n    end subroutine mu64\nend module test_mod\nEOF\ngfortran -O3 -S -o /tmp/test_mu64_interop.s /tmp/test_mu64_interop.f90 && grep -A15 'mu64:' /tmp/test_mu64_interop.s)",
+      "Bash(cat > /tmp/test_i128.f90 << 'EOF'\nmodule test_mod\n    use iso_fortran_env, only: int64\n    use iso_c_binding, only: c_int128_t\n    implicit none\n    integer, parameter :: has_128 = merge\\(1, 0, c_int128_t > 0\\)\n    integer, parameter :: IK = merge\\(c_int128_t, int64, c_int128_t > 0\\)\n    type :: u128\n        integer\\(int64\\) :: lo, hi\n    end type\ncontains\n    pure elemental subroutine mu64\\(a, b, res\\)\n        integer\\(int64\\), intent\\(in\\) :: a, b\n        type\\(u128\\), intent\\(out\\) :: res\n        integer\\(IK\\) :: z\n        z = int\\(a, IK\\) * int\\(b, IK\\)\n        res%lo = int\\(z, int64\\)\n        res%hi = int\\(ishft\\(z, -64\\), int64\\)\n        ! unsigned correction: signed→unsigned high word\n        if \\(a < 0\\) res%hi = res%hi + b\n        if \\(b < 0\\) res%hi = res%hi + a\n    end subroutine mu64\nend module test_mod\nEOF\ngfortran -O3 -S -o /tmp/test_i128.s /tmp/test_i128.f90 && grep -A25 'mu64:' /tmp/test_i128.s)",
+      "Bash(objdump -d /Users/federico/code/fortran-fast-float/build/gfortran_*/fortran-fast-float/src_fast_float_module.f90.o 2>/dev/null | grep -A60 'mu64>' | head -65)",
+      "Bash(ls /Users/federico/code/fortran-fast-float/build/gfortran_*/fortran-fast-float/src_fast_float_module.f90.o 2>/dev/null && ls /Users/federico/code/fortran-fast-float/build/gfortran_*/test/benchmark_compare 2>/dev/null)",
+      "Bash(objdump -d /Users/federico/code/fortran-fast-float/build/gfortran_5B9D64403829A5C6/fortran-fast-float/src_fast_float_module.f90.o 2>/dev/null | grep -A30 '<___fast_float_module_MOD_mu64>:')",
+      "Bash(objdump -d /Users/federico/code/fortran-fast-float/build/gfortran_5B9D64403829A5C6/fortran-fast-float/src_fast_float_module.f90.o 2>/dev/null | grep 'mu64' | head -5)",
+      "Bash(nm /Users/federico/code/fortran-fast-float/build/gfortran_5B9D64403829A5C6/fortran-fast-float/src_fast_float_module.f90.o | grep -i mu64)",
+      "Bash(nm /Users/federico/code/fortran-fast-float/build/gfortran_5B9D64403829A5C6/fortran-fast-float/src_fast_float_module.f90.o | grep -i 'cprd\\\\|cflt\\\\|fchars\\\\|pns\\\\|parse_double')",
+      "Bash(objdump -d /Users/federico/code/fortran-fast-float/build/gfortran_5B9D64403829A5C6/fortran-fast-float/src_fast_float_module.f90.o 2>/dev/null | sed -n '/<___fast_float_module_MOD_cprd/,/^$/p' | head -40)",
+      "Bash(objdump -d /Users/federico/code/fortran-fast-float/build/gfortran_5B9D64403829A5C6/fortran-fast-float/src_fast_float_module.f90.o 2>/dev/null | sed -n '/<___fast_float_module_MOD_pns>:/,/^$/p' | wc -l)",
+      "Bash(objdump -d /Users/federico/code/fortran-fast-float/build/gfortran_5B9D64403829A5C6/fortran-fast-float/src_fast_float_module.f90.o 2>/dev/null | sed -n '/<___fast_float_module_MOD_ffc_parse_double_range_sub>:/,/^$/p' | wc -l)",
+      "Bash(git add:*)",
+      "Bash(source ~/.zshrc 2>/dev/null; echo \"SDKROOT=$SDKROOT\")",
+      "Bash(./run_benchmarks.sh 2>&1)",
+      "Bash(git worktree:*)",
+      "Bash(git stash:*)"
+    ]
+  }
+}

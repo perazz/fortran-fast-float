@@ -715,10 +715,9 @@ contains
 
         a%valid = .false.
         if (first > last) return
-        if (opts%decimal_point /= '.') return
-        if (iand(opts%format, FMT_FORT) /= 0) return
-        if (iand(opts%format, FMT_SKIP) /= 0) return
-        if (iand(opts%format, FMT_FIX) == 0) return
+        if (iand(opts%format, ior(FMT_FORT, FMT_SKIP)) /= 0 .or. &
+            iand(opts%format, FMT_FIX) == 0 .or. &
+            opts%decimal_point /= '.') return
 
         p = first
         if (str(p:p) == '-') then
@@ -726,27 +725,27 @@ contains
             p = p + 1
         else if (str(p:p) == '+') then
             if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
-            p = p + 1
+            first = first + 1
         end if
-        if (p > last) return
+        if (first > last) return
 
         ! Parse integer digits
         a%int_start = p
         mantissa = 0_i8
         int_digits = 0
-        do while (p <= last .and. int_digits < 19)
-            ic = iachar(str(p:p)) - 48
+        do while (first <= last .and. int_digits < 19)
+            ic = iachar(str(first:first)) - 48
             if (ic < 0 .or. ic > 9) exit
             mantissa = 10_i8 * mantissa + int(ic, i8)
             int_digits = int_digits + 1
-            p = p + 1
+            first = first + 1
         end do
         if (int_digits == 0) return
         if (bj .and. int_digits > 1 .and. str(a%int_start:a%int_start) == '0') return
         a%int_len = int_digits
 
         ! Check what follows the integer part
-        if (p > last) then
+        if (first > last) then
             ! Pure integer: consumed entire string
             a%mantissa = mantissa
             a%exponent = 0_i8
@@ -760,9 +759,9 @@ contains
         if (iand(opts%format, FMT_SCI) == 0) return
 
         ! Parse fractional part
-        p = p + 1
-        if (p > last) return
-        frac_digits = last - p + 1
+        first = first + 1
+        if (first > last) return
+        frac_digits = last - first + 1
         if (int_digits + frac_digits > 19) return
         a%frac_start = p
         call loop_parse_eight(p, last, str, mantissa)
@@ -2434,6 +2433,7 @@ contains
                 call parse_infnan_32( str, ps, la, out, res)
                 return
             end if
+            return
         end if
         call from_chars(str, p, out, FLOAT_FMT, res)
     end function parse_float_opts_impl

@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DATA_DIR="/Users/federico/code/simple_fastfloat_benchmark/data"
-REPEAT_COUNT="${1:-3}"
+REPEAT_COUNT="${1:-5}"
 
 SDKROOT="${SDKROOT:-$(xcrun --show-sdk-path)}"
 export SDKROOT
