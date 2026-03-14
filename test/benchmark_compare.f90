@@ -1,8 +1,8 @@
 program benchmark_compare
     use iso_c_binding, only: c_char, c_double, c_int32_t, c_null_char, c_size_t
     use iso_fortran_env, only: int64, output_unit, real64
-    use fast_float_module, only: FFC_OUTCOME_OK, ffc_parse_double, DEFAULT_PARSING
-    use fast_float_module, only: ffc_parse_double_range_sub, ffc_result
+    use fast_float_module, only: OUTCOME_OK, parse_double, DEFAULT_PARSING
+    use fast_float_module, only: parse_double_range_sub, parse_result
     use ffc_c_bridge, only: benchmark_ffc_lines_c, ffc_parse_double_c
     use str2real_m, only: str2real
     use stdlib_str2num, only: to_num
@@ -153,10 +153,10 @@ contains
         integer(c_int32_t) :: c_outcome
         real(c_double) :: c_value
         real(real64) :: f_value
-        type(ffc_result) :: f_result
+        type(parse_result) :: f_result
 
         do i = 1, size(lines)
-            f_result = ffc_parse_double(lines(i)%text, f_value)
+            f_result = parse_double(lines(i)%text, f_value)
             call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), c_value, c_outcome)
 
             if (f_result%outcome /= int(c_outcome)) then
@@ -164,7 +164,7 @@ contains
                 error stop 1
             end if
 
-            if (f_result%outcome == FFC_OUTCOME_OK) then
+            if (f_result%outcome == OUTCOME_OK) then
                 if (transfer(f_value, 0_int64) /= transfer(real(c_value, real64), 0_int64)) then
                     write(output_unit, "(a,i0)") "value mismatch at line ", i
                     error stop 1
@@ -200,7 +200,7 @@ contains
         integer :: i, k, r
         integer(c_int32_t) :: c_outcome
         integer(int64) :: count_end, count_rate, count_start
-        type(ffc_result) :: f_result
+        type(parse_result) :: f_result
 
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
         min_ns = huge(1.0_real64)
@@ -212,8 +212,8 @@ contains
             answer = 0.0_real64
             call system_clock(count=count_start)
             do i = 1, nlines
-                f_result = ffc_parse_double(lines(i)%text, x_f)
-                if (f_result%outcome /= FFC_OUTCOME_OK) cycle
+                f_result = parse_double(lines(i)%text, x_f)
+                if (f_result%outcome /= OUTCOME_OK) cycle
                 if (x_f > answer) answer = x_f
             end do
             call system_clock(count=count_end)
@@ -225,12 +225,12 @@ contains
             answer = 0.0_real64
             call system_clock(count=count_start)
             do i = 1, nlines
-                call ffc_parse_double_range_sub( &
+                call parse_double_range_sub( &
                     packed_text, &
                     int(offsets(i), kind=kind(i)) + 1, &
                     int(offsets(i) + lengths(i), kind=kind(i)), &
                     x_f, f_result, DEFAULT_PARSING)
-                if (f_result%outcome /= FFC_OUTCOME_OK) cycle
+                if (f_result%outcome /= OUTCOME_OK) cycle
                 if (x_f > answer) answer = x_f
             end do
             call system_clock(count=count_end)
@@ -268,7 +268,7 @@ contains
             call system_clock(count=count_start)
             do i = 1, nlines
                 call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), x_c, c_outcome)
-                if (c_outcome /= FFC_OUTCOME_OK) cycle
+                if (c_outcome /= OUTCOME_OK) cycle
                 if (real(x_c, real64) > answer) answer = real(x_c, real64)
             end do
             call system_clock(count=count_end)
