@@ -1309,8 +1309,7 @@ contains
             res%mantissa = ishft(res%mantissa, res%power2 - 1_int32)
             res%mantissa = res%mantissa + iand(res%mantissa, 1_int64)
             res%mantissa = ishft(res%mantissa, -1)
-            if (unsigned_lt(res%mantissa, &
-                    ishft(1_int64, f%mantissa_bits))) then
+            if (unsigned_lt(res%mantissa, ishft(1_int64, f%mantissa_bits))) then
                 res%power2 = 0
             else
                 res%power2 = 1
@@ -1319,27 +1318,19 @@ contains
         end if
 
         if (iand(pr%lo, not(1_int64)) == 0 .and. &
-            q >= int(f%min_round_trip_exp, int64) .and. &
-            q <= int(f%max_round_trip_exp, int64) .and. &
-            iand(res%mantissa, 3_int64) == 1) then
-            if (ishft(res%mantissa, sa) == pr%hi) &
-                res%mantissa = iand(res%mantissa, &
-                                    not(1_int64))
-        end if
+            q >= int(f%min_round_trip_exp, int64) .and. q <= int(f%max_round_trip_exp, int64) .and. &
+            iand(res%mantissa, 3_int64) == 1 .and. ishft(res%mantissa, sa) == pr%hi) &
+                res%mantissa = iand(res%mantissa, not(1_int64))
 
-        res%mantissa = res%mantissa + &
-            iand(res%mantissa, 1_int64)
+        res%mantissa = res%mantissa + iand(res%mantissa, 1_int64)
         res%mantissa = ishft(res%mantissa, -1)
 
-        if (unsigned_ge(res%mantissa, &
-                ishft(2_int64, f%mantissa_bits))) then
-            res%mantissa = ishft(1_int64, &
-                                 f%mantissa_bits)
+        if (unsigned_ge(res%mantissa, ishft(2_int64, f%mantissa_bits))) then
+            res%mantissa = ishft(1_int64, f%mantissa_bits)
             res%power2 = res%power2 + 1
         end if
 
-        res%mantissa = iand(res%mantissa, &
-            not(ishft(1_int64, f%mantissa_bits)))
+        res%mantissa = iand(res%mantissa, not(ishft(1_int64, f%mantissa_bits)))
         if (res%power2 >= int(f%inf_power, int32)) then
             res%power2 = int(f%inf_power, int32)
             res%mantissa = 0
@@ -1347,19 +1338,16 @@ contains
     end subroutine compute_float
 
     !> Compute error-scaled adjusted mantissa.
-    pure elemental subroutine compute_error_scaled( &
-            q, wi, lz, f, res)
+    pure elemental subroutine compute_error_scaled(q, wi, lz, f, res)
         integer(int64), intent(in) :: q, wi
         integer(int32), intent(in) :: lz
         type(float_format), intent(in) :: f
         type(adjusted_mantissa), intent(out) :: res
         integer :: h, b
+        
         h = int(ieor(ishft(wi, -63), 1_int64))
         b = f%mantissa_bits - f%min_exponent
-        res = adjusted_mantissa( &
-            ishft(wi, h), &
-            b10_to_b2(int(q, int32)) + int(b, int32) - &
-                int(h, int32) - lz - 62 + INVALID_AM)
+        res = adjusted_mantissa(ishft(wi, h), b10_to_b2(int(q, int32)) + int(b-h-lz-62+INVALID_AM, int32))
     end subroutine compute_error_scaled
 
     !> Compute error adjusted mantissa.
@@ -1380,17 +1368,14 @@ contains
     ! ===== Clinger fast path =====
 
     !> Clinger fast path for double precision.
-    pure elemental subroutine clinger_fast_path_64( &
-            m, e, ng, vd, f, ok)
+    pure elemental subroutine clinger_fast_path_64( m, e, ng, vd, f, ok)
         integer(int64), intent(in) :: m, e
         logical, intent(in) :: ng
         real(real64), intent(inout) :: vd
         type(float_format), intent(in) :: f
         logical, intent(out) :: ok
 
-        ok = e >= int(f%min_fast_path, int64) .and. &
-             e <= int(f%max_fast_path, int64) .and. &
-             m <= f%max_mantissa
+        ok = e >= int(f%min_fast_path, int64) .and. e <= int(f%max_fast_path, int64) .and. m <= f%max_mantissa
         if (.not. ok) return
 
         if (e < 0) then
@@ -1411,9 +1396,7 @@ contains
         type(float_format), intent(in) :: f
         logical, intent(out) :: ok
 
-        ok = e >= int(f%min_fast_path, int64) .and. &
-             e <= int(f%max_fast_path, int64) .and. &
-             m <= f%max_mantissa
+        ok = e >= int(f%min_fast_path, int64) .and. e <= int(f%max_fast_path, int64) .and. m <= f%max_mantissa
         if (.not. ok) return
 
         if (e < 0) then
@@ -1428,8 +1411,7 @@ contains
     ! ===== Adjusted mantissa to float conversion =====
 
     !> Convert adjusted mantissa to double precision.
-    pure elemental real(real64) function am_to_double(ng, am) &
-            result(v)
+    pure elemental real(real64) function am_to_double(ng, am) result(v)
         logical, intent(in) :: ng
         type(adjusted_mantissa), intent(in) :: am
         integer(int64) :: w
@@ -1440,8 +1422,7 @@ contains
     end function am_to_double
 
     !> Convert adjusted mantissa to single precision.
-    pure elemental real(real32) function am_to_float(ng, am) &
-            result(v)
+    pure elemental real(real32) function am_to_float(ng, am) result(v)
         logical, intent(in) :: ng
         type(adjusted_mantissa), intent(in) :: am
         integer(int32) :: w
@@ -1626,8 +1607,7 @@ contains
             cf = c1 .or. c2
         end do
         if (cf) then
-            call bigint_small_add( &
-                x, 1_int64, st + yl, bla_ok)
+            call bigint_small_add(x, 1_int64, st + yl, bla_ok)
             return
         end if
         bla_ok = .true.
@@ -1661,8 +1641,7 @@ contains
                         blm_ok = .false.
                         return
                     end if
-                    call bigint_large_add( &
-                        x, zi%d, zi%ln, j, ok)
+                    call bigint_large_add(x, zi%d, zi%ln, j, ok)
                     if (.not. ok) then
                         blm_ok = .false.
                         return
@@ -1699,8 +1678,7 @@ contains
         pv = 0
         do j = 1, sv%ln
             xi = sv%d(j)
-            sv%d(j) = ior(ishft(xi, sl), &
-                          ishft(pv, -sr))
+            sv%d(j) = ior(ishft(xi, sl), ishft(pv, -sr))
             pv = xi
         end do
         cy = ishft(pv, -sr)
@@ -1767,13 +1745,11 @@ contains
         integer :: er
         logical :: ok
         integer, parameter :: ss = 27
-        integer(int64), parameter :: &
-            mn = 7450580596923828125_int64
+        integer(int64), parameter :: mn = 7450580596923828125_int64
         er = ei
         bp5_ok = .false.
         do while (er >= LARGE_POWER_OF_FIVE_SIZE)
-            call bigint_large_mul( &
-                bi%vec, LARGE_POWER_OF_FIVE, 5, ok)
+            call bigint_large_mul( bi%vec, LARGE_POWER_OF_FIVE, 5, ok)
             if (.not. ok) return
             er = er - LARGE_POWER_OF_FIVE_SIZE
         end do
@@ -1783,8 +1759,7 @@ contains
             er = er - ss
         end do
         if (er /= 0) then
-            call bigint_small_mul( &
-                bi%vec, SMALL_POWER_OF_FIVE(er), ok)
+            call bigint_small_mul(bi%vec, SMALL_POWER_OF_FIVE(er), ok)
             if (.not. ok) return
         end if
         bp5_ok = .true.
@@ -1820,16 +1795,14 @@ contains
         if (bi%vec%ln == 0) then
             bigint_ctlz = 0
         else
-            bigint_ctlz = &
-                count_leading_zeros(bi%vec%d(bi%vec%ln))
+            bigint_ctlz = count_leading_zeros(bi%vec%d(bi%vec%ln))
         end if
     end function bigint_ctlz
 
     !> Compute bit length of a bigint.
     pure elemental integer function bigint_bit_length(bi)
         type(bigint), intent(in) :: bi
-        bigint_bit_length = &
-            LIMB_BITS * bi%vec%ln - bigint_ctlz(bi)
+        bigint_bit_length = LIMB_BITS * bi%vec%ln - bigint_ctlz(bi)
     end function bigint_bit_length
 
     !> Extract high 64 bits from a single limb.
@@ -1853,8 +1826,7 @@ contains
             res = r0
         else
             tr = ishft(r1, s) /= 0
-            res = ior(ishft(r0, s), &
-                      ishft(r1, -(64 - s)))
+            res = ior(ishft(r0, s), ishft(r1, -(64 - s)))
         end if
     end subroutine hi64_2
 
@@ -1869,8 +1841,7 @@ contains
         else if (bi%vec%ln == 1) then
             call hi64_1(sv_rindex(bi%vec, 0), tr, res)
         else
-            call hi64_2(sv_rindex(bi%vec, 0), &
-                        sv_rindex(bi%vec, 1), tr, res)
+            call hi64_2(sv_rindex(bi%vec, 0), sv_rindex(bi%vec, 1), tr, res)
             tr = tr .or. sv_nonzero_after(bi%vec, 2)
         end if
     end subroutine bigint_hi64
@@ -1888,12 +1859,10 @@ contains
         end if
         bigint_compare = 0
         do j = a%vec%ln, 1, -1
-            if (unsigned_gt(a%vec%d(j), &
-                            b%vec%d(j))) then
+            if (unsigned_gt(a%vec%d(j), b%vec%d(j))) then
                 bigint_compare = 1
                 return
-            else if (unsigned_lt(a%vec%d(j), &
-                                 b%vec%d(j))) then
+            else if (unsigned_lt(a%vec%d(j), b%vec%d(j))) then
                 bigint_compare = -1
                 return
             end if
@@ -1933,14 +1902,10 @@ contains
         bi = int(f%mantissa_bits - f%min_exponent, int32)
         b = get_double_bits(vd)
         if (iand(b, f%exponent_mask) == 0) then
-            res = adjusted_mantissa( &
-                iand(b, f%mantissa_mask), 1 - bi)
+            res = adjusted_mantissa( iand(b, f%mantissa_mask), 1 - bi)
         else
-            res = adjusted_mantissa( &
-                ior(iand(b, f%mantissa_mask), &
-                    f%hidden_bit_mask), &
-                int(ishft(iand(b, f%exponent_mask), &
-                    -f%mantissa_bits), int32) - bi)
+            res = adjusted_mantissa( ior(iand(b, f%mantissa_mask), f%hidden_bit_mask), &
+                                     int(ishft(iand(b, f%exponent_mask),-f%mantissa_bits), int32) - bi)
         end if
     end subroutine to_extended
 
@@ -1967,8 +1932,7 @@ contains
     end subroutine round_down_impl
 
     !> Round to nearest with tie-even.
-    pure elemental subroutine round_nearest_tie_even( &
-            am, s, tr)
+    pure elemental subroutine round_nearest_tie_even( am, s, tr)
         type(adjusted_mantissa), intent(inout) :: am
         integer(int32), intent(in) :: s
         logical, intent(in) :: tr
@@ -1994,8 +1958,7 @@ contains
         end if
         am%power2 = am%power2 + s
         od = iand(am%mantissa, 1_int64) == 1
-        if (ab .or. (hf .and. tr) .or. (od .and. hf)) &
-            am%mantissa = am%mantissa + 1
+        if (ab .or. (hf .and. tr) .or. (od .and. hf)) am%mantissa = am%mantissa + 1
     end subroutine round_nearest_tie_even
 
     !> Round to nearest using comparison ordering.
@@ -2011,22 +1974,18 @@ contains
         end if
         am%power2 = am%power2 + s
         od = iand(am%mantissa, 1_int64) == 1
-        if (ord > 0 .or. (ord == 0 .and. od)) &
-            am%mantissa = am%mantissa + 1
+        if (ord > 0 .or. (ord == 0 .and. od)) am%mantissa = am%mantissa + 1
     end subroutine round_nearest_cmp
 
     !> Finish rounding: handle overflow and infinity.
     pure elemental subroutine round_finish(am, f)
         type(adjusted_mantissa), intent(inout) :: am
         type(float_format), intent(in) :: f
-        if (unsigned_ge(am%mantissa, &
-                ishft(2_int64, f%mantissa_bits))) then
-            am%mantissa = ishft(1_int64, &
-                                f%mantissa_bits)
+        if (unsigned_ge(am%mantissa, ishft(2_int64, f%mantissa_bits))) then
+            am%mantissa = ishft(1_int64, f%mantissa_bits)
             am%power2 = am%power2 + 1
         end if
-        am%mantissa = iand(am%mantissa, &
-            not(ishft(1_int64, f%mantissa_bits)))
+        am%mantissa = iand(am%mantissa, not(ishft(1_int64, f%mantissa_bits)))
         if (am%power2 >= int(f%inf_power, int32)) then
             am%power2 = int(f%inf_power, int32)
             am%mantissa = 0
@@ -2042,9 +2001,7 @@ contains
         if (-am%power2 >= ms) then
             s = min(-am%power2 + 1, 64_int32)
             call round_down_impl(am, s)
-            if (unsigned_lt(am%mantissa, &
-                    ishft(1_int64, &
-                          f%mantissa_bits))) then
+            if (unsigned_lt(am%mantissa, ishft(1_int64, f%mantissa_bits))) then
                 am%power2 = 0
             else
                 am%power2 = 1
@@ -2065,9 +2022,7 @@ contains
         if (-am%power2 >= ms) then
             s = min(-am%power2 + 1, 64_int32)
             call round_nearest_tie_even(am, s, tr)
-            if (unsigned_lt(am%mantissa, &
-                    ishft(1_int64, &
-                          f%mantissa_bits))) then
+            if (unsigned_lt(am%mantissa, ishft(1_int64, f%mantissa_bits))) then
                 am%power2 = 0
             else
                 am%power2 = 1
@@ -2088,9 +2043,7 @@ contains
         if (-am%power2 >= ms) then
             s = min(-am%power2 + 1, 64_int32)
             call round_nearest_cmp(am, s, ord)
-            if (unsigned_lt(am%mantissa, &
-                    ishft(1_int64, &
-                          f%mantissa_bits))) then
+            if (unsigned_lt(am%mantissa, ishft(1_int64, f%mantissa_bits))) then
                 am%power2 = 0
             else
                 am%power2 = 1
@@ -2139,8 +2092,7 @@ contains
     end subroutine round_up_bigint
 
     !> Parse mantissa digits into a bigint.
-    pure elemental subroutine parse_mantissa( &
-            str, num, md, rb, dg)
+    pure elemental subroutine parse_mantissa( str, num, md, rb, dg)
         character(*), intent(in) :: str
         type(parsed_number), intent(in) :: num
         integer, intent(in) :: md
@@ -2160,96 +2112,69 @@ contains
             pe = p + num%int_len - 1
             call skip_zeros(str, p, pe)
             do while (p <= pe)
-                do while (pe - p + 1 >= 8 .and. &
-                          stp - ct >= 8 .and. &
-                          md - dg >= 8)
-                    v = v*100000000_int64 + int( &
-                        parse_eight_digits( &
-                            read8_to_u64(str(p:))), &
-                        int64)
+                do while (pe - p + 1 >= 8 .and. stp - ct >= 8 .and. md - dg >= 8)
+                    v = v*100000000_int64 + int( parse_eight_digits(read8_to_u64(str(p:))),int64)
                     p = p + 8
                     ct = ct + 8
                     dg = dg + 8
                 end do
-                do while (ct < stp .and. p <= pe .and. &
-                          dg < md)
-                    v = v*10 + &
-                        int(iachar(str(p:p)) - 48, int64)
+                do while (ct < stp .and. p <= pe .and. dg < md)
+                    v = v*10 + int(iachar(str(p:p)) - 48, int64)
                     p = p + 1
                     ct = ct + 1
                     dg = dg + 1
                 end do
                 if (dg == md) then
-                    call add_native( &
-                        rb, POW10_U64(ct), v)
+                    call add_native(rb, POW10_U64(ct), v)
                     tr = is_truncated(str, p, pe)
-                    if (num%frac_start > 0 .and. &
-                        num%frac_len > 0) &
-                        tr = tr .or. is_truncated( &
-                            str, num%frac_start, &
-                            num%frac_start + &
-                                num%frac_len - 1)
-                    if (tr) &
-                        call round_up_bigint(rb, dg)
+                    if (num%frac_start > 0 .and. num%frac_len > 0) &
+                        tr = tr .or. is_truncated(str, num%frac_start, num%frac_start + num%frac_len - 1)
+                    if (tr) call round_up_bigint(rb, dg)
                     return
                 else
-                    call add_native( &
-                        rb, POW10_U64(ct), v)
+                    call add_native(rb, POW10_U64(ct), v)
                     ct = 0
                     v = 0
                 end if
             end do
         end if
 
-        if (num%frac_start > 0 .and. &
-            num%frac_len > 0) then
+        if (num%frac_start > 0 .and. num%frac_len > 0) then
             p = num%frac_start
             pe = p + num%frac_len - 1
             if (dg == 0) call skip_zeros(str, p, pe)
             do while (p <= pe)
-                do while (pe - p + 1 >= 8 .and. &
-                          stp - ct >= 8 .and. &
-                          md - dg >= 8)
-                    v = v*100000000_int64 + int( &
-                        parse_eight_digits( &
-                            read8_to_u64(str(p:))), &
-                        int64)
+                do while (pe - p + 1 >= 8 .and. stp - ct >= 8 .and. md - dg >= 8)
+                    v = v*100000000_int64 + int(parse_eight_digits(read8_to_u64(str(p:))),int64)
                     p = p + 8
                     ct = ct + 8
                     dg = dg + 8
                 end do
-                do while (ct < stp .and. p <= pe .and. &
-                          dg < md)
-                    v = v*10 + &
-                        int(iachar(str(p:p)) - 48, int64)
+                do while (ct < stp .and. p <= pe .and. dg < md)
+                    v = v*10 + int(iachar(str(p:p)) - 48, int64)
                     p = p + 1
                     ct = ct + 1
                     dg = dg + 1
                 end do
                 if (dg == md) then
-                    call add_native( &
-                        rb, POW10_U64(ct), v)
+                    call add_native( rb, POW10_U64(ct), v)
                     tr = is_truncated(str, p, pe)
-                    if (tr) &
-                        call round_up_bigint(rb, dg)
+                    if (tr) call round_up_bigint(rb, dg)
                     return
                 else
-                    call add_native( &
-                        rb, POW10_U64(ct), v)
+                    call add_native( rb, POW10_U64(ct), v)
                     ct = 0
                     v = 0
                 end if
             end do
         end if
-        if (ct /= 0) &
-            call add_native(rb, POW10_U64(ct), v)
+        if (ct /= 0) call add_native(rb, POW10_U64(ct), v)
     end subroutine parse_mantissa
 
     ! ===== Digit comparison fallback =====
 
     !> Positive digit comparison path.
-    pure elemental subroutine positive_digit_comp( &
-            str, bm, ev, f, res)
+    pure elemental subroutine positive_digit_comp( str, bm, ev, f, res)
         character(*), intent(in) :: str
         type(bigint), intent(inout) :: bm
         integer(int32), intent(in) :: ev
@@ -2260,14 +2185,12 @@ contains
         call bigint_pow10(bm, int(ev), ok)
         call bigint_hi64(bm, tr, res%mantissa)
         bi = f%mantissa_bits - f%min_exponent
-        res%power2 = int( &
-            bigint_bit_length(bm) - 64 + bi, int32)
+        res%power2 = int( bigint_bit_length(bm) - 64 + bi, int32)
         call round_tie_even(res, tr, f)
     end subroutine positive_digit_comp
 
     !> Negative digit comparison path.
-    pure elemental subroutine negative_digit_comp( &
-            str, bm, ai, ev, f, res)
+    pure elemental subroutine negative_digit_comp( str, bm, ai, ev, f, res)
         character(*), intent(in) :: str
         type(bigint), intent(inout) :: bm
         type(adjusted_mantissa), intent(in) :: ai
@@ -2313,26 +2236,21 @@ contains
         type(bigint) :: bm
         am = ai
         am%power2 = am%power2 - INVALID_AM
-        se = scale_exponent(num%mantissa, &
-                            int(num%exponent, int32))
+        se = scale_exponent(num%mantissa, int(num%exponent, int32))
         call bigint_empty(bm)
-        call parse_mantissa( &
-            str, num, f%max_digits, bm, dg)
+        call parse_mantissa(str, num, f%max_digits, bm, dg)
         ev = se + 1 - int(dg, int32)
         if (ev >= 0) then
-            call positive_digit_comp( &
-                str, bm, ev, f, res)
+            call positive_digit_comp(str, bm, ev, f, res)
         else
-            call negative_digit_comp( &
-                str, bm, am, ev, f, res)
+            call negative_digit_comp(str, bm, am, ev, f, res)
         end if
     end subroutine digit_comp
 
     ! ===== Conversion entry points =====
 
     !> Convert parsed number string to double (from_chars path).
-    pure elemental subroutine from_chars_64( &
-            str, p, vd, f, res)
+    pure elemental subroutine from_chars_64(str, p, vd, f, res)
         character(*), intent(in) :: str
         type(parsed_number), intent(in) :: p
         real(real64), intent(inout) :: vd
@@ -2345,38 +2263,26 @@ contains
         res%pos     = p%last_idx
 
         if (.not. p%too_many_digits) then
-            call clinger_fast_path_64( &
-                p%mantissa, p%exponent, &
-                p%negative, vd, f, cfok)
+            call clinger_fast_path_64(p%mantissa, p%exponent, p%negative, vd, f, cfok)
             if (cfok) return
         end if
 
-        call compute_float( &
-            p%exponent, p%mantissa, f, am)
-        if (p%too_many_digits .and. &
-            am%power2 >= 0) then
-            call compute_float( &
-                p%exponent, p%mantissa + 1, f, ap)
-            eq = am%mantissa == ap%mantissa .and. &
-                 am%power2 == ap%power2
-            if (.not. eq) call compute_error( &
-                p%exponent, p%mantissa, f, am)
+        call compute_float(p%exponent, p%mantissa, f, am)
+        if (p%too_many_digits .and. am%power2 >= 0) then
+            call compute_float(p%exponent, p%mantissa + 1, f, ap)
+            eq = am%mantissa == ap%mantissa .and. am%power2 == ap%power2
+            if (.not. eq) call compute_error(p%exponent, p%mantissa, f, am)
         end if
-        if (am%power2 < 0) &
-            call digit_comp(str, p, am, f, am)
+        if (am%power2 < 0) call digit_comp(str, p, am, f, am)
 
         vd = am_to_double(p%negative, am)
 
-        if ((p%mantissa /= 0 .and. &
-             am%mantissa == 0 .and. &
-             am%power2 == 0) .or. &
-            am%power2 == int(f%inf_power, int32)) &
-            res%outcome = OUTCOME_OUT_OF_RANGE
+        if ((p%mantissa /= 0 .and. am%mantissa == 0 .and. am%power2 == 0) .or. &
+             am%power2 == int(f%inf_power, int32)) res%outcome = OUTCOME_OUT_OF_RANGE
     end subroutine from_chars_64
 
     !> Convert parsed number string to float (from_chars path).
-    pure elemental subroutine from_chars_32( &
-            str, p, vf, f, res)
+    pure elemental subroutine from_chars_32( str, p, vf, f, res)
         character(*), intent(in) :: str
         type(parsed_number), intent(in) :: p
         real(real32), intent(inout) :: vf
@@ -2389,81 +2295,61 @@ contains
         res%pos     = p%last_idx
 
         if (.not. p%too_many_digits) then
-            call clinger_fast_path_32( &
-                p%mantissa, p%exponent, &
-                p%negative, vf, f, cfok)
+            call clinger_fast_path_32( p%mantissa, p%exponent, p%negative, vf, f, cfok)
             if (cfok) return
         end if
 
-        call compute_float( &
-            p%exponent, p%mantissa, f, am)
-        if (p%too_many_digits .and. &
-            am%power2 >= 0) then
-            call compute_float( &
-                p%exponent, p%mantissa + 1, f, ap)
-            eq = am%mantissa == ap%mantissa .and. &
-                 am%power2 == ap%power2
-            if (.not. eq) call compute_error( &
-                p%exponent, p%mantissa, f, am)
+        call compute_float( p%exponent, p%mantissa, f, am)
+        if (p%too_many_digits .and. am%power2 >= 0) then
+            call compute_float(p%exponent, p%mantissa + 1, f, ap)
+            eq = am%mantissa == ap%mantissa .and. am%power2 == ap%power2
+            if (.not. eq) call compute_error(p%exponent, p%mantissa, f, am)
         end if
-        if (am%power2 < 0) &
-            call digit_comp(str, p, am, f, am)
+        if (am%power2 < 0) call digit_comp(str, p, am, f, am)
 
         vf = am_to_float(p%negative, am)
 
-        if ((p%mantissa /= 0 .and. &
-             am%mantissa == 0 .and. &
-             am%power2 == 0) .or. &
-            am%power2 == int(f%inf_power, int32)) &
-            res%outcome = OUTCOME_OUT_OF_RANGE
+        if ((p%mantissa /= 0 .and. am%mantissa == 0 .and. am%power2 == 0) .or. &
+            am%power2 == int(f%inf_power, int32)) res%outcome = OUTCOME_OUT_OF_RANGE
     end subroutine from_chars_32
 
     ! ===== Public API =====
 
     !> Parse a string to double precision.
-    type(parse_result) function parse_double_impl(str, out) &
-            result(res)
+    type(parse_result) function parse_double_impl(str, out) result(res)
         character(*), intent(in) :: str
         real(real64), intent(out) :: out
-        call parse_double_range_sub( &
-            str, 1, len(str), out, res, DEFAULT_PARSING)
+        call parse_double_range_sub(str, 1, len(str), out, res, DEFAULT_PARSING)
     end function parse_double_impl
 
     !> Parse a string to double precision with options.
-    type(parse_result) function parse_double_opts_impl( &
-            str, out, options) result(res)
+    type(parse_result) function parse_double_opts_impl(str, out, options) result(res)
         character(*), intent(in) :: str
         real(real64), intent(out) :: out
         type(parse_options), intent(in) :: options
-        call parse_double_range_sub( &
-            str, 1, len(str), out, res, options)
+        call parse_double_range_sub(str, 1, len(str), out, res, options)
     end function parse_double_opts_impl
 
     !> Parse a substring range to double precision.
-    type(parse_result) function parse_double_range_impl( &
-            str, first, last, out) result(res)
+    type(parse_result) function parse_double_range_impl(str, first, last, out) result(res)
         character(*), intent(in) :: str
         integer, intent(in) :: first, last
         real(real64), intent(out) :: out
-        call parse_double_range_sub( &
-            str, first, last, out, res, DEFAULT_PARSING)
+        call parse_double_range_sub(str, first, last, out, res, DEFAULT_PARSING)
     end function parse_double_range_impl
 
     !> Parse a substring range to double precision with options.
-    function parse_double_range_opts_impl( &
-            str, first, last, out, options) result(res)
+    function parse_double_range_opts_impl(str, first, last, out, options) result(res)
         character(*), intent(in) :: str
         integer, intent(in) :: first, last
         real(real64), intent(out) :: out
         type(parse_options), intent(in) :: options
         type(parse_result) :: res
-        call parse_double_range_sub( &
-            str, first, last, out, res, options)
+        call parse_double_range_sub(str, first, last, out, res, options)
     end function parse_double_range_opts_impl
 
     !> Parse a string range to double, subroutine form.
-    elemental subroutine parse_double_range_sub( &
-            str, first, last, out, res, o)
+    elemental subroutine parse_double_range_sub(str, first, last, out, res, o)
         character(len=*), intent(in) :: str
         integer, value :: first
         integer, intent(in), value :: last
@@ -2480,28 +2366,22 @@ contains
             end do
         end if
         if (first > last) then
-            res = parse_result( &
-                first, OUTCOME_INVALID_INPUT)
+            res = parse_result(first, OUTCOME_INVALID_INPUT)
             out = 0.0_real64
             return
         end if
         bj = iand(o%format, FMT_JSON) /= 0
         call try_fast_path(first, last, str, o, bj, p)
-        if (.not. p%valid) &
-            call parse_number_string( &
-                first, last, str, o, bj, p)
+        if (.not. p%valid) call parse_number_string(first, last, str, o, bj, p)
         if (.not. p%valid) then
             if (iand(o%format, FMT_NOIN) /= 0) then
-                res = parse_result( &
-                    first, OUTCOME_INVALID_INPUT)
+                res = parse_result(first, OUTCOME_INVALID_INPUT)
                 out = 0.0_real64
             else
-                call parse_infnan_64( &
-                    str, first, last, out, res)
+                call parse_infnan_64(str, first, last, out, res)
             end if
         else
-            call from_chars( &
-                str, p, out, DOUBLE_FMT, res)
+            call from_chars(str, p, out, DOUBLE_FMT, res)
         end if
     end subroutine parse_double_range_sub
 
@@ -2510,13 +2390,11 @@ contains
         character(*), intent(in) :: str
         real(real32), intent(out) :: out
         type(parse_result) :: res
-        res = parse_float_opts_impl( &
-            str, out, DEFAULT_PARSING)
+        res = parse_float_opts_impl(str, out, DEFAULT_PARSING)
     end function parse_float_impl
 
     !> Parse a string to single precision with options.
-    function parse_float_opts_impl( &
-            str, out, options) result(res)
+    function parse_float_opts_impl(str, out, options) result(res)
         character(*), intent(in) :: str
         real(real32), intent(out) :: out
         type(parse_options), intent(in) :: options
@@ -2534,27 +2412,21 @@ contains
             end do
         end if
         if (ps > la) then
-            res = parse_result( &
-                ps, OUTCOME_INVALID_INPUT)
+            res = parse_result(ps, OUTCOME_INVALID_INPUT)
             return
         end if
         bj = iand(options%format, FMT_JSON) /= 0
-        call parse_number_string( &
-            ps, la, str, options, bj, p)
+        call parse_number_string(ps, la, str, options, bj, p)
         if (.not. p%valid) then
-            if (iand(options%format, &
-                     FMT_NOIN) /= 0) then
-                res = parse_result( &
-                    ps, OUTCOME_INVALID_INPUT)
+            if (iand(options%format, FMT_NOIN) /= 0) then
+                res = parse_result(ps, OUTCOME_INVALID_INPUT)
                 return
             else
-                call parse_infnan_32( &
-                    str, ps, la, out, res)
+                call parse_infnan_32( str, ps, la, out, res)
                 return
             end if
         end if
-        call from_chars( &
-            str, p, out, FLOAT_FMT, res)
+        call from_chars(str, p, out, FLOAT_FMT, res)
     end function parse_float_opts_impl
 
     ! ===== Integer parsing =====
@@ -2612,22 +2484,18 @@ contains
             res%outcome = OUTCOME_OUT_OF_RANGE
             return
         end if
-        if (dc == md .and. &
-            unsigned_lt(i, MIN_SAFE_U64(base))) then
+        if (dc == md .and. unsigned_lt(i, MIN_SAFE_U64(base))) then
             res%outcome = OUTCOME_OUT_OF_RANGE
             return
         end if
         if (.not. ng) then
-            if (unsigned_gt(i, &
-                    int(z'7FFFFFFFFFFFFFFF', &
-                        int64))) then
+            if (unsigned_gt(i, int(z'7FFFFFFFFFFFFFFF', int64))) then
                 res%outcome = OUTCOME_OUT_OF_RANGE
                 return
             end if
             out = i
         else
-            if (unsigned_gt(i, &
-                    ishft(1_int64, 63))) then
+            if (unsigned_gt(i, ishft(1_int64, 63))) then
                 res%outcome = OUTCOME_OUT_OF_RANGE
                 return
             end if
@@ -2646,8 +2514,7 @@ contains
         out = 0
         res = parse_i64(str, base, v)
         if (res%outcome /= OUTCOME_OK) return
-        if (v > int(z'7FFFFFFF', int64) .or. &
-            v < int(z'FFFFFFFF80000000', int64)) then
+        if (v > int(z'7FFFFFFF', int64) .or. v < int(z'FFFFFFFF80000000', int64)) then
             res%outcome = OUTCOME_OUT_OF_RANGE
             return
         end if
