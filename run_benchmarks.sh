@@ -2,13 +2,26 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CPP_DIR="${CPP_BENCH_DIR:-/Users/federico/code/simple_fastfloat_benchmark}"
-DATA_DIR="${CPP_DIR}/data"
 REPEAT_COUNT="${1:-5}"
 DATA_FILES=("canada_short.txt" "canada.txt" "mesh.txt")
 
-SDKROOT="${SDKROOT:-$(xcrun --show-sdk-path)}"
-export SDKROOT
+# Locate or clone the C++ benchmark repo
+if [[ -n "${CPP_BENCH_DIR:-}" ]]; then
+    CPP_DIR="${CPP_BENCH_DIR}"
+elif [[ -d "${ROOT_DIR}/build/simple_fastfloat_benchmark" ]]; then
+    CPP_DIR="${ROOT_DIR}/build/simple_fastfloat_benchmark"
+else
+    echo "=== Cloning simple_fastfloat_benchmark ==="
+    CPP_DIR="${ROOT_DIR}/build/simple_fastfloat_benchmark"
+    git clone --depth 1 https://github.com/lemire/simple_fastfloat_benchmark.git "${CPP_DIR}"
+fi
+DATA_DIR="${CPP_DIR}/data"
+
+# macOS SDK (needed by fpm C compilation)
+if command -v xcrun &>/dev/null; then
+    SDKROOT="${SDKROOT:-$(xcrun --show-sdk-path)}"
+    export SDKROOT
+fi
 export FPM_CFLAGS="${FPM_CFLAGS:--O3 -DNDEBUG}"
 
 # Build C++ benchmarks if needed
@@ -26,7 +39,6 @@ fpm build --profile release 2>&1 | tail -1
 echo ""
 
 # extract_results: keep only lines matching "label : NNN MB/s"
-# also skip UTF-16 results and fpm build chatter
 extract_results() {
     grep -E '^\S.+:\s+[0-9]+(\.[0-9]+)?\s+MB/s'
 }
