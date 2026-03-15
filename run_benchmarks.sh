@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CPP_DIR="${CPP_BENCH_DIR:-/Users/federico/code/simple_fastfloat_benchmark}"
 DATA_DIR="${CPP_DIR}/data"
 REPEAT_COUNT="${1:-5}"
-DATA_FILES=("canada.txt" "canada_short.txt" "mesh.txt" "contrived.txt")
+DATA_FILES=("canada_short.txt" "canada.txt" "mesh.txt")
 
 SDKROOT="${SDKROOT:-$(xcrun --show-sdk-path)}"
 export SDKROOT

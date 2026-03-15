@@ -183,23 +183,25 @@ contains
 
         ! Benchmark case indices
         integer, parameter :: B_RSUB = 1, B_STDLIB = 2
-        integer, parameter :: B_S2R = 3, B_CLOOP = 4
-        integer, parameter :: B_C = 5, NCASES = 5
+        integer, parameter :: B_S2R = 3, B_READ = 4
+        integer, parameter :: B_CLOOP = 5, B_C = 6, NCASES = 6
 
         character(len=40), parameter :: labels(NCASES) = [ character(len=40) :: &
-            "fortran (range sub)", &
+            "fortran (fast_float)", &
             "fortran (stdlib to_num)", "fortran (str2real)", &
-            "c (ffc.h, line loop)", "c (ffc.h)" ]
+            "fortran (read *)", &
+            "ffc via fortran interop", "ffc (pure C loop)" ]
         character(len=24), parameter :: cksum_labels(NCASES) = [ character(len=24) :: &
-            "fortran range subbits = ", &
+            "fast_float bits       = ", &
             "stdlib checksum bits  = ", "str2real checksum bits= ", &
-            "c loop checksum bits  = ", "c checksum bits       = " ]
+            "read * checksum bits  = ", &
+            "ffc interop bits      = ", "ffc C loop bits       = " ]
 
         real(real64) :: min_ns(NCASES), avg_ns(NCASES), checksum(NCASES)
         real(real64) :: answer, elapsed_ns, volume_mb, x_f
-        real(real64) :: x_stdlib, x_str2real
+        real(real64) :: x_stdlib, x_str2real, x_read
         real(c_double) :: x_c
-        integer :: i, k, r
+        integer :: i, k, r, ios_read
         integer(c_int32_t) :: c_outcome
         integer(int64) :: count_end, count_rate, count_start
         type(parse_result) :: f_result
@@ -256,6 +258,19 @@ contains
             answer = 0.0_real64
             call system_clock(count=count_start)
             do i = 1, nlines
+                read(lines(i)%text, *, iostat=ios_read) x_read
+                if (ios_read /= 0) cycle
+                if (x_read > answer) answer = x_read
+            end do
+            call system_clock(count=count_end)
+            call tally(B_READ, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
+        end do
+
+        do r = 1, repeat_count
+            answer = 0.0_real64
+            call system_clock(count=count_start)
+            do i = 1, nlines
                 call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), x_c, c_outcome)
                 if (c_outcome /= OUTCOME_OK) cycle
                 if (real(x_c, real64) > answer) answer = real(x_c, real64)
@@ -304,12 +319,11 @@ contains
         real(real64), intent(in) :: volume_mb, min_ns, avg_ns
         integer, intent(in) :: nlines
 
-        write(output_unit, "(a40,a,f12.2,a,f5.1,a,f12.2,a,f12.2,a)") &
+        write(output_unit, "(a40,a,f8.2,a,f3.1,a,f8.2,a)") &
             name, ": ", &
             volume_mb * 1.0e9_real64 / min_ns, " MB/s (+/- ", &
             (avg_ns - min_ns) * 100.0_real64 / avg_ns, " %) ", &
-            real(nlines, real64) * 1.0e3_real64 / min_ns, " Mfloat/s  ", &
-            min_ns / real(nlines, real64), " ns/f"
+            real(nlines, real64) * 1.0e3_real64 / min_ns, " Mfloat/s  "
     end subroutine print_result
 
 end program benchmark_compare
