@@ -3,7 +3,7 @@ program benchmark_compare
     use iso_fortran_env, only: int64, output_unit, real64
     use fast_float_module, only: OUTCOME_OK, parse_double, DEFAULT_PARSING
     use fast_float_module, only: parse_double_range_sub, parse_result
-    use ffc_c_bridge, only: benchmark_ffc_lines_c, ffc_parse_double_c
+    use ffc_c_bridge, only: ffc_parse_double_c
     use str2real_m, only: str2real
     use stdlib_str2num, only: to_num
     implicit none(type, external)
@@ -252,18 +252,18 @@ contains
         ! Benchmark case indices
         integer, parameter :: B_RSUB = 1, B_STDLIB = 2
         integer, parameter :: B_S2R = 3, B_READ = 4
-        integer, parameter :: B_CLOOP = 5, B_C = 6, NCASES = 6
+        integer, parameter :: B_CLOOP = 5, NCASES = 5
 
         character(len=40), parameter :: labels(NCASES) = [ character(len=40) :: &
             "fortran (fast_float)", &
             "fortran (stdlib to_num)", "fortran (str2real)", &
             "fortran (read *)", &
-            "ffc via fortran interop", "ffc (pure C loop)" ]
+            "ffc via fortran interop" ]
         character(len=24), parameter :: cksum_labels(NCASES) = [ character(len=24) :: &
             "fast_float bits       = ", &
             "stdlib checksum bits  = ", "str2real checksum bits= ", &
             "read * checksum bits  = ", &
-            "ffc interop bits      = ", "ffc C loop bits       = " ]
+            "ffc interop bits      = " ]
 
         real(real64) :: min_ns(NCASES), avg_ns(NCASES), checksum(NCASES)
         real(real64) :: answer, elapsed_ns, volume_mb, x_f
@@ -348,14 +348,6 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
-        do r = 1, repeat_count
-            call system_clock(count=count_start)
-            call benchmark_ffc_lines_c(packed_data, offsets, lengths, nlines, x_c, c_outcome)
-            call system_clock(count=count_end)
-            call tally(B_C, real(x_c, real64), count_start, count_end, count_rate, &
-                        elapsed_ns, avg_ns, min_ns, checksum)
-        end do
-
         avg_ns = avg_ns / real(repeat_count, real64)
 
         write(output_unit, "(a)") ""
@@ -367,7 +359,6 @@ contains
         do k = 1, NCASES
             write(output_unit, "(a,z16.16)") cksum_labels(k), transfer(checksum(k), 0_int64)
         end do
-        write(output_unit, "(a,f8.3,a)") "speed ratio c/fortran = ", min_ns(B_RSUB) / min_ns(B_C), "x"
     end subroutine run_benchmark
 
     subroutine tally(idx, cksum_val, t0, t1, rate, elapsed_ns, avg_ns, min_ns, checksum)
