@@ -32,3 +32,8 @@ main = "check.f90"
 name = "benchmark_compare"
 source-dir = "test"
 main = "benchmark_compare.f90"
+
+[[test]]
+name = "test_accuracy"
+source-dir = "test"
+main = "test_accuracy.f90"

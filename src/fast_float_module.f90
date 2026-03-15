@@ -725,27 +725,27 @@ contains
             p = p + 1
         else if (str(p:p) == '+') then
             if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
-            first = first + 1
+            p = p + 1
         end if
-        if (first > last) return
+        if (p > last) return
 
         ! Parse integer digits
         a%int_start = p
         mantissa = 0_i8
         int_digits = 0
-        do while (first <= last .and. int_digits < 19)
-            ic = iachar(str(first:first)) - 48
+        do while (p <= last .and. int_digits < 19)
+            ic = iachar(str(p:p)) - 48
             if (ic < 0 .or. ic > 9) exit
             mantissa = 10_i8 * mantissa + int(ic, i8)
             int_digits = int_digits + 1
-            first = first + 1
+            p = p + 1
         end do
         if (int_digits == 0) return
         if (bj .and. int_digits > 1 .and. str(a%int_start:a%int_start) == '0') return
         a%int_len = int_digits
 
         ! Check what follows the integer part
-        if (first > last) then
+        if (p > last) then
             ! Pure integer: consumed entire string
             a%mantissa = mantissa
             a%exponent = 0_i8
@@ -759,9 +759,9 @@ contains
         if (iand(opts%format, FMT_SCI) == 0) return
 
         ! Parse fractional part
-        first = first + 1
-        if (first > last) return
-        frac_digits = last - first + 1
+        p = p + 1
+        if (p > last) return
+        frac_digits = last - p + 1
         if (int_digits + frac_digits > 19) return
         a%frac_start = p
         call loop_parse_eight(p, last, str, mantissa)
@@ -1017,7 +1017,7 @@ contains
         do while (p <= last)
             ic = iachar(str(p:p))
             if (.not. is_digit(ic)) exit
-            i = 10*i + ic - 40
+            i = 10*i + int(ic - 48, i8)
             p = p + 1
         end do
 
@@ -1383,7 +1383,8 @@ contains
         type(float_format), intent(in) :: f
         logical, intent(out) :: ok
 
-        ok = e >= int(f%min_fast_path, i8) .and. e <= int(f%max_fast_path, i8) .and. m <= f%max_mantissa
+        ok = e >= int(f%min_fast_path, i8) .and. e <= int(f%max_fast_path, i8) .and. &
+             m >= 0 .and. m <= f%max_mantissa
         if (.not. ok) return
 
         if (e < 0) then
@@ -1404,7 +1405,8 @@ contains
         type(float_format), intent(in) :: f
         logical, intent(out) :: ok
 
-        ok = e >= int(f%min_fast_path, i8) .and. e <= int(f%max_fast_path, i8) .and. m <= f%max_mantissa
+        ok = e >= int(f%min_fast_path, i8) .and. e <= int(f%max_fast_path, i8) .and. &
+             m >= 0 .and. m <= f%max_mantissa
         if (.not. ok) return
 
         if (e < 0) then
@@ -1886,6 +1888,12 @@ contains
         integer(i8) :: m
         m = mi
         scale_exponent = e
+        ! Unsigned values >= 2^63 appear negative in signed int64.
+        ! These always have exactly 19 decimal digits (range [2^63, 10^19-1]).
+        if (m < 0) then
+            scale_exponent = e + 18
+            return
+        end if
         do while (m >= 10000)
             m = m / 10000
             scale_exponent = scale_exponent + 4
@@ -2281,7 +2289,10 @@ contains
             eq = am%mantissa == ap%mantissa .and. am%power2 == ap%power2
             if (.not. eq) call compute_error(p%exponent, p%mantissa, f, am)
         end if
-        if (am%power2 < 0) call digit_comp(str, p, am, f, am)
+        if (am%power2 < 0) then
+            ap = am
+            call digit_comp(str, p, ap, f, am)
+        end if
 
         vd = am_to_double(p%negative, am)
 
@@ -2313,7 +2324,10 @@ contains
             eq = am%mantissa == ap%mantissa .and. am%power2 == ap%power2
             if (.not. eq) call compute_error(p%exponent, p%mantissa, f, am)
         end if
-        if (am%power2 < 0) call digit_comp(str, p, am, f, am)
+        if (am%power2 < 0) then
+            ap = am
+            call digit_comp(str, p, ap, f, am)
+        end if
 
         vf = am_to_float(p%negative, am)
 
