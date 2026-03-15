@@ -18,8 +18,8 @@ program benchmark_compare
     end type benchmark_file
 
     character(len=1024) :: filename, arg
-    integer :: i, nargs, repeat_count
-    logical :: has_file
+    integer :: i, nargs, repeat_count, random_count
+    logical :: has_file, has_random
     type(benchmark_file), allocatable :: files(:)
     type(benchmark_line), allocatable :: lines(:)
     character(:), allocatable :: packed_text
@@ -29,7 +29,9 @@ program benchmark_compare
 
     filename = ""
     has_file = .false.
+    has_random = .false.
     repeat_count = 100
+    random_count = 100000
 
     nargs = command_argument_count()
     i = 1
@@ -41,6 +43,16 @@ program benchmark_compare
             call get_command_argument(i, filename)
             has_file = .true.
             call add_file(files, trim(filename))
+        case ("-m", "--model")
+            has_random = .true.
+            ! skip the model name argument (only "uniform" supported)
+            if (i + 1 <= nargs) then
+                i = i + 1
+            end if
+        case ("-n", "--volume")
+            i = i + 1
+            call get_command_argument(i, arg)
+            read(arg, *) random_count
         case ("-r", "--repeat")
             i = i + 1
             call get_command_argument(i, arg)
@@ -52,21 +64,34 @@ program benchmark_compare
         i = i + 1
     end do
 
-    if (.not. has_file) then
-        call print_help()
-        stop 1
+    if (.not. has_file .and. .not. has_random) then
+        ! Default: run random benchmark
+        has_random = .true.
     end if
 
-    do i = 1, size(files)
-        call load_lines(files(i)%path, lines, packed_text, packed_data, offsets, lengths, nlines, volume)
-        call verify(lines)
-        call run_benchmark(files(i)%path, lines, packed_text, packed_data, offsets, lengths, nlines, volume, repeat_count)
-    end do
+    if (has_random) then
+        call generate_random_lines(random_count, lines, packed_text, packed_data, offsets, lengths, nlines, volume)
+        call run_benchmark("random uniform [0,1)", lines, packed_text, packed_data, &
+                           offsets, lengths, nlines, volume, repeat_count)
+    end if
+
+    if (has_file) then
+        do i = 1, size(files)
+            call load_lines(files(i)%path, lines, packed_text, packed_data, offsets, lengths, nlines, volume)
+            call verify(lines)
+            call run_benchmark(files(i)%path, lines, packed_text, packed_data, &
+                               offsets, lengths, nlines, volume, repeat_count)
+        end do
+    end if
 
 contains
 
     subroutine print_help()
-        write(output_unit, "(a)") "Usage: fpm test --target benchmark_compare -- -f <datafile> [-f <datafile> ...] [-r repeat]"
+        write(output_unit, "(a)") "Usage: fpm test --target benchmark_compare -- [options]"
+        write(output_unit, "(a)") "  -f <file>    Benchmark a data file (repeatable)"
+        write(output_unit, "(a)") "  -m uniform   Benchmark random floats in [0,1) (default if no -f)"
+        write(output_unit, "(a)") "  -n <count>   Number of random floats (default: 100000)"
+        write(output_unit, "(a)") "  -r <repeat>  Repeat count (default: 100)"
     end subroutine print_help
 
     subroutine add_file(files, path)
@@ -87,6 +112,49 @@ contains
         tmp(n + 1)%path = path
         call move_alloc(tmp, files)
     end subroutine add_file
+
+    subroutine generate_random_lines(howmany, lines, packed_text, packed_data, offsets, lengths, nlines, volume)
+        integer, intent(in) :: howmany
+        type(benchmark_line), allocatable, intent(out) :: lines(:)
+        character(:), allocatable, intent(out) :: packed_text
+        character(kind=c_char), allocatable, intent(out) :: packed_data(:)
+        integer(c_size_t), allocatable, intent(out) :: offsets(:), lengths(:)
+        integer, intent(out) :: nlines, volume
+
+        real(real64) :: x
+        character(len=24) :: buf
+        integer :: i, j, n, cursor, total
+
+        nlines = howmany
+        allocate(lines(nlines), offsets(nlines), lengths(nlines))
+
+        ! First pass: generate strings and measure total volume
+        total = 0
+        call random_seed()
+        do i = 1, nlines
+            call random_number(x)
+            write(buf, '(es23.16)') x
+            n = len_trim(buf)
+            lines(i)%text = trim(buf)
+            allocate(lines(i)%c_text(n))
+            lines(i)%c_text = [(buf(j:j), j = 1, n)]
+            total = total + n
+        end do
+        volume = total
+
+        ! Build packed arrays
+        allocate(character(len=max(total, 1)) :: packed_text)
+        allocate(packed_data(max(total, 1)))
+        cursor = 1
+        do i = 1, nlines
+            n = len(lines(i)%text)
+            offsets(i) = int(cursor - 1, c_size_t)
+            lengths(i) = int(n, c_size_t)
+            packed_text(cursor:cursor+n-1) = lines(i)%text
+            packed_data(cursor:cursor+n-1) = lines(i)%c_text
+            cursor = cursor + n
+        end do
+    end subroutine generate_random_lines
 
     subroutine load_lines(fname, lines, packed_text, packed_data, offsets, lengths, nlines, volume)
         character(*), intent(in) :: fname

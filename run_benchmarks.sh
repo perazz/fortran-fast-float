@@ -48,6 +48,23 @@ extract_cpp_results() {
     sed '/UTF-16/,$d' | extract_results
 }
 
+# ---- Random uniform [0,1) benchmark ----
+echo "================================================================"
+echo "  Random uniform [0,1)  (100000 floats)"
+echo "================================================================"
+
+cpp_out=$("${CPP_BENCH}" 2>&1 || true)
+cpp_results=$(echo "${cpp_out}" | extract_cpp_results || true)
+
+fort_out=$(fpm test --profile release --target benchmark_compare -- \
+    -m uniform -r "${REPEAT_COUNT}" 2>&1 || true)
+fort_results=$(echo "${fort_out}" | extract_results || true)
+
+echo "${cpp_results}"
+echo "${fort_results}"
+echo ""
+
+# ---- File-based benchmarks ----
 for f in "${DATA_FILES[@]}"; do
     filepath="${DATA_DIR}/${f}"
     [[ -f "${filepath}" ]] || { echo "WARNING: ${filepath} not found, skipping"; continue; }
