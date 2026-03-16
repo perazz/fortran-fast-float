@@ -1,7 +1,8 @@
 program benchmark_compare
     use iso_c_binding, only: c_char, c_double, c_int32_t, c_null_char, c_size_t
     use iso_fortran_env, only: int64, output_unit, real64
-    use fast_float_module, only: OUTCOME_OK, parse_double, DEFAULT_PARSING
+    use fast_float_module, only: outcomes, outcome, parse_double, DEFAULT_PARSING, &
+                                  operator(==), operator(/=)
     use fast_float_module, only: parse_double_range_sub, parse_result
     use ffc_c_bridge, only: ffc_parse_double_c
     use str2real_m, only: str2real
@@ -224,15 +225,15 @@ contains
         type(parse_result) :: f_result
 
         do i = 1, size(lines)
-            f_result = parse_double(lines(i)%text, f_value)
+            f_value = parse_double(lines(i)%text, f_result)
             call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), c_value, c_outcome)
 
-            if (f_result%outcome /= int(c_outcome)) then
+            if (f_result%outcome%state /= int(c_outcome, kind=1)) then
                 write(output_unit, "(a,i0)") "outcome mismatch at line ", i
                 error stop 1
             end if
 
-            if (f_result%outcome == OUTCOME_OK) then
+            if (f_result%outcome == outcomes%OK) then
                 if (transfer(f_value, 0_int64) /= transfer(real(c_value, real64), 0_int64)) then
                     write(output_unit, "(a,i0)") "value mismatch at line ", i
                     error stop 1
@@ -289,7 +290,7 @@ contains
                     int(offsets(i), kind=kind(i)) + 1, &
                     int(offsets(i) + lengths(i), kind=kind(i)), &
                     x_f, f_result, DEFAULT_PARSING)
-                if (f_result%outcome /= OUTCOME_OK) cycle
+                if (f_result%outcome /= outcomes%OK) cycle
                 if (x_f > answer) answer = x_f
             end do
             call system_clock(count=count_end)
@@ -340,7 +341,7 @@ contains
             call system_clock(count=count_start)
             do i = 1, nlines
                 call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), x_c, c_outcome)
-                if (c_outcome /= OUTCOME_OK) cycle
+                if (c_outcome /= outcomes%OK%state) cycle
                 if (real(x_c, real64) > answer) answer = real(x_c, real64)
             end do
             call system_clock(count=count_end)

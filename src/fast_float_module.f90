@@ -8,32 +8,42 @@ module fast_float_module
     implicit none(type, external)
     private
 
-    public :: parse_double, parse_double_range
+    public :: parse_double
     public :: parse_double_range_sub
     public :: parse_float
     public :: parse_i64, parse_i32
     public :: parse_options, parse_result
-    public :: OUTCOME_OK, OUTCOME_INVALID_INPUT
-    public :: OUTCOME_OUT_OF_RANGE
+    public :: OUTCOME
     public :: PRESET_GENERAL, PRESET_JSON
     public :: PRESET_FORTRAN, DEFAULT_PARSING
 
     interface parse_double
-        module procedure parse_double_impl, parse_double_opts_impl
+        module procedure parse_dp, parse_dp_opts, parse_dp_range, parse_dp_range_opts
+        module procedure parse_dp_res, parse_dp_opts_res, parse_dp_range_res, parse_dp_range_opts_res
     end interface parse_double
 
-    interface parse_double_range
-        module procedure parse_double_range_impl
-        module procedure parse_double_range_opts_impl
-    end interface parse_double_range
-
     interface parse_float
-        module procedure parse_float_impl, parse_float_opts_impl
+        module procedure parse_fp, parse_fp_opts
+        module procedure parse_fp_res, parse_fp_opts_res
     end interface parse_float
+
+    interface parse_i64
+        module procedure parse_i64_pure, parse_i64_std
+    end interface parse_i64
+
+    interface parse_i32
+        module procedure parse_i32_pure, parse_i32_std
+    end interface parse_i32
     
-    integer(i1), parameter :: OUTCOME_OK            = 0
-    integer(i1), parameter :: OUTCOME_INVALID_INPUT = 1
-    integer(i1), parameter :: OUTCOME_OUT_OF_RANGE  = 2
+    ! Parsing output
+    type, bind(C) :: outcome; integer(i1) :: state; end type   
+    type, bind(C), private :: outcomes_enum  
+        type(outcome) :: OK            = outcome(0)
+        type(outcome) :: INVALID_INPUT = outcome(1)
+        type(outcome) :: OUT_OF_RANGE  = outcome(2)        
+    end type outcomes_enum    
+    type(outcomes_enum), parameter, public :: outcomes = outcomes_enum()
+    
 
     integer(i8), parameter :: FMT_SCI  = ishft(1_i8, 0)
     integer(i8), parameter :: FMT_FIX  = ishft(1_i8, 2)
@@ -63,7 +73,7 @@ module fast_float_module
 
     type :: parse_result
         integer :: pos
-        integer(i1) :: outcome
+        type(outcome) :: outcome
     end type parse_result
 
     type :: parse_options
@@ -698,6 +708,16 @@ module fast_float_module
         module procedure is_digit_char
         module procedure is_digit_int
     end interface
+    
+    public :: operator(==), operator(/=)
+
+    interface operator(==)
+        module procedure outcome_eq
+    end interface
+
+    interface operator(/=)
+        module procedure outcome_ne
+    end interface
 
 contains
 
@@ -1162,10 +1182,10 @@ contains
         integer :: p, pp
         logical :: ms
         if (p0 > la) then
-            res = parse_result(p0, OUTCOME_INVALID_INPUT)
+            res = parse_result(p0, OUTCOMES%INVALID_INPUT)
             return
         else
-            res = parse_result(p0, OUTCOME_OK)
+            res = parse_result(p0, OUTCOMES%OK)
         end if
         p = p0
         ms = str(p:p) == '-'
@@ -1200,7 +1220,7 @@ contains
                 return
             end if
         end if
-        res%outcome = OUTCOME_INVALID_INPUT
+        res%outcome = OUTCOMES%INVALID_INPUT
     end subroutine parse_infnan_32
 
     !> Parse inf/nan for double precision.
@@ -1213,10 +1233,10 @@ contains
         logical :: ms
         res%pos = p0
         if (p0 > la) then
-            res%outcome = OUTCOME_INVALID_INPUT
+            res%outcome = OUTCOMES%INVALID_INPUT
             return
         else
-            res%outcome = OUTCOME_OK
+            res%outcome = OUTCOMES%OK
         end if
         p = p0
         ms = (str(p:p) == '-')
@@ -1251,7 +1271,7 @@ contains
                 return
             end if
         end if
-        res%outcome = OUTCOME_INVALID_INPUT
+        res%outcome = OUTCOMES%INVALID_INPUT
     end subroutine parse_infnan_64
 
     ! ===== Eisel-Lemire core algorithm =====
@@ -2275,7 +2295,7 @@ contains
         type(adjusted_mantissa) :: am, ap
         logical :: eq, cfok
 
-        res%outcome = OUTCOME_OK
+        res%outcome = OUTCOMES%OK
         res%pos     = p%last_idx
 
         if (.not. p%too_many_digits) then
@@ -2297,7 +2317,7 @@ contains
         vd = am_to_double(p%negative, am)
 
         if ((p%mantissa /= 0 .and. am%mantissa == 0 .and. am%power2 == 0) .or. &
-             am%power2 == int(f%inf_power, i4)) res%outcome = OUTCOME_OUT_OF_RANGE
+             am%power2 == int(f%inf_power, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
     end subroutine from_chars_64
 
     !> Convert parsed number string to float (from_chars path).
@@ -2310,7 +2330,7 @@ contains
         type(adjusted_mantissa) :: am, ap
         logical :: eq, cfok
 
-        res%outcome = OUTCOME_OK
+        res%outcome = OUTCOMES%OK
         res%pos     = p%last_idx
 
         if (.not. p%too_many_digits) then
@@ -2332,43 +2352,70 @@ contains
         vf = am_to_float(p%negative, am)
 
         if ((p%mantissa /= 0 .and. am%mantissa == 0 .and. am%power2 == 0) .or. &
-            am%power2 == int(f%inf_power, i4)) res%outcome = OUTCOME_OUT_OF_RANGE
+            am%power2 == int(f%inf_power, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
     end subroutine from_chars_32
 
     ! ===== Public API =====
 
-    !> Parse a string to double precision.
-    type(parse_result) function parse_double_impl(str, out) result(res)
-        character(*), intent(in) :: str
-        real(dp), intent(out) :: out
-        call parse_double_range_sub(str, 1, len(str), out, res, DEFAULT_PARSING)
-    end function parse_double_impl
+    ! --- parse_double: pure elemental (no parse_result) ---
 
-    !> Parse a string to double precision with options.
-    type(parse_result) function parse_double_opts_impl(str, out, options) result(res)
+    pure elemental real(dp) function parse_dp(str) result(out)
         character(*), intent(in) :: str
-        real(dp), intent(out) :: out
-        type(parse_options), intent(in) :: options
-        call parse_double_range_sub(str, 1, len(str), out, res, options)
-    end function parse_double_opts_impl
-
-    !> Parse a substring range to double precision.
-    type(parse_result) function parse_double_range_impl(str, first, last, out) result(res)
-        character(*), intent(in) :: str
-        integer, intent(in) :: first, last
-        real(dp), intent(out) :: out
-        call parse_double_range_sub(str, first, last, out, res, DEFAULT_PARSING)
-    end function parse_double_range_impl
-
-    !> Parse a substring range to double precision with options.
-    function parse_double_range_opts_impl(str, first, last, out, options) result(res)
-        character(*), intent(in) :: str
-        integer, intent(in) :: first, last
-        real(dp), intent(out) :: out
-        type(parse_options), intent(in) :: options
         type(parse_result) :: res
-        call parse_double_range_sub(str, first, last, out, res, options)
-    end function parse_double_range_opts_impl
+        call parse_double_range_sub(str, 1, len(str), out, res, DEFAULT_PARSING)
+    end function parse_dp
+
+    pure elemental real(dp) function parse_dp_opts(str, opts) result(out)
+        character(*), intent(in) :: str
+        type(parse_options), intent(in) :: opts
+        type(parse_result) :: res
+        call parse_double_range_sub(str, 1, len(str), out, res, opts)
+    end function parse_dp_opts
+
+    pure elemental real(dp) function parse_dp_range(str, first, last) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        type(parse_result) :: res
+        call parse_double_range_sub(str, first, last, out, res, DEFAULT_PARSING)
+    end function parse_dp_range
+
+    pure elemental real(dp) function parse_dp_range_opts(str, first, last, opts) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        type(parse_options), intent(in) :: opts
+        type(parse_result) :: res
+        call parse_double_range_sub(str, first, last, out, res, opts)
+    end function parse_dp_range_opts
+
+    ! --- parse_double: standard (with parse_result intent(out)) ---
+
+    real(dp) function parse_dp_res(str, res) result(out)
+        character(*), intent(in) :: str
+        type(parse_result), intent(out) :: res
+        call parse_double_range_sub(str, 1, len(str), out, res, DEFAULT_PARSING)
+    end function parse_dp_res
+
+    real(dp) function parse_dp_opts_res(str, opts, res) result(out)
+        character(*), intent(in) :: str
+        type(parse_options), intent(in) :: opts
+        type(parse_result), intent(out) :: res
+        call parse_double_range_sub(str, 1, len(str), out, res, opts)
+    end function parse_dp_opts_res
+
+    real(dp) function parse_dp_range_res(str, first, last, res) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        type(parse_result), intent(out) :: res
+        call parse_double_range_sub(str, first, last, out, res, DEFAULT_PARSING)
+    end function parse_dp_range_res
+
+    real(dp) function parse_dp_range_opts_res(str, first, last, opts, res) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: first, last
+        type(parse_options), intent(in) :: opts
+        type(parse_result), intent(out) :: res
+        call parse_double_range_sub(str, first, last, out, res, opts)
+    end function parse_dp_range_opts_res
 
     !> Parse a string range to double, subroutine form.
     elemental subroutine parse_double_range_sub(str, first, last, out, res, o)
@@ -2388,7 +2435,7 @@ contains
             end do
         end if
         if (first > last) then
-            res = parse_result(first, OUTCOME_INVALID_INPUT)
+            res = parse_result(first, OUTCOMES%INVALID_INPUT)
             out = 0.0_dp
             return
         end if
@@ -2397,7 +2444,7 @@ contains
         if (.not. p%valid) call parse_number_string(first, last, str, o, bj, p)
         if (.not. p%valid) then
             if (iand(o%format, FMT_NOIN) /= 0) then
-                res = parse_result(first, OUTCOME_INVALID_INPUT)
+                res = parse_result(first, OUTCOMES%INVALID_INPUT)
                 out = 0.0_dp
             else
                 call parse_infnan_64(str, first, last, out, res)
@@ -2407,59 +2454,81 @@ contains
         end if
     end subroutine parse_double_range_sub
 
-    !> Parse a string to single precision.
-    function parse_float_impl(str, out) result(res)
-        character(*), intent(in) :: str
+    !> Parse a string range to float, subroutine form.
+    elemental subroutine parse_float_range_sub(str, first, last, out, res, o)
+        character(len=*), intent(in) :: str
+        integer, intent(in), value :: first, last
         real(sp), intent(out) :: out
-        type(parse_result) :: res
-        res = parse_float_opts_impl(str, out, DEFAULT_PARSING)
-    end function parse_float_impl
-
-    !> Parse a string to single precision with options.
-    function parse_float_opts_impl(str, out, options) result(res)
-        character(*), intent(in) :: str
-        real(sp), intent(out) :: out
-        type(parse_options), intent(in) :: options
-        type(parse_result) :: res
+        type(parse_result), intent(out) :: res
+        type(parse_options), intent(in) :: o
         type(parsed_number) :: p
-        integer :: ps, la
+        integer :: ps
         logical :: bj
 
-        la = len(str)
-        ps = 1
-        if (iand(options%format, FMT_SKIP) /= 0) then
-            do while (ps <= la)
+        ps = first
+        if (iand(o%format, FMT_SKIP) /= 0) then
+            do while (ps <= last)
                 if (.not. is_space(str(ps:ps))) exit
                 ps = ps + 1
             end do
         end if
-        if (ps > la) then
-            res = parse_result(ps, OUTCOME_INVALID_INPUT)
+        if (ps > last) then
+            res = parse_result(ps, OUTCOMES%INVALID_INPUT)
+            out = 0.0_sp
             return
         end if
-        bj = iand(options%format, FMT_JSON) /= 0
-        call parse_number_string(ps, la, str, options, bj, p)
+        bj = iand(o%format, FMT_JSON) /= 0
+        call parse_number_string(ps, last, str, o, bj, p)
         if (.not. p%valid) then
-            if (iand(options%format, FMT_NOIN) /= 0) then
-                res = parse_result(ps, OUTCOME_INVALID_INPUT)
-                return
+            if (iand(o%format, FMT_NOIN) /= 0) then
+                res = parse_result(ps, OUTCOMES%INVALID_INPUT)
+                out = 0.0_sp
             else
-                call parse_infnan_32( str, ps, la, out, res)
-                return
+                call parse_infnan_32(str, ps, last, out, res)
             end if
-            return
+        else
+            call from_chars(str, p, out, FLOAT_FMT, res)
         end if
-        call from_chars(str, p, out, FLOAT_FMT, res)
-    end function parse_float_opts_impl
+    end subroutine parse_float_range_sub
+
+    ! --- parse_float: pure elemental (no parse_result) ---
+
+    pure elemental real(sp) function parse_fp(str) result(out)
+        character(*), intent(in) :: str
+        type(parse_result) :: res
+        call parse_float_range_sub(str, 1, len(str), out, res, DEFAULT_PARSING)
+    end function parse_fp
+
+    pure elemental real(sp) function parse_fp_opts(str, opts) result(out)
+        character(*), intent(in) :: str
+        type(parse_options), intent(in) :: opts
+        type(parse_result) :: res
+        call parse_float_range_sub(str, 1, len(str), out, res, opts)
+    end function parse_fp_opts
+
+    ! --- parse_float: standard (with parse_result intent(out)) ---
+
+    real(sp) function parse_fp_res(str, res) result(out)
+        character(*), intent(in) :: str
+        type(parse_result), intent(out) :: res
+        call parse_float_range_sub(str, 1, len(str), out, res, DEFAULT_PARSING)
+    end function parse_fp_res
+
+    real(sp) function parse_fp_opts_res(str, opts, res) result(out)
+        character(*), intent(in) :: str
+        type(parse_options), intent(in) :: opts
+        type(parse_result), intent(out) :: res
+        call parse_float_range_sub(str, 1, len(str), out, res, opts)
+    end function parse_fp_opts_res
 
     ! ===== Integer parsing =====
 
-    !> Parse a string to a 64-bit integer.
-    function parse_i64(str, base, out) result(res)
+    !> Parse a string to a 64-bit integer (subroutine form).
+    elemental subroutine parse_i64_sub(str, base, out, res)
         character(*), intent(in) :: str
         integer, intent(in) :: base
         integer(i8), intent(out) :: out
-        type(parse_result) :: res
+        type(parse_result), intent(out) :: res
         integer :: p, la, sn, sd, dc, md, d
         logical :: ng, hlz
         integer(i8) :: i
@@ -2468,7 +2537,7 @@ contains
         la = len(str)
         p = 1
         if (p > la .or. base < 2 .or. base > 36) then
-            res%outcome = OUTCOME_INVALID_INPUT
+            res%outcome = OUTCOMES%INVALID_INPUT
             res%pos = p
             return
         end if
@@ -2493,10 +2562,10 @@ contains
         if (dc == 0) then
             if (hlz) then
                 out = 0
-                res%outcome = OUTCOME_OK
+                res%outcome = OUTCOMES%OK
                 res%pos = p
             else
-                res%outcome = OUTCOME_INVALID_INPUT
+                res%outcome = OUTCOMES%INVALID_INPUT
                 res%pos = 1
             end if
             return
@@ -2504,44 +2573,87 @@ contains
         res%pos = p
         md = MAX_DIGITS_U64(base)
         if (dc > md) then
-            res%outcome = OUTCOME_OUT_OF_RANGE
+            res%outcome = OUTCOMES%OUT_OF_RANGE
             return
         end if
         if (dc == md .and. unsigned_lt(i, MIN_SAFE_U64(base))) then
-            res%outcome = OUTCOME_OUT_OF_RANGE
+            res%outcome = OUTCOMES%OUT_OF_RANGE
             return
         end if
         if (.not. ng) then
             if (unsigned_gt(i, int(z'7FFFFFFFFFFFFFFF', i8))) then
-                res%outcome = OUTCOME_OUT_OF_RANGE
+                res%outcome = OUTCOMES%OUT_OF_RANGE
                 return
             end if
             out = i
         else
             if (unsigned_gt(i, ishft(1_i8, 63))) then
-                res%outcome = OUTCOME_OUT_OF_RANGE
+                res%outcome = OUTCOMES%OUT_OF_RANGE
                 return
             end if
             out = not(i) + 1
         end if
-        res%outcome = OUTCOME_OK
-    end function parse_i64
+        res%outcome = OUTCOMES%OK
+    end subroutine parse_i64_sub
 
-    !> Parse a string to a 32-bit integer.
-    function parse_i32(str, base, out) result(res)
+    !> Parse a string to a 32-bit integer (subroutine form).
+    elemental subroutine parse_i32_sub(str, base, out, res)
         character(*), intent(in) :: str
         integer, intent(in) :: base
         integer(i4), intent(out) :: out
-        type(parse_result) :: res
+        type(parse_result), intent(out) :: res
         integer(i8) :: v
         out = 0
-        res = parse_i64(str, base, v)
-        if (res%outcome /= OUTCOME_OK) return
+        call parse_i64_sub(str, base, v, res)
+        if (.not. res%outcome == OUTCOMES%OK) return
         if (v > int(z'7FFFFFFF', i8) .or. v < int(z'FFFFFFFF80000000', i8)) then
-            res%outcome = OUTCOME_OUT_OF_RANGE
+            res%outcome = OUTCOMES%OUT_OF_RANGE
             return
         end if
         out = int(v, i4)
-    end function parse_i32
+    end subroutine parse_i32_sub
+
+    ! --- parse_i64: pure elemental + standard ---
+
+    pure elemental integer(i8) function parse_i64_pure(str, base) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: base
+        type(parse_result) :: res
+        call parse_i64_sub(str, base, out, res)
+    end function parse_i64_pure
+
+    integer(i8) function parse_i64_std(str, base, res) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: base
+        type(parse_result), intent(out) :: res
+        call parse_i64_sub(str, base, out, res)
+    end function parse_i64_std
+
+    ! --- parse_i32: pure elemental + standard ---
+
+    pure elemental integer(i4) function parse_i32_pure(str, base) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: base
+        type(parse_result) :: res
+        call parse_i32_sub(str, base, out, res)
+    end function parse_i32_pure
+
+    integer(i4) function parse_i32_std(str, base, res) result(out)
+        character(*), intent(in) :: str
+        integer, intent(in) :: base
+        type(parse_result), intent(out) :: res
+        call parse_i32_sub(str, base, out, res)
+    end function parse_i32_std
+    
+    ! Outcome comparisons
+    elemental logical function outcome_eq(this,that)
+        type(outcome), intent(in) :: this,that
+        outcome_eq = this%state==that%state
+    end function outcome_eq
+
+    elemental logical function outcome_ne(this,that)
+        type(outcome), intent(in) :: this,that
+        outcome_ne = this%state/=that%state
+    end function outcome_ne
 
 end module fast_float_module

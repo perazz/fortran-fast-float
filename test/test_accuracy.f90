@@ -1,9 +1,9 @@
 !> @brief Accuracy tests against supplemental hex-encoded reference data.
 module test_accuracy_driver
-    use iso_fortran_env, only: int8, int32, int64, real32, real64, stderr => error_unit, &
+    use iso_fortran_env, only: int32, int64, real32, real64, stderr => error_unit, &
                                stdout => output_unit
-    use fast_float_module, only: parse_double, parse_float, parse_result, OUTCOME_OK, &
-                               OUTCOME_OUT_OF_RANGE
+    use fast_float_module, only: parse_double, parse_float, parse_result, outcome, outcomes, &
+                                  operator(==), operator(/=)
     implicit none(type, external)
     private
 
@@ -221,14 +221,14 @@ contains
                 cycle
             end if
 
-            res = parse_double(trim(num_string), dval)
-            if (res%outcome /= OUTCOME_OK .and. res%outcome /= OUTCOME_OUT_OF_RANGE) then
+            dval = parse_double(trim(num_string), res)
+            if (res%outcome /= outcomes%OK .and. res%outcome /= outcomes%OUT_OF_RANGE) then
                 line_ok = .false.
                 if (verbose .and. fail_printed < MAX_FAIL_PRINT) then
                     write(stdout, '()')
                     write(stdout, '(a,i0,a,a,a,i0)') '  FAIL line ', line_num, &
                         ': parse_double failed for "', trim(num_string), &
-                        '" outcome=', int(res%outcome)
+                        '" outcome=', res%outcome%state
                     fail_printed = fail_printed + 1
                 end if
             else
@@ -257,14 +257,14 @@ contains
                         fail_printed = fail_printed + 1
                     end if
                 else
-                    res = parse_float(trim(num_string), fval)
-                    if (res%outcome /= OUTCOME_OK .and. res%outcome /= OUTCOME_OUT_OF_RANGE) then
+                    fval = parse_float(trim(num_string), res)
+                    if (res%outcome /= outcomes%OK .and. res%outcome /= outcomes%OUT_OF_RANGE) then
                         line_ok = .false.
                         if (verbose .and. fail_printed < MAX_FAIL_PRINT) then
                             write(stdout, '()')
                             write(stdout, '(a,i0,a,a,a,i0)') '  FAIL line ', line_num, &
                                 ': parse_float failed for "', trim(num_string), &
-                                '" outcome=', int(res%outcome)
+                                '" outcome=', res%outcome%state
                             fail_printed = fail_printed + 1
                         end if
                     else
