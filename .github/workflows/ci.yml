@@ -1,0 +1,42 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        toolchain:
+          - {compiler: gcc, version: 9}
+          - {compiler: gcc, version: 10}
+          - {compiler: gcc, version: 11}
+          - {compiler: gcc, version: 12}
+          - {compiler: gcc, version: 13}
+          - {compiler: gcc, version: 14}
+          - {compiler: intel, version: '2023.2'}
+          - {compiler: intel, version: '2024.0'}
+          - {compiler: intel, version: '2025.0'}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup fortran
+        uses: fortran-lang/setup-fortran@v1.6.3
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: Setup fpm
+        uses: fortran-lang/setup-fpm@v6.1.0
+        with:
+          fpm-version: 'v0.10.1'
+
+      - name: Build
+        run: |
+          fpm build --profile debug
+
+      - name: Run unit tests
+        run: fpm test check
