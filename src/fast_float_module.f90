@@ -45,17 +45,17 @@ module fast_float_module
     type(outcomes_enum), parameter, public :: outcomes = outcomes_enum()
     
 
-    integer(i8), parameter :: FMT_SCI  = ishft(1_i8, 0)
-    integer(i8), parameter :: FMT_FIX  = ishft(1_i8, 2)
-    integer(i8), parameter :: FMT_NOIN = ishft(1_i8, 4)
-    integer(i8), parameter :: FMT_JSON = ishft(1_i8, 5)
-    integer(i8), parameter :: FMT_FORT = ishft(1_i8, 6)
-    integer(i8), parameter :: FMT_PLUS = ishft(1_i8, 7)
-    integer(i8), parameter :: FMT_SKIP = ishft(1_i8, 8)
+    integer(i8), parameter :: FMT_SCIENTIFIC = int(b'000000001', i8)
+    integer(i8), parameter :: FMT_FIXED      = int(b'000000100', i8)
+    integer(i8), parameter :: FMT_NO_INFNAN  = int(b'000010000', i8)
+    integer(i8), parameter :: FMT_JSON       = int(b'000100000', i8)
+    integer(i8), parameter :: FMT_FORTRAN    = int(b'001000000', i8)
+    integer(i8), parameter :: FMT_ALLOW_PLUS = int(b'010000000', i8)
+    integer(i8), parameter :: FMT_SKIP_WS    = int(b'100000000', i8)
 
-    integer(i8), parameter :: PRESET_GENERAL = ior(FMT_FIX, FMT_SCI)
-    integer(i8), parameter :: PRESET_JSON    = ior(ior(FMT_JSON, PRESET_GENERAL), FMT_NOIN)
-    integer(i8), parameter :: PRESET_FORTRAN = ior(FMT_FORT, PRESET_GENERAL)
+    integer(i8), parameter :: PRESET_GENERAL = ior(FMT_FIXED, FMT_SCIENTIFIC)
+    integer(i8), parameter :: PRESET_JSON    = ior(ior(FMT_JSON, PRESET_GENERAL), FMT_NO_INFNAN)
+    integer(i8), parameter :: PRESET_FORTRAN = ior(FMT_FORTRAN, PRESET_GENERAL)
 
     integer(i4), parameter :: INVALID_AM = -32768_i4
     integer(i8), parameter :: SB64 = ishft(1_i8, 63)
@@ -68,8 +68,6 @@ module fast_float_module
     ! Compile-time endianness detection
     integer(i4), parameter :: ENDIAN_TAG = transfer([1_i1, 0_i1, 0_i1, 0_i1], 0_i4)
     logical, parameter :: LITTLE_ENDIAN = ENDIAN_TAG == 1_i4
-
-    integer, private :: i
 
     type :: parse_result
         integer :: pos
@@ -625,6 +623,7 @@ module fast_float_module
     integer(i8), parameter :: POWER5_TABLE(POWER5_TABLE_SIZE) = &
         [ POWER5_1, POWER5_2, POWER5_3, POWER5_4, POWER5_5, POWER5_6, POWER5_7 ]
 
+    integer, private :: i
     real(dp), parameter :: DOUBLE_POW10(-22:22) = [ (10**real(i,dp), i=-22, 22) ]
     real(sp), parameter :: FLOAT_POW10 (-10:10) = [ (10**real(i,sp), i=-10, 10) ]
 
@@ -735,8 +734,8 @@ contains
 
         a%valid = .false.
         if (first > last) return
-        if (iand(opts%format, ior(FMT_FORT, FMT_SKIP)) /= 0 .or. &
-            iand(opts%format, FMT_FIX) == 0 .or. &
+        if (iand(opts%format, ior(FMT_FORTRAN, FMT_SKIP_WS)) /= 0 .or. &
+            iand(opts%format, FMT_FIXED) == 0 .or. &
             opts%decimal_point /= '.') return
 
         p = first
@@ -744,7 +743,7 @@ contains
             a%negative = .true.
             p = p + 1
         else if (str(p:p) == '+') then
-            if (bj .or. iand(opts%format, FMT_PLUS) == 0) return
+            if (bj .or. iand(opts%format, FMT_ALLOW_PLUS) == 0) return
             p = p + 1
         end if
         if (p > last) return
@@ -776,7 +775,7 @@ contains
 
         ! If next char is not '.', bail out
         if (str(p:p) /= '.') return
-        if (iand(opts%format, FMT_SCI) == 0) return
+        if (iand(opts%format, FMT_SCIENTIFIC) == 0) return
 
         ! Parse fractional part
         p = p + 1
@@ -1011,7 +1010,7 @@ contains
         end if
 
         a%negative = (str(p:p) == '-')
-        alp = iand(fmt, FMT_PLUS) /= 0
+        alp = iand(fmt, FMT_ALLOW_PLUS) /= 0
 
         if (str(p:p) == '-' .or. (alp .and. .not. bj .and. str(p:p) == '+')) then
             p = p + 1
@@ -1092,8 +1091,8 @@ contains
         en = 0_i8
         hse = .false.
         if (p <= last) then
-            hse = (iand(fmt, FMT_SCI) /= 0 .and. scan(str(p:p), 'eE') > 0) .or. &
-                  (iand(fmt, FMT_FORT) /= 0 .and. scan(str(p:p), '+-dD') > 0)
+            hse = (iand(fmt, FMT_SCIENTIFIC) /= 0 .and. scan(str(p:p), 'eE') > 0) .or. &
+                  (iand(fmt, FMT_FORTRAN) /= 0 .and. scan(str(p:p), '+-dD') > 0)
         end if
         if (hse) then
             le = p
@@ -1110,7 +1109,7 @@ contains
             hed = .false.
             if (p <= last) hed = is_digit(str(p:p))
             if (.not. hed) then
-                if (iand(fmt, FMT_FIX) == 0) then
+                if (iand(fmt, FMT_FIXED) == 0) then
                     a%last_idx = p
                     return
                 end if
@@ -1126,7 +1125,7 @@ contains
                 exp = exp + en
             end if
         else
-            if (iand(fmt, FMT_SCI) /= 0 .and. iand(fmt, FMT_FIX) == 0) then
+            if (iand(fmt, FMT_SCIENTIFIC) /= 0 .and. iand(fmt, FMT_FIXED) == 0) then
                 a%last_idx = p
                 return
             end if
@@ -2428,7 +2427,7 @@ contains
         type(parsed_number) :: p
         logical :: bj
 
-        if (iand(o%format, FMT_SKIP) /= 0) then
+        if (iand(o%format, FMT_SKIP_WS) /= 0) then
             do while (first <= last)
                 if (.not. is_space(str(first:first))) exit
                 first = first + 1
@@ -2443,7 +2442,7 @@ contains
         call try_fast_path(first, last, str, o, bj, p)
         if (.not. p%valid) call parse_number_string(first, last, str, o, bj, p)
         if (.not. p%valid) then
-            if (iand(o%format, FMT_NOIN) /= 0) then
+            if (iand(o%format, FMT_NO_INFNAN) /= 0) then
                 res = parse_result(first, OUTCOMES%INVALID_INPUT)
                 out = 0.0_dp
             else
@@ -2466,7 +2465,7 @@ contains
         logical :: bj
 
         ps = first
-        if (iand(o%format, FMT_SKIP) /= 0) then
+        if (iand(o%format, FMT_SKIP_WS) /= 0) then
             do while (ps <= last)
                 if (.not. is_space(str(ps:ps))) exit
                 ps = ps + 1
@@ -2480,7 +2479,7 @@ contains
         bj = iand(o%format, FMT_JSON) /= 0
         call parse_number_string(ps, last, str, o, bj, p)
         if (.not. p%valid) then
-            if (iand(o%format, FMT_NOIN) /= 0) then
+            if (iand(o%format, FMT_NO_INFNAN) /= 0) then
                 res = parse_result(ps, OUTCOMES%INVALID_INPUT)
                 out = 0.0_sp
             else
