@@ -2,3 +2,5 @@ build/
 *.mod
 *.o
 project/doxygen/html/
+.claude/
+CLAUDE.md
