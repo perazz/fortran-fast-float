@@ -1,4 +1,5 @@
 build/
 *.mod
+*.smod
 *.o
-project/doxygen/html/
+project/doxygen/
