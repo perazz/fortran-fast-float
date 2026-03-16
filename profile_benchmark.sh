@@ -17,9 +17,9 @@ FFLAGS="${FFLAGS:--O3 -g -fno-omit-frame-pointer -fno-stack-arrays}"
 
 cd "${ROOT_DIR}"
 
-fpm test --profile release --target benchmark_compare --flag "${FFLAGS}" -- -h >/dev/null
+fpm run --profile release --target benchmark_compare --flag "${FFLAGS}" -- -h >/dev/null
 
-BENCH_EXE="$(find build -type f -path '*/test/benchmark_compare' | sort | tail -n 1)"
+BENCH_EXE="$(find build -type f -path '*/app/benchmark_compare' | sort | tail -n 1)"
 if [[ -z "${BENCH_EXE}" ]]; then
   echo "failed to locate benchmark_compare executable under build/" >&2
   exit 1

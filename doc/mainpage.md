@@ -65,8 +65,8 @@ Individual format flags (`FMT_SCIENTIFIC`, `FMT_FIXED`, `FMT_NO_INFNAN`, `FMT_FO
 
 ```bash
 fpm build
-fpm test check          # unit tests
-fpm test benchmark_compare  # benchmarks
+fpm test                    # unit tests
+fpm run benchmark_compare   # benchmarks
 ```
 
 ## License
