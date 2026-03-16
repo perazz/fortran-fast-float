@@ -1,6 +1,8 @@
 build/
 *.mod
+*.smod
 *.o
+project/doxygen/
 project/doxygen/html/
 .claude/
 CLAUDE.md

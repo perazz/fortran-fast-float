@@ -88,7 +88,7 @@ program benchmark_compare
 contains
 
     subroutine print_help()
-        write(output_unit, "(a)") "Usage: fpm test --target benchmark_compare -- [options]"
+        write(output_unit, "(a)") "Usage: fpm run benchmark_compare -- [options]"
         write(output_unit, "(a)") "  -f <file>    Benchmark a data file (repeatable)"
         write(output_unit, "(a)") "  -m uniform   Benchmark random floats in [0,1) (default if no -f)"
         write(output_unit, "(a)") "  -n <count>   Number of random floats (default: 100000)"
