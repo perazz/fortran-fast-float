@@ -71,7 +71,7 @@ contains
         else
             write(stderr, '(a)') 'Usage: test_accuracy -d <data_dir> [--all] [--float32]'
             write(stderr, '(a)') '       test_accuracy -f <single_file> [--float32]'
-            error stop 1
+            return
         end if
 
     end subroutine accuracy_tests

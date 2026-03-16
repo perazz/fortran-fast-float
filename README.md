@@ -67,7 +67,7 @@ fpm test
 
 ## Profiling
 
-Use `profile_benchmark.sh` to profile the `benchmark_compare` test target on macOS:
+Use `profile_benchmark.sh` to profile the `benchmark_compare` benchmark on macOS:
 
 ```bash
 ./profile_benchmark.sh xctrace   # Time Profiler trace
