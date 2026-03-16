@@ -1,6 +1,6 @@
 name = "fortran-fast-float"
 version = "0.1.0"
-license = "license"
+license = "MIT OR Apache-2.0 OR BSL-1.0"
 author = "Federico Perini"
 copyright = "Copyright 2026, Federico Perini"
 [library]
