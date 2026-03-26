@@ -135,6 +135,7 @@ contains
         do i = 1, nlines
             call random_number(x)
             write(buf, '(es23.16)') x
+            buf = adjustl(buf)
             n = len_trim(buf)
             lines(i)%text = trim(buf)
             allocate(lines(i)%c_text(n))
@@ -267,7 +268,9 @@ contains
             "ffc interop bits      = " ]
 
         real(real64) :: min_ns(NCASES), avg_ns(NCASES), checksum(NCASES)
-        real(real64) :: answer, elapsed_ns, volume_mb, x_f
+        integer(int64) :: xor_checksum(NCASES)
+        real(real64), volatile :: answer
+        real(real64) :: elapsed_ns, volume_mb, x_f
         real(real64) :: x_stdlib, x_str2real, x_read
         real(c_double) :: x_c
         integer :: i, k, r, ios_read
@@ -279,6 +282,33 @@ contains
         min_ns = huge(1.0_real64)
         avg_ns = 0.0_real64
         checksum = 0.0_real64
+
+        ! Compute XOR checksums in a single untimed pass
+        xor_checksum = 0_int64
+        do i = 1, nlines
+            call parse_double_range_sub( &
+                packed_text, &
+                int(offsets(i), kind=kind(i)) + 1, &
+                int(offsets(i) + lengths(i), kind=kind(i)), &
+                x_f, f_result, DEFAULT_PARSING)
+            if (f_result%outcome == outcomes%OK) &
+                xor_checksum(B_RSUB) = ieor(xor_checksum(B_RSUB), transfer(x_f, 0_int64))
+
+            x_stdlib = 0.0_real64
+            x_stdlib = to_num(lines(i)%text, x_stdlib)
+            xor_checksum(B_STDLIB) = ieor(xor_checksum(B_STDLIB), transfer(x_stdlib, 0_int64))
+
+            x_str2real = str2real(lines(i)%text)
+            xor_checksum(B_S2R) = ieor(xor_checksum(B_S2R), transfer(x_str2real, 0_int64))
+
+            read(lines(i)%text, *, iostat=ios_read) x_read
+            if (ios_read == 0) &
+                xor_checksum(B_READ) = ieor(xor_checksum(B_READ), transfer(x_read, 0_int64))
+
+            call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), x_c, c_outcome)
+            if (c_outcome == outcomes%OK%state) &
+                xor_checksum(B_CLOOP) = ieor(xor_checksum(B_CLOOP), transfer(real(x_c, real64), 0_int64))
+        end do
 
         call system_clock(count_rate=count_rate)
         do r = 1, repeat_count
@@ -358,7 +388,7 @@ contains
             call print_result(labels(k), volume_mb, nlines, min_ns(k), avg_ns(k))
         end do
         do k = 1, NCASES
-            write(output_unit, "(a,z16.16)") cksum_labels(k), transfer(checksum(k), 0_int64)
+            write(output_unit, "(a,z16.16)") cksum_labels(k), xor_checksum(k)
         end do
     end subroutine run_benchmark
 
