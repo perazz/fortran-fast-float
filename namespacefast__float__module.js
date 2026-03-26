@@ -50,8 +50,6 @@ var namespacefast__float__module =
     [ "digit_comp", "namespacefast__float__module.html#a4b8fb8b9741abb502f1f2abb5441e54e", null ],
     [ "from_chars_32", "namespacefast__float__module.html#a207c3638c8ad236c4f7e286b0c645a1c", null ],
     [ "from_chars_64", "namespacefast__float__module.html#ae2040cdf38b5422319d60df6201fecde", null ],
-    [ "get_double_bits", "namespacefast__float__module.html#a8d4f5ec2e98533d0b21691be1a283d05", null ],
-    [ "get_float_bits", "namespacefast__float__module.html#a4fdcf0a95d4f46d84cf9baf971e3d0d6", null ],
     [ "hi64_1", "namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700", null ],
     [ "hi64_2", "namespacefast__float__module.html#a70e0d2a9188d831137ab521f9c1a1639", null ],
     [ "is_digit_char", "namespacefast__float__module.html#a5c9a7477c199d517e2f8ec40537f42ee", null ],

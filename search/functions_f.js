@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['to_5fextended_0',['to_extended',['../namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118',1,'fast_float_module']]],
-  ['to_5fextended_5fhalfway_1',['to_extended_halfway',['../namespacefast__float__module.html#a2b5f87588cdb53203c8c9c9b68225a66',1,'fast_float_module']]],
-  ['try_5ffast_5fpath_2',['try_fast_path',['../namespacefast__float__module.html#adfcfe482bc6215d666183c953722a899',1,'fast_float_module']]]
+  ['unsigned_5fge_0',['unsigned_ge',['../namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d',1,'fast_float_module']]],
+  ['unsigned_5fgt_1',['unsigned_gt',['../namespacefast__float__module.html#a944ecb13b505dc695566387268667632',1,'fast_float_module']]],
+  ['unsigned_5flt_2',['unsigned_lt',['../namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497',1,'fast_float_module']]]
 ];

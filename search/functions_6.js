@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['hi64_5f1_0',['hi64_1',['../namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700',1,'fast_float_module']]],
-  ['hi64_5f2_1',['hi64_2',['../namespacefast__float__module.html#a70e0d2a9188d831137ab521f9c1a1639',1,'fast_float_module']]]
+  ['is_5fdigit_5fchar_0',['is_digit_char',['../interfacefast__float__module_1_1is__digit.html#acead10e3804d1b6eaa2099915606d685',1,'fast_float_module::is_digit::is_digit_char()'],['../namespacefast__float__module.html#a5c9a7477c199d517e2f8ec40537f42ee',1,'fast_float_module::is_digit_char()']]],
+  ['is_5fdigit_5fint_1',['is_digit_int',['../interfacefast__float__module_1_1is__digit.html#a49845c8c0ded30e95f9cd027f0a51650',1,'fast_float_module::is_digit::is_digit_int()'],['../namespacefast__float__module.html#acff59df228cc465ab5b71f392e2d76ae',1,'fast_float_module::is_digit_int(ic)']]],
+  ['is_5feight_5fdigits_2',['is_eight_digits',['../namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934',1,'fast_float_module']]],
+  ['is_5fspace_3',['is_space',['../namespacefast__float__module.html#a982324823ffb8ed4eb402f9f8b989d72',1,'fast_float_module']]],
+  ['is_5ftruncated_4',['is_truncated',['../namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b',1,'fast_float_module']]]
 ];

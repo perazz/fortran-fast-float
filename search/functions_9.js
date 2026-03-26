@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mul_5fu64_0',['mul_u64',['../namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983',1,'fast_float_module']]]
+  ['negative_5fdigit_5fcomp_0',['negative_digit_comp',['../namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a',1,'fast_float_module']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['get_5fdouble_5fbits_0',['get_double_bits',['../namespacefast__float__module.html#a8d4f5ec2e98533d0b21691be1a283d05',1,'fast_float_module']]],
-  ['get_5ffloat_5fbits_1',['get_float_bits',['../namespacefast__float__module.html#a4fdcf0a95d4f46d84cf9baf971e3d0d6',1,'fast_float_module']]]
+  ['hi64_5f1_0',['hi64_1',['../namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700',1,'fast_float_module']]],
+  ['hi64_5f2_1',['hi64_2',['../namespacefast__float__module.html#a70e0d2a9188d831137ab521f9c1a1639',1,'fast_float_module']]]
 ];

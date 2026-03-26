@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loop_5fparse_5feight_0',['loop_parse_eight',['../namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767',1,'fast_float_module']]]
+  ['mul_5fu64_0',['mul_u64',['../namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983',1,'fast_float_module']]]
 ];
