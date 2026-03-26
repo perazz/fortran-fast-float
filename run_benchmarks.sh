@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPEAT_COUNT="${1:-5}"
+REPEAT_COUNT="${1:-10}"
 DATA_FILES=("canada_short.txt" "canada.txt" "mesh.txt")
 
 # Locate or clone the C++ benchmark repo
@@ -56,7 +56,7 @@ echo "================================================================"
 cpp_out=$("${CPP_BENCH}" 2>&1 || true)
 cpp_results=$(echo "${cpp_out}" | extract_cpp_results || true)
 
-fort_out=$(fpm run --profile release --target benchmark_compare -- \
+fort_out=$(fpm test --profile release --target benchmark_compare -- \
     -m uniform -r "${REPEAT_COUNT}" 2>&1 || true)
 fort_results=$(echo "${fort_out}" | extract_results || true)
 
@@ -83,7 +83,7 @@ for f in "${DATA_FILES[@]}"; do
     cpp_results=$(echo "${cpp_out}" | extract_cpp_results || true)
 
     # Run Fortran benchmark, capture result lines
-    fort_out=$(fpm run --profile release --target benchmark_compare -- \
+    fort_out=$(fpm test --profile release --target benchmark_compare -- \
         -f "${filepath}" -r "${REPEAT_COUNT}" 2>&1 || true)
     fort_results=$(echo "${fort_out}" | extract_results || true)
 

@@ -5,7 +5,6 @@ author = "Federico Perini"
 copyright = "Copyright 2026, Federico Perini"
 [library]
 source-dir = "src"
-include-dir = ["include"]
 [build]
 auto-executables = true
 auto-tests = false
@@ -19,8 +18,8 @@ implicit-typing = false
 implicit-external = false
 source-form = "free"
 
-[dependencies]
-stdlib = "*"
+[dev-dependencies]
+stdlib = { git = "https://github.com/fortran-lang/stdlib", branch = "stdlib-fpm" }
 str2real = { git = "https://github.com/Carltoffel/Fortran-String-to-Real" }
 
 [features]
@@ -38,3 +37,7 @@ name = "check"
 source-dir = "test"
 main = "check.f90"
 
+[[test]]
+name = "benchmark_compare"
+source-dir = "benchmark"
+main = "benchmark_compare.f90"

@@ -76,6 +76,42 @@ Use `profile_benchmark.sh` to profile the `benchmark_compare` benchmark on macOS
 
 Environment overrides: `REPEAT_COUNT`, `DATA_DIR`, `TRACE_OUT`.
 
+## Benchmarks
+
+Run with `fpm test --profile release --target benchmark_compare` on Apple Silicon (M1 Max).
+Data files from [simple_fastfloat_benchmark](https://github.com/lemire/simple_fastfloat_benchmark).
+Use `./run_benchmarks.sh` to run the full suite (random + data files) with C++ comparison.
+
+### Random uniform [0,1) -- 100k floats, 2.19 MB
+
+```
+fortran (fast_float)                    :  2311.33 MB/s (+/-   6.7 %)   105.37 Mfloat/s
+fortran (stdlib to_num)                 :  1079.45 MB/s (+/-   4.0 %)    49.21 Mfloat/s
+fortran (str2real)                      :   646.27 MB/s (+/-   0.8 %)    29.46 Mfloat/s
+fortran (read *)                        :    56.92 MB/s (+/-   0.9 %)     2.59 Mfloat/s
+ffc via fortran interop                 :  4193.98 MB/s (+/-   5.7 %)   191.20 Mfloat/s
+```
+
+### canada.txt -- 111k lines, 1.93 MB
+
+```
+fortran (fast_float)                    :   977.63 MB/s (+/-   1.1 %)    56.18 Mfloat/s
+fortran (stdlib to_num)                 :  1040.21 MB/s (+/-   1.1 %)    59.78 Mfloat/s
+fortran (str2real)                      :   461.40 MB/s (+/-   2.4 %)    26.52 Mfloat/s
+fortran (read *)                        :    48.51 MB/s (+/-   1.1 %)     2.79 Mfloat/s
+ffc via fortran interop                 :  1073.71 MB/s (+/-   2.3 %)    61.70 Mfloat/s
+```
+
+### mesh.txt -- 73k lines, 0.54 MB
+
+```
+fortran (fast_float)                    :   829.74 MB/s (+/-   1.0 %)   113.03 Mfloat/s
+fortran (stdlib to_num)                 :   771.24 MB/s (+/-   0.9 %)   105.06 Mfloat/s
+fortran (str2real)                      :   291.15 MB/s (+/-   1.7 %)    39.66 Mfloat/s
+fortran (read *)                        :    27.41 MB/s (+/-   1.4 %)     3.73 Mfloat/s
+ffc via fortran interop                 :   823.36 MB/s (+/-   0.8 %)   112.16 Mfloat/s
+```
+
 ## Acknowledgements
 
 This library is a Fortran translation of the Eisel-Lemire algorithm. Credit goes to:
