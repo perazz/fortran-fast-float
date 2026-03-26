@@ -379,7 +379,7 @@ contains
         real(real64), intent(in) :: volume_mb, min_ns, avg_ns
         integer, intent(in) :: nlines
 
-        write(output_unit, "(a40,a,f8.2,a,f3.1,a,f8.2,a)") &
+        write(output_unit, "(a40,a,f8.2,a,f5.1,a,f8.2,a)") &
             name, ": ", &
             volume_mb * 1.0e9_real64 / min_ns, " MB/s (+/- ", &
             (avg_ns - min_ns) * 100.0_real64 / avg_ns, " %) ", &
