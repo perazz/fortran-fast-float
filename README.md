@@ -78,7 +78,7 @@ Environment overrides: `REPEAT_COUNT`, `DATA_DIR`, `TRACE_OUT`.
 
 ## Benchmarks
 
-Run with `fpm run --profile release --target benchmark_compare` on Apple Silicon (M1 Max).
+Run with `fpm test --profile release --target benchmark_compare` on Apple Silicon (M1 Max).
 Data files from [simple_fastfloat_benchmark](https://github.com/lemire/simple_fastfloat_benchmark).
 Use `./run_benchmarks.sh` to run the full suite (random + data files) with C++ comparison.
 

@@ -19,7 +19,7 @@ implicit-external = false
 source-form = "free"
 
 [dev-dependencies]
-stdlib = "*"
+stdlib = { git = "https://github.com/fortran-lang/stdlib", branch = "stdlib-fpm" }
 str2real = { git = "https://github.com/Carltoffel/Fortran-String-to-Real" }
 
 [features]
@@ -32,12 +32,12 @@ boz-compat.gfortran.flags = "-fno-range-check"
 [profiles]
 default = ["boz-compat"]
 
-[[executable]]
-name = "benchmark_compare"
-source-dir = "benchmark"
-main = "benchmark_compare.f90"
-
 [[test]]
 name = "check"
 source-dir = "test"
 main = "check.f90"
+
+[[test]]
+name = "benchmark_compare"
+source-dir = "benchmark"
+main = "benchmark_compare.f90"

@@ -42,4 +42,4 @@ jobs:
         run: fpm test check
 
       - name: Run benchmarks
-        run: ./run_benchmarks.sh
+        run: fpm test --profile release --target benchmark_compare

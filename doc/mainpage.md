@@ -75,12 +75,12 @@ Individual format flags (`FMT_SCIENTIFIC`, `FMT_FIXED`, `FMT_NO_INFNAN`, `FMT_FO
 ```bash
 fpm build
 fpm test                    # unit tests
-fpm run benchmark_compare   # benchmarks
+fpm test benchmark_compare  # benchmarks
 ```
 
 ## Benchmarks
 
-Run with `fpm run --profile release --target benchmark_compare` on Apple Silicon (M1 Max).
+Run with `fpm test --profile release --target benchmark_compare` on Apple Silicon (M1 Max).
 Data files from [simple_fastfloat_benchmark](https://github.com/lemire/simple_fastfloat_benchmark).
 Use `./run_benchmarks.sh` to run the full suite (random + data files) with C++ comparison.
 
