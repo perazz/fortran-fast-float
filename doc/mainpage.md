@@ -87,31 +87,31 @@ Use `./run_benchmarks.sh` to run the full suite (random + data files) with C++ c
 ### Random uniform [0,1) -- 100k floats, 2.19 MB
 
 ```
-fortran (fast_float)                    :  1986.82 MB/s (+/-   5.4 %)    90.58 Mfloat/s
-fortran (stdlib to_num)                 :   978.78 MB/s (+/-  28.3 %)    44.62 Mfloat/s
-fortran (str2real)                      :   603.59 MB/s (+/-  22.9 %)    27.52 Mfloat/s
-fortran (read *)                        :    53.20 MB/s (+/-  17.6 %)     2.43 Mfloat/s
-ffc via fortran interop                 :  3966.46 MB/s (+/-   8.9 %)   180.83 Mfloat/s
+fortran (fast_float)                    :  2311.33 MB/s (+/-   6.7 %)   105.37 Mfloat/s
+fortran (stdlib to_num)                 :  1079.45 MB/s (+/-   4.0 %)    49.21 Mfloat/s
+fortran (str2real)                      :   646.27 MB/s (+/-   0.8 %)    29.46 Mfloat/s
+fortran (read *)                        :    56.92 MB/s (+/-   0.9 %)     2.59 Mfloat/s
+ffc via fortran interop                 :  4193.98 MB/s (+/-   5.7 %)   191.20 Mfloat/s
 ```
 
 ### canada.txt -- 111k lines, 1.93 MB
 
 ```
-fortran (fast_float)                    :   948.84 MB/s (+/-   0.9 %)    54.53 Mfloat/s
-fortran (stdlib to_num)                 :  1009.26 MB/s (+/-   0.3 %)    58.00 Mfloat/s
-fortran (str2real)                      :   440.19 MB/s (+/-  36.0 %)    25.30 Mfloat/s
-fortran (read *)                        :    44.40 MB/s (+/-  33.8 %)     2.55 Mfloat/s
-ffc via fortran interop                 :  1026.40 MB/s (+/-   0.3 %)    58.98 Mfloat/s
+fortran (fast_float)                    :   977.63 MB/s (+/-   1.1 %)    56.18 Mfloat/s
+fortran (stdlib to_num)                 :  1040.21 MB/s (+/-   1.1 %)    59.78 Mfloat/s
+fortran (str2real)                      :   461.40 MB/s (+/-   2.4 %)    26.52 Mfloat/s
+fortran (read *)                        :    48.51 MB/s (+/-   1.1 %)     2.79 Mfloat/s
+ffc via fortran interop                 :  1073.71 MB/s (+/-   2.3 %)    61.70 Mfloat/s
 ```
 
 ### mesh.txt -- 73k lines, 0.54 MB
 
 ```
-fortran (fast_float)                    :   809.68 MB/s (+/-   0.4 %)   110.30 Mfloat/s
-fortran (stdlib to_num)                 :   751.77 MB/s (+/-   0.4 %)   102.41 Mfloat/s
-fortran (str2real)                      :   285.41 MB/s (+/-   0.1 %)    38.88 Mfloat/s
-fortran (read *)                        :    26.86 MB/s (+/-   5.4 %)     3.66 Mfloat/s
-ffc via fortran interop                 :   803.61 MB/s (+/-   0.7 %)   109.47 Mfloat/s
+fortran (fast_float)                    :   829.74 MB/s (+/-   1.0 %)   113.03 Mfloat/s
+fortran (stdlib to_num)                 :   771.24 MB/s (+/-   0.9 %)   105.06 Mfloat/s
+fortran (str2real)                      :   291.15 MB/s (+/-   1.7 %)    39.66 Mfloat/s
+fortran (read *)                        :    27.41 MB/s (+/-   1.4 %)     3.73 Mfloat/s
+ffc via fortran interop                 :   823.36 MB/s (+/-   0.8 %)   112.16 Mfloat/s
 ```
 
 ## License
