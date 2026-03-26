@@ -1,4 +1,4 @@
-var fast__float__module_8f90 =
+var fast__float__module_8_f90 =
 [
     [ "fast_float_module::parse_double", "interfacefast__float__module_1_1parse__double.html", "interfacefast__float__module_1_1parse__double" ],
     [ "fast_float_module::parse_float", "interfacefast__float__module_1_1parse__float.html", "interfacefast__float__module_1_1parse__float" ],

@@ -2,7 +2,7 @@ var searchData=
 [
   ['fast_20float_0',['fortran-fast-float',['../index.html',1,'']]],
   ['fast_5ffloat_5fmodule_1',['fast_float_module',['../namespacefast__float__module.html',1,'']]],
-  ['fast_5ffloat_5fmodule_2ef90_2',['fast_float_module.f90',['../fast__float__module_8f90.html',1,'']]],
+  ['fast_5ffloat_5fmodule_2ef90_2',['fast_float_module.F90',['../fast__float__module_8_f90.html',1,'']]],
   ['ffc_2eh_3',['ffc.h',['../ffc_8h.html',1,'']]],
   ['ffc_5fapi_4',['FFC_API',['../ffc_8h.html#a4b636c30104d5f494ebf1d90296cff67',1,'ffc.h']]],
   ['ffc_5fbenchmark_2ec_5',['ffc_benchmark.c',['../ffc__benchmark_8c.html',1,'']]],
