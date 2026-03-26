@@ -57,7 +57,7 @@ module fast_float_module
     integer(i8), parameter :: FMT_ALLOW_PLUS = int(b'010000000', i8)
     integer(i8), parameter :: FMT_SKIP_WS    = int(b'100000000', i8)
 
-    integer(i8), parameter :: PRESET_GENERAL = ior(FMT_FIXED, FMT_SCIENTIFIC)
+    integer(i8), parameter :: PRESET_GENERAL = ior(ior(FMT_FIXED, FMT_SCIENTIFIC), FMT_SKIP_WS)
     integer(i8), parameter :: PRESET_JSON    = ior(ior(FMT_JSON, PRESET_GENERAL), FMT_NO_INFNAN)
     integer(i8), parameter :: PRESET_FORTRAN = ior(FMT_FORTRAN, PRESET_GENERAL)
 
@@ -867,18 +867,6 @@ contains
     end subroutine mul_u64
 
     ! ===== Character and digit utilities =====
-
-    !> Reinterpret a double as its 64-bit integer representation.
-    pure elemental integer(i8) function get_double_bits(d)
-        real(dp), intent(in) :: d
-        get_double_bits = transfer(d, 0_i8)
-    end function get_double_bits
-
-    !> Reinterpret a float as its 32-bit integer representation.
-    pure elemental integer(i4) function get_float_bits(f)
-        real(sp), intent(in) :: f
-        get_float_bits = transfer(f, 0_i4)
-    end function get_float_bits
 
     !> Count leading zero bits in a 64-bit integer.
     pure elemental integer function count_leading_zeros(x)
@@ -1886,11 +1874,9 @@ contains
     pure elemental integer function bigint_compare(a, b)
         type(bigint), intent(in) :: a, b
         integer :: j
-        if (a%vec%ln > b%vec%ln) then
-            bigint_compare = 1
-            return
-        else if (a%vec%ln < b%vec%ln) then
-            bigint_compare = -1
+        j = a%vec%ln - b%vec%ln
+        if (j/=0) then
+            bigint_compare = sign(1,j)
             return
         end if
         bigint_compare = 0
@@ -1942,7 +1928,7 @@ contains
         integer(i8) :: b
         integer(i4) :: bi
         bi = int(f%mantissa_bits - f%min_exponent, i4)
-        b = get_double_bits(vd)
+        b = transfer(vd, b)
         if (iand(b, f%exponent_mask) == 0) then
             res = adjusted_mantissa( iand(b, f%mantissa_mask), 1 - bi)
         else
