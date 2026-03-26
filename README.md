@@ -85,31 +85,46 @@ Use `./run_benchmarks.sh` to run the full suite (random + data files) with C++ c
 ### Random uniform [0,1) -- 100k floats, 2.19 MB
 
 ```
-fortran (fast_float)                    :  2311.33 MB/s (+/-   6.7 %)   105.37 Mfloat/s
-fortran (stdlib to_num)                 :  1079.45 MB/s (+/-   4.0 %)    49.21 Mfloat/s
-fortran (str2real)                      :   646.27 MB/s (+/-   0.8 %)    29.46 Mfloat/s
-fortran (read *)                        :    56.92 MB/s (+/-   0.9 %)     2.59 Mfloat/s
-ffc via fortran interop                 :  4193.98 MB/s (+/-   5.7 %)   191.20 Mfloat/s
+netlib              (C)                 :   405.14 MB/s (+/-  1.2 %)    19.31 Mfloat/s
+strtod              (C)                 :   787.20 MB/s (+/-  1.0 %)    37.52 Mfloat/s
+abseil              (C++)               :   919.15 MB/s (+/-  1.0 %)    43.81 Mfloat/s
+fastfloat           (C++)               :  1586.45 MB/s (+/-  1.3 %)    75.61 Mfloat/s
+ffc                 (C)                 :  1653.72 MB/s (+/-  1.6 %)    78.82 Mfloat/s
+fortran (fast_float)                    :  2394.60 MB/s (+/-  8.8 %)   109.17 Mfloat/s
+fortran (stdlib to_num)                 :  1078.39 MB/s (+/-  2.7 %)    49.16 Mfloat/s
+fortran (str2real)                      :   666.91 MB/s (+/-  0.5 %)    30.40 Mfloat/s
+fortran (read *)                        :    58.58 MB/s (+/-  0.5 %)     2.67 Mfloat/s
+ffc via fortran interop                 :  4284.08 MB/s (+/- 11.0 %)   195.31 Mfloat/s
 ```
 
 ### canada.txt -- 111k lines, 1.93 MB
 
 ```
-fortran (fast_float)                    :   977.63 MB/s (+/-   1.1 %)    56.18 Mfloat/s
-fortran (stdlib to_num)                 :  1040.21 MB/s (+/-   1.1 %)    59.78 Mfloat/s
-fortran (str2real)                      :   461.40 MB/s (+/-   2.4 %)    26.52 Mfloat/s
-fortran (read *)                        :    48.51 MB/s (+/-   1.1 %)     2.79 Mfloat/s
-ffc via fortran interop                 :  1073.71 MB/s (+/-   2.3 %)    61.70 Mfloat/s
+netlib              (C)                 :   385.05 MB/s (+/-  1.3 %)    22.13 Mfloat/s
+strtod              (C)                 :   686.85 MB/s (+/-  1.4 %)    39.47 Mfloat/s
+abseil              (C++)               :   868.24 MB/s (+/-  1.6 %)    49.89 Mfloat/s
+fastfloat           (C++)               :  1095.24 MB/s (+/-  1.4 %)    62.94 Mfloat/s
+ffc                 (C)                 :  1169.13 MB/s (+/-  1.8 %)    67.19 Mfloat/s
+fortran (fast_float)                    :  1011.37 MB/s (+/-  1.3 %)    58.12 Mfloat/s
+fortran (stdlib to_num)                 :  1074.30 MB/s (+/-  2.3 %)    61.74 Mfloat/s
+fortran (str2real)                      :   463.62 MB/s (+/-  1.5 %)    26.64 Mfloat/s
+fortran (read *)                        :    49.77 MB/s (+/-  0.5 %)     2.86 Mfloat/s
+ffc via fortran interop                 :  1089.43 MB/s (+/-  0.9 %)    62.61 Mfloat/s
 ```
 
 ### mesh.txt -- 73k lines, 0.54 MB
 
 ```
-fortran (fast_float)                    :   829.74 MB/s (+/-   1.0 %)   113.03 Mfloat/s
-fortran (stdlib to_num)                 :   771.24 MB/s (+/-   0.9 %)   105.06 Mfloat/s
-fortran (str2real)                      :   291.15 MB/s (+/-   1.7 %)    39.66 Mfloat/s
-fortran (read *)                        :    27.41 MB/s (+/-   1.4 %)     3.73 Mfloat/s
-ffc via fortran interop                 :   823.36 MB/s (+/-   0.8 %)   112.16 Mfloat/s
+netlib              (C)                 :   537.08 MB/s (+/-  2.7 %)    73.17 Mfloat/s
+strtod              (C)                 :   523.55 MB/s (+/-  1.5 %)    71.32 Mfloat/s
+abseil              (C++)               :   415.44 MB/s (+/-  1.3 %)    56.59 Mfloat/s
+fastfloat           (C++)               :   825.16 MB/s (+/-  1.5 %)   112.41 Mfloat/s
+ffc                 (C)                 :   948.34 MB/s (+/-  2.5 %)   129.19 Mfloat/s
+fortran (fast_float)                    :   846.78 MB/s (+/-  2.4 %)   115.35 Mfloat/s
+fortran (stdlib to_num)                 :   802.41 MB/s (+/-  1.0 %)   109.31 Mfloat/s
+fortran (str2real)                      :   301.81 MB/s (+/-  0.4 %)    41.11 Mfloat/s
+fortran (read *)                        :    28.43 MB/s (+/-  1.2 %)     3.87 Mfloat/s
+ffc via fortran interop                 :   853.52 MB/s (+/-  0.9 %)   116.27 Mfloat/s
 ```
 
 ## Acknowledgements
