@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPEAT_COUNT="${1:-5}"
+REPEAT_COUNT="${1:-10}"
 DATA_FILES=("canada_short.txt" "canada.txt" "mesh.txt")
 
 # Locate or clone the C++ benchmark repo

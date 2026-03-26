@@ -3,7 +3,11 @@
 !> @since  Mon, 10 Mar 2026
 module fast_float_module
     use iso_fortran_env, only: i1 => int8, i4 => int32, i8 => int64, sp => real32, dp => real64
+#if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
+    ! Intel Fortran does not support 128-bit integers
+#else
     use iso_c_binding, only: c_int128_t
+#endif
     use ieee_arithmetic
     implicit none(type, external)
     private
@@ -62,6 +66,9 @@ module fast_float_module
     integer(i8), parameter :: M32 = int(z'00000000FFFFFFFF', i8)
 
     ! 128-bit integer support: compile-time detection
+#if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
+    integer, parameter :: c_int128_t = -1
+#endif
     logical, parameter :: HAS_INT128 = c_int128_t > 0
     integer, parameter :: IK128 = merge(c_int128_t, i8, HAS_INT128)
 

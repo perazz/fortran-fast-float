@@ -76,6 +76,42 @@ Use `profile_benchmark.sh` to profile the `benchmark_compare` benchmark on macOS
 
 Environment overrides: `REPEAT_COUNT`, `DATA_DIR`, `TRACE_OUT`.
 
+## Benchmarks
+
+Run with `fpm run --profile release --target benchmark_compare` on Apple Silicon (M1 Max).
+Data files from [simple_fastfloat_benchmark](https://github.com/lemire/simple_fastfloat_benchmark).
+Use `./run_benchmarks.sh` to run the full suite (random + data files) with C++ comparison.
+
+### Random uniform [0,1) -- 100k floats, 2.19 MB
+
+```
+fortran (fast_float)                    :  2323.57 MB/s (+/- 1.3 %)   105.93 Mfloat/s
+fortran (stdlib to_num)                 :  1062.20 MB/s (+/- 1.6 %)    48.43 Mfloat/s
+fortran (str2real)                      :   657.90 MB/s (+/- 1.8 %)    29.99 Mfloat/s
+fortran (read *)                        :    56.65 MB/s (+/- 0.4 %)     2.58 Mfloat/s
+ffc via fortran interop                 :  4275.73 MB/s (+/- 3.0 %)   194.93 Mfloat/s
+```
+
+### canada.txt -- 111k lines, 1.93 MB
+
+```
+fortran (fast_float)                    :   894.84 MB/s (+/- 6.9 %)    51.42 Mfloat/s
+fortran (stdlib to_num)                 :  1000.90 MB/s (+/- 5.8 %)    57.52 Mfloat/s
+fortran (str2real)                      :   435.23 MB/s (+/- 0.6 %)    25.01 Mfloat/s
+fortran (read *)                        :    46.88 MB/s (+/- 8.1 %)     2.69 Mfloat/s
+ffc via fortran interop                 :  1023.15 MB/s (+/- *** %)    58.80 Mfloat/s
+```
+
+### mesh.txt -- 73k lines, 0.54 MB
+
+```
+fortran (fast_float)                    :   828.45 MB/s (+/- 2.3 %)   112.86 Mfloat/s
+fortran (stdlib to_num)                 :   748.62 MB/s (+/- 0.6 %)   101.98 Mfloat/s
+fortran (str2real)                      :   289.27 MB/s (+/- 2.6 %)    39.41 Mfloat/s
+fortran (read *)                        :    27.19 MB/s (+/- 1.6 %)     3.70 Mfloat/s
+ffc via fortran interop                 :   800.01 MB/s (+/- 0.7 %)   108.98 Mfloat/s
+```
+
 ## Acknowledgements
 
 This library is a Fortran translation of the Eisel-Lemire algorithm. Credit goes to:
