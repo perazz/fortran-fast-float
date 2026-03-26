@@ -57,7 +57,7 @@ module fast_float_module
     integer(i8), parameter :: FMT_ALLOW_PLUS = int(b'010000000', i8)
     integer(i8), parameter :: FMT_SKIP_WS    = int(b'100000000', i8)
 
-    integer(i8), parameter :: PRESET_GENERAL = ior(FMT_FIXED, FMT_SCIENTIFIC)
+    integer(i8), parameter :: PRESET_GENERAL = ior(ior(FMT_FIXED, FMT_SCIENTIFIC), FMT_SKIP_WS)
     integer(i8), parameter :: PRESET_JSON    = ior(ior(FMT_JSON, PRESET_GENERAL), FMT_NO_INFNAN)
     integer(i8), parameter :: PRESET_FORTRAN = ior(FMT_FORTRAN, PRESET_GENERAL)
 
