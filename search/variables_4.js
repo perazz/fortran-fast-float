@@ -13,7 +13,7 @@ var searchData=
   ['fmt_5fno_5finfnan_10',['fmt_no_infnan',['../namespacefast__float__module.html#a2d60367c20f6184f8c976ebcd3d13191',1,'fast_float_module']]],
   ['fmt_5fscientific_11',['fmt_scientific',['../namespacefast__float__module.html#aae76c29b9a278e8c7c637bfd312f3907',1,'fast_float_module']]],
   ['fmt_5fskip_5fws_12',['fmt_skip_ws',['../namespacefast__float__module.html#a1cfb1715cdb3237f14abfc1b7e6ad8b7',1,'fast_float_module']]],
-  ['format_13',['format',['../structfast__float__module_1_1parse__options.html#aae136b0a6f5d77caacdbe53677734420',1,'fast_float_module::parse_options::format'],['../structffc__parse__options.html#a4dc47e93a359344654dcbebe63a2deaa',1,'ffc_parse_options::format']]],
+  ['format_13',['format',['../structfast__float__module_1_1parse__options.html#aae136b0a6f5d77caacdbe53677734420',1,'fast_float_module::parse_options']]],
   ['frac_5flen_14',['frac_len',['../structfast__float__module_1_1parsed__number.html#a26514e0fb1b0b9b284cfea0f34b8fa55',1,'fast_float_module::parsed_number']]],
   ['frac_5fstart_15',['frac_start',['../structfast__float__module_1_1parsed__number.html#a7f73005b3c9c18b581ede43a3bdda594',1,'fast_float_module::parsed_number']]]
 ];

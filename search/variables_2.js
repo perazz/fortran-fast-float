@@ -1,7 +1,7 @@
 var searchData=
 [
   ['d_0',['d',['../structfast__float__module_1_1stackvec.html#a847c69fbbfe4a84d159cbb3f209ffe46',1,'fast_float_module::stackvec']]],
-  ['decimal_5fpoint_1',['decimal_point',['../structfast__float__module_1_1parse__options.html#ac866fb6a162c05ebf0a57429ca8bd18a',1,'fast_float_module::parse_options::decimal_point'],['../structffc__parse__options.html#a0351f40a3399c0b25e22dfc232de3d43',1,'ffc_parse_options::decimal_point']]],
+  ['decimal_5fpoint_1',['decimal_point',['../structfast__float__module_1_1parse__options.html#ac866fb6a162c05ebf0a57429ca8bd18a',1,'fast_float_module::parse_options']]],
   ['default_5fparsing_2',['default_parsing',['../namespacefast__float__module.html#af8ca6a938a2a47c11abe640dc0053736',1,'fast_float_module']]],
   ['double_5ffmt_3',['double_fmt',['../namespacefast__float__module.html#a5ed5ba8aa910a83e83a4ad6ad3ba3255',1,'fast_float_module']]],
   ['double_5fmantissa_5fbits_4',['double_mantissa_bits',['../namespacefast__float__module.html#ade4120d3867b62b148c87fa1b1bff188',1,'fast_float_module']]],

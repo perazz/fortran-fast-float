@@ -1,16 +1,13 @@
 var searchData=
 [
-  ['i_0',['i',['../namespacefast__float__module.html#a236b70e3d91ba75babb96f15c08a77bb',1,'fast_float_module']]],
-  ['ik128_1',['ik128',['../namespacefast__float__module.html#a2a435d927d5e2e28e38dcf4cb84bc73e',1,'fast_float_module']]],
-  ['inf_5fpower_2',['inf_power',['../structfast__float__module_1_1float__format.html#abb23179401635da4a77f6d15c2c81f98',1,'fast_float_module::float_format']]],
-  ['int_5flen_3',['int_len',['../structfast__float__module_1_1parsed__number.html#a1fd42c636c352ba1cc1769b29e554ef4',1,'fast_float_module::parsed_number']]],
-  ['int_5fstart_4',['int_start',['../structfast__float__module_1_1parsed__number.html#a84d792cdb900b60ab266020a7b390d6d',1,'fast_float_module::parsed_number']]],
-  ['invalid_5fam_5',['invalid_am',['../namespacefast__float__module.html#a6e902a14bd4ecb6896494991f9233c3c',1,'fast_float_module']]],
-  ['invalid_5finput_6',['invalid_input',['../structfast__float__module_1_1outcomes__enum.html#a85818829db1dd3ff14b1ee5d5ba53416',1,'fast_float_module::outcomes_enum']]],
-  ['is_5fdigit_7',['is_digit',['../interfacefast__float__module_1_1is__digit.html',1,'fast_float_module']]],
-  ['is_5fdigit_5fchar_8',['is_digit_char',['../interfacefast__float__module_1_1is__digit.html#acead10e3804d1b6eaa2099915606d685',1,'fast_float_module::is_digit::is_digit_char()'],['../namespacefast__float__module.html#a5c9a7477c199d517e2f8ec40537f42ee',1,'fast_float_module::is_digit_char()']]],
-  ['is_5fdigit_5fint_9',['is_digit_int',['../interfacefast__float__module_1_1is__digit.html#a49845c8c0ded30e95f9cd027f0a51650',1,'fast_float_module::is_digit::is_digit_int()'],['../namespacefast__float__module.html#acff59df228cc465ab5b71f392e2d76ae',1,'fast_float_module::is_digit_int(ic)']]],
-  ['is_5feight_5fdigits_10',['is_eight_digits',['../namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934',1,'fast_float_module']]],
-  ['is_5fspace_11',['is_space',['../namespacefast__float__module.html#a982324823ffb8ed4eb402f9f8b989d72',1,'fast_float_module']]],
-  ['is_5ftruncated_12',['is_truncated',['../namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b',1,'fast_float_module']]]
+  ['canada_20txt_20ndash_20111k_20lines_201_2093_20mb_0',['canada.txt &amp;ndash; 111k lines, 1.93 MB',['../index.html#autotoc_md7',1,'']]],
+  ['char_5fto_5fdigit_1',['char_to_digit',['../namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e',1,'fast_float_module']]],
+  ['char_5fto_5fdigit_5ftable_2',['char_to_digit_table',['../namespacefast__float__module.html#affd7bf1cb654c4ab4373a54828155eb3',1,'fast_float_module']]],
+  ['clinger_5ffast_5fpath_5f32_3',['clinger_fast_path_32',['../namespacefast__float__module.html#a5655e8ef3e099a235a0fd3115ae12a9e',1,'fast_float_module']]],
+  ['clinger_5ffast_5fpath_5f64_4',['clinger_fast_path_64',['../namespacefast__float__module.html#ab84ee3f6396f64b30d33a53edc845192',1,'fast_float_module']]],
+  ['compute_5ferror_5',['compute_error',['../namespacefast__float__module.html#a34ebed8f392eed32171825921225c7d1',1,'fast_float_module']]],
+  ['compute_5ferror_5fscaled_6',['compute_error_scaled',['../namespacefast__float__module.html#a9c934c61ac0a9105f681ccabb3986043',1,'fast_float_module']]],
+  ['compute_5ffloat_7',['compute_float',['../namespacefast__float__module.html#a3dccfc96e927157dfe3c7d89c814cf75',1,'fast_float_module']]],
+  ['compute_5fproduct_8',['compute_product',['../namespacefast__float__module.html#af869682752534bd0deac3196f2502646',1,'fast_float_module']]],
+  ['count_5fleading_5fzeros_9',['count_leading_zeros',['../namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf',1,'fast_float_module']]]
 ];

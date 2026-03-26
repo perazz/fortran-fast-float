@@ -30,7 +30,12 @@ var NAVTREE =
     [ "Error handling", "index.html#autotoc_md2", null ],
     [ "Format options", "index.html#autotoc_md3", null ],
     [ "Building", "index.html#autotoc_md4", null ],
-    [ "License", "index.html#autotoc_md5", null ],
+    [ "Benchmarks", "index.html#autotoc_md5", [
+      [ "Random uniform [0,1) – 100k floats, 2.19 MB", "index.html#autotoc_md6", null ],
+      [ "canada.txt – 111k lines, 1.93 MB", "index.html#autotoc_md7", null ],
+      [ "mesh.txt – 73k lines, 0.54 MB", "index.html#autotoc_md8", null ]
+    ] ],
+    [ "License", "index.html#autotoc_md9", null ],
     [ "Modules", "namespaces.html", [
       [ "Modules List", "namespaces.html", "namespaces_dup" ],
       [ "Module Members", "namespacemembers.html", [
@@ -49,15 +54,7 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ],
-      [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
-        [ "Functions/Subroutines", "globals_func.html", null ],
-        [ "Typedefs", "globals_type.html", null ],
-        [ "Enumerations", "globals_enum.html", null ],
-        [ "Enumerator", "globals_eval.html", null ],
-        [ "Macros", "globals_defs.html", null ]
-      ] ]
+      [ "File List", "files.html", "files_dup" ]
     ] ]
   ] ]
 ];
@@ -65,7 +62,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"namespacefast__float__module.html#aaf36fda7a41a25d08d834da8b6a11767"
+"structfast__float__module_1_1float__format.html#a2cc41e3c5d8f371ba9f370346d9785c7"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

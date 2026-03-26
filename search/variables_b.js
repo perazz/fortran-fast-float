@@ -14,6 +14,5 @@ var searchData=
   ['power5_5ftable_5fsize_11',['power5_table_size',['../namespacefast__float__module.html#ac1a63a185788cedd3940d50da7643145',1,'fast_float_module']]],
   ['preset_5ffortran_12',['preset_fortran',['../namespacefast__float__module.html#ad344974356a6a9af0c445b8b7edf3c11',1,'fast_float_module']]],
   ['preset_5fgeneral_13',['preset_general',['../namespacefast__float__module.html#a6a275cd7495fc52377481de43b2dbbcd',1,'fast_float_module']]],
-  ['preset_5fjson_14',['preset_json',['../namespacefast__float__module.html#a924a2e571ece1ee30473ddb5ae371055',1,'fast_float_module']]],
-  ['ptr_15',['ptr',['../structffc__c__bridge_1_1c__ffc__result.html#a4913989e9eae4b9cde7a11d3a424624e',1,'ffc_c_bridge::c_ffc_result::ptr'],['../structffc__result.html#a76ea2bdb1193a587b8c5e26b12635919',1,'ffc_result::ptr']]]
+  ['preset_5fjson_14',['preset_json',['../namespacefast__float__module.html#a924a2e571ece1ee30473ddb5ae371055',1,'fast_float_module']]]
 ];

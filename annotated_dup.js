@@ -19,12 +19,5 @@ var annotated_dup =
       [ "parsed_number", "structfast__float__module_1_1parsed__number.html", "structfast__float__module_1_1parsed__number" ],
       [ "stackvec", "structfast__float__module_1_1stackvec.html", "structfast__float__module_1_1stackvec" ],
       [ "u128", "structfast__float__module_1_1u128.html", "structfast__float__module_1_1u128" ]
-    ] ],
-    [ "ffc_c_bridge", "namespaceffc__c__bridge.html", [
-      [ "c_benchmark_ffc_lines", "interfaceffc__c__bridge_1_1c__benchmark__ffc__lines.html", "interfaceffc__c__bridge_1_1c__benchmark__ffc__lines" ],
-      [ "c_ffc_parse_double", "interfaceffc__c__bridge_1_1c__ffc__parse__double.html", "interfaceffc__c__bridge_1_1c__ffc__parse__double" ],
-      [ "c_ffc_result", "structffc__c__bridge_1_1c__ffc__result.html", "structffc__c__bridge_1_1c__ffc__result" ]
-    ] ],
-    [ "ffc_parse_options", "structffc__parse__options.html", "structffc__parse__options" ],
-    [ "ffc_result", "structffc__result.html", "structffc__result" ]
+    ] ]
 ];

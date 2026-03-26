@@ -1,7 +1,0 @@
-<map id="ffc.h" name="ffc.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="110,5,161,31"/>
-<area shape="rect" id="Node000002" href="$ffc__benchmark_8c.html" title=" " alt="" coords="5,79,135,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,43,83,80,79,77,113,39"/>
-<area shape="rect" id="Node000003" href="$ffc__impl_8c.html" title=" " alt="" coords="159,79,245,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,39,193,77,189,80,154,43"/>
-</map>
