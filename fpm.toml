@@ -31,8 +31,7 @@ str2real = { git = "https://github.com/Carltoffel/Fortran-String-to-Real" }
 boz-compat.gfortran.flags = "-fno-range-check"
 
 [profiles]
-debug = ["debug", "boz-compat"]
-release = ["release", "boz-compat"]
+default = ["boz-compat"]
 
 [[test]]
 name = "check"
