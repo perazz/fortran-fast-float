@@ -12,13 +12,13 @@ typically 4-10x faster than Fortran's native `read(str, *)`.
 | Procedure | Description |
 |-----------|-------------|
 | `parse_double(s [, options] [, first, last])` | Parse `character(*)` to `real64` (pure elemental) |
-| `parse_double(s [, options], res=res)` | Parse to `real64`, return `parse_result` in `res` |
+| `parse_double(s [, options], res)` | Parse to `real64`, populate `parse_result` in `res` |
 | `parse_float(s [, options])` | Parse `character(*)` to `real32` (pure elemental) |
-| `parse_float(s [, options], res=res)` | Parse to `real32`, return `parse_result` in `res` |
-| `parse_i64(s [, base])` | Parse `character(*)` to `integer(int64)` (pure elemental) |
-| `parse_i64(s [, base], res=res)` | Parse to `int64`, return `parse_result` in `res` |
-| `parse_i32(s [, base])` | Parse `character(*)` to `integer(int32)` (pure elemental) |
-| `parse_i32(s [, base], res=res)` | Parse to `int32`, return `parse_result` in `res` |
+| `parse_float(s [, options], res)` | Parse to `real32`, populate `parse_result` in `res` |
+| `parse_i64(s, base)` | Parse `character(*)` to `integer(int64)` (pure elemental) |
+| `parse_i64(s, base, res)` | Parse to `int64`, populate `parse_result` in `res` |
+| `parse_i32(s, base)` | Parse `character(*)` to `integer(int32)` (pure elemental) |
+| `parse_i32(s, base, res)` | Parse to `int32`, populate `parse_result` in `res` |
 
 All procedures return the parsed value directly. The `res` variants additionally populate a `parse_result`
 containing the cursor position (`pos`) and an `outcome` status code.
