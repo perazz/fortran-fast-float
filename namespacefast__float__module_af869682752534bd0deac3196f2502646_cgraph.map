@@ -1,0 +1,8 @@
+<map id="fast_float_module::compute_product" name="fast_float_module::compute_product">
+<area shape="rect" id="Node000001" title="Compute the product approximation for Eisel&#45;Lemire." alt="" coords="5,49,152,89"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="200,5,347,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,50,186,42,187,48,153,55"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="200,93,347,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,83,187,91,186,96,151,88"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="237,94,234,84,240,75,253,69,273,67,296,70,309,77,306,81,295,75,273,72,255,74,244,79,240,85,242,92"/>
+</map>

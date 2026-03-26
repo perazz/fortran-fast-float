@@ -1,0 +1,24 @@
+<map id="fast_float_module::parse_i32_sub" name="fast_float_module::parse_i32_sub">
+<area shape="rect" id="Node000001" title="Parse a string to a 32&#45;bit integer (subroutine form)." alt="" coords="5,137,152,177"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="200,137,347,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,155,186,155,186,160,152,160"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e" title="Map a character to its digit value using the lookup table." alt="" coords="395,29,541,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="303,135,393,79,405,73,408,78,396,84,305,139"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="395,93,541,133"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="346,138,380,130,382,136,347,143"/>
+<area shape="rect" id="Node000008" href="$namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="395,181,541,221"/>
+<area shape="poly" id="edge10_Node000002_Node000008" title=" " alt="" coords="347,171,382,179,380,184,346,176"/>
+<area shape="rect" id="Node000009" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="395,269,541,309"/>
+<area shape="poly" id="edge12_Node000002_Node000009" title=" " alt="" coords="305,175,427,259,424,264,302,180"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="431,30,429,20,435,11,448,5,468,3,491,6,503,13,501,17,489,11,468,8,449,10,438,15,434,21,436,28"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="589,29,736,69"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="529,91,587,71,589,76,530,96"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="589,93,736,133"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="541,111,575,111,575,116,541,116"/>
+<area shape="rect" id="Node000007" href="$namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="589,181,736,221"/>
+<area shape="poly" id="edge8_Node000004_Node000007" title=" " alt="" coords="516,131,542,143,608,173,605,178,540,148,514,136"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="626,30,624,20,630,11,643,5,663,3,686,6,698,13,695,17,684,11,663,8,644,10,633,15,629,21,631,28"/>
+<area shape="poly" id="edge9_Node000007_Node000007" title=" " alt="" coords="626,182,624,172,630,163,643,157,663,155,686,158,698,165,695,169,684,163,663,160,644,162,633,167,629,173,631,180"/>
+<area shape="poly" id="edge11_Node000008_Node000008" title=" " alt="" coords="431,182,429,172,435,163,448,157,468,155,491,158,503,165,501,169,489,163,468,160,449,162,438,167,434,173,436,180"/>
+<area shape="poly" id="edge13_Node000009_Node000009" title=" " alt="" coords="431,270,429,260,435,251,448,245,468,243,491,246,503,253,501,257,489,251,468,248,449,250,438,255,434,261,436,268"/>
+</map>

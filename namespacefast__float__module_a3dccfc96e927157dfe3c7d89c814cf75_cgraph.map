@@ -1,0 +1,20 @@
+<map id="fast_float_module::compute_float" name="fast_float_module::compute_float">
+<area shape="rect" id="Node000001" title="Compute the Eisel&#45;Lemire float approximation." alt="" coords="5,151,152,191"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a5b56697a868ca3f61bdb494294b6e93c" title="Convert a base&#45;10 exponent to base&#45;2." alt="" coords="204,29,351,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,148,146,114,199,79,210,73,213,77,201,84,149,118,105,152"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#af869682752534bd0deac3196f2502646" title="Compute the product approximation for Eisel&#45;Lemire." alt="" coords="204,93,351,133"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="148,148,193,135,195,140,149,153"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="403,151,549,191"/>
+<area shape="poly" id="edge11_Node000001_Node000005" title=" " alt="" coords="152,168,389,168,389,173,152,173"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="200,232,355,272"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="129,188,216,224,214,229,127,193"/>
+<area shape="rect" id="Node000007" href="$namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="204,320,351,360"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="102,189,202,282,238,310,234,314,198,286,98,193"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="240,30,238,20,244,11,257,5,277,3,301,6,313,13,311,18,299,11,277,8,258,10,247,15,243,21,245,28"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="403,63,549,103"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="351,99,389,93,389,99,352,105"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="348,131,393,144,392,149,346,136"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="439,151,437,141,442,132,456,126,476,124,499,127,512,134,509,139,498,132,476,129,457,131,446,136,442,142,444,150"/>
+<area shape="poly" id="edge8_Node000006_Node000006" title=" " alt="" coords="240,232,238,222,244,213,257,207,277,205,301,208,313,216,311,220,299,213,277,211,258,213,247,217,243,223,245,231"/>
+<area shape="poly" id="edge10_Node000007_Node000007" title=" " alt="" coords="240,320,238,310,244,301,257,295,277,293,301,296,313,304,311,308,299,301,277,299,258,301,247,305,243,311,245,319"/>
+</map>

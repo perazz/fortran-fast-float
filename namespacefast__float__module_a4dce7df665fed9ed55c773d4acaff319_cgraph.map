@@ -1,0 +1,9 @@
+<map id="fast_float_module::parse_infnan_32" name="fast_float_module::parse_infnan_32">
+<area shape="rect" id="Node000001" title="Parse inf/nan for single precision." alt="" coords="5,73,152,113"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="200,29,347,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,74,186,66,187,72,153,79"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="200,117,347,157"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="153,107,187,115,186,120,151,112"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="237,30,234,20,240,11,253,5,273,3,296,6,309,13,306,17,295,11,273,8,255,10,244,15,240,21,242,28"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="237,118,234,108,240,99,253,93,273,91,296,94,309,101,306,105,295,99,273,96,255,98,244,103,240,109,242,116"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="fast_float_module::scalar_mul" name="fast_float_module::scalar_mul">
+<area shape="rect" id="Node000001" title="Multiply with carry for big integer arithmetic." alt="" coords="5,37,152,77"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="200,5,347,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,43,186,37,187,42,152,48"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#aaf36fda7a41a25d08d834da8b6a11767" title="Add two unsigned 64&#45;bit integers with carry detection." alt="" coords="200,69,347,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="152,67,187,72,186,78,152,72"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="395,69,541,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="347,87,381,87,381,92,347,92"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="431,70,429,60,435,51,448,45,468,43,491,46,503,53,501,57,489,51,468,48,449,50,438,55,434,61,436,68"/>
+</map>

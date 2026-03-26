@@ -1,0 +1,10 @@
+<map id="fast_float_module::bigint_bit_length" name="fast_float_module::bigint_bit_length">
+<area shape="rect" id="Node000001" title="Compute bit length of a bigint." alt="" coords="5,29,152,69"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="42,30,40,20,46,11,59,5,79,3,102,6,114,13,111,17,100,11,79,8,60,10,49,15,45,21,47,28"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a258f8750d36535cf5b9e8497a833800f" title="Count leading zeros of a bigint." alt="" coords="200,29,347,69"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="152,47,186,47,186,52,152,52"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="237,30,234,20,240,11,253,5,273,3,296,6,309,13,306,17,295,11,273,8,255,10,244,15,240,21,242,28"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="395,29,549,69"/>
+<area shape="poly" id="edge4_Node000002_Node000003" title=" " alt="" coords="347,47,381,47,381,52,347,52"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="435,30,433,20,438,11,452,5,472,3,495,6,508,13,505,18,494,11,472,8,453,10,442,15,438,21,440,28"/>
+</map>

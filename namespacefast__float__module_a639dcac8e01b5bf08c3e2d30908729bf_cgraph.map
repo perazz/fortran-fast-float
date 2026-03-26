@@ -1,0 +1,17 @@
+<map id="fast_float_module::bigint_hi64" name="fast_float_module::bigint_hi64">
+<area shape="rect" id="Node000001" title="Extract the high 64 bits of a bigint." alt="" coords="5,113,152,153"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700" title="Extract high 64 bits from a single limb." alt="" coords="200,5,347,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,111,199,55,211,49,213,54,201,60,111,115"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a70e0d2a9188d831137ab521f9c1a1639" title="Extract high 64 bits from two limbs." alt="" coords="200,69,347,109"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="151,114,186,106,187,112,153,119"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a536da3d7a72ca4d6b052d813648fde0b" title="Check if any non&#45;zero elements exist after index i." alt="" coords="200,157,347,197"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="153,147,187,155,186,160,151,152"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#ab1f7a43febc992caa75416e62b4beefd" title="Get element at reverse index from the stack vector." alt="" coords="200,245,347,285"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="111,151,233,235,230,240,108,156"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="395,37,549,77"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="348,35,382,40,381,45,347,40"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="435,38,433,28,438,19,452,13,472,11,495,14,508,21,505,26,494,19,472,16,453,18,442,23,438,29,440,36"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="347,75,381,69,382,75,348,80"/>
+<area shape="poly" id="edge7_Node000005_Node000005" title=" " alt="" coords="237,158,234,148,240,139,253,133,273,131,296,134,309,141,306,145,295,139,273,136,255,138,244,143,240,149,242,156"/>
+<area shape="poly" id="edge9_Node000006_Node000006" title=" " alt="" coords="237,246,234,236,240,227,253,221,273,219,296,222,309,229,306,233,295,227,273,224,255,226,244,231,240,237,242,244"/>
+</map>

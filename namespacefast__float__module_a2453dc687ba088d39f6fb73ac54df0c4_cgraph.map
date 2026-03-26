@@ -1,0 +1,7 @@
+<map id="fast_float_module::bigint_make" name="fast_float_module::bigint_make">
+<area shape="rect" id="Node000001" title="Create a bigint from a single value." alt="" coords="5,37,152,77"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="200,5,347,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,43,186,37,187,42,152,48"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a08efb715246ed5f2def9b97783e43d7a" title="Push a value onto the stack vector." alt="" coords="200,69,347,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="152,67,187,72,186,78,152,72"/>
+</map>

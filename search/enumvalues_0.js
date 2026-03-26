@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['ffc_5fformat_5fflag_5fallow_5fleading_5fplus_0',['FFC_FORMAT_FLAG_ALLOW_LEADING_PLUS',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfbaaf809b1c3daaa2083ca39b2dfd87b6d1',1,'ffc.h']]],
+  ['ffc_5fformat_5fflag_5fbasic_5ffortran_1',['FFC_FORMAT_FLAG_BASIC_FORTRAN',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba3922f8b2602126a7d32ea391fbdcc276',1,'ffc.h']]],
+  ['ffc_5fformat_5fflag_5fbasic_5fjson_2',['FFC_FORMAT_FLAG_BASIC_JSON',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba798ca1ae2b46baa439ac7ef12d8790bf',1,'ffc.h']]],
+  ['ffc_5fformat_5fflag_5ffixed_3',['FFC_FORMAT_FLAG_FIXED',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba4851a80f54f43dc753b4ad8e55944e53',1,'ffc.h']]],
+  ['ffc_5fformat_5fflag_5fhex_4',['FFC_FORMAT_FLAG_HEX',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba54eabed9924fa933747be5a3ed241826',1,'ffc.h']]],
+  ['ffc_5fformat_5fflag_5fno_5finfnan_5',['FFC_FORMAT_FLAG_NO_INFNAN',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfbae4f91a861f53ccc5dcaa577c41c791de',1,'ffc.h']]],
+  ['ffc_5fformat_5fflag_5fscientific_6',['FFC_FORMAT_FLAG_SCIENTIFIC',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfbaf21675dd266f92d346086c8fdd408551',1,'ffc.h']]],
+  ['ffc_5fformat_5fflag_5fskip_5fwhite_5fspace_7',['FFC_FORMAT_FLAG_SKIP_WHITE_SPACE',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba5f679f58775d5b378b587ddd8a7aa303',1,'ffc.h']]],
+  ['ffc_5foutcome_5finvalid_5finput_8',['FFC_OUTCOME_INVALID_INPUT',['../ffc_8h.html#a0fda46a0a26a61cdcb2023719146ddbaa315adf010ac469ed6ec0b6c559103df9',1,'ffc.h']]],
+  ['ffc_5foutcome_5fok_9',['FFC_OUTCOME_OK',['../ffc_8h.html#a0fda46a0a26a61cdcb2023719146ddbaabf492f886a16798459b2386f957d6b54',1,'ffc.h']]],
+  ['ffc_5foutcome_5fout_5fof_5frange_10',['FFC_OUTCOME_OUT_OF_RANGE',['../ffc_8h.html#a0fda46a0a26a61cdcb2023719146ddbaa1c0d5d6a76e0b7187861abb68b9cf898',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fjson_5fleading_5fzeros_5fin_5finteger_5fpart_11',['FFC_PARSE_OUTCOME_JSON_LEADING_ZEROS_IN_INTEGER_PART',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a8e6145f7041705c017f9601edb3fe7bf',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fjson_5fmissing_5finteger_5fafter_5fsign_12',['FFC_PARSE_OUTCOME_JSON_MISSING_INTEGER_AFTER_SIGN',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a3911bd28b7b5ff4f5b01d273c2e7ad2d',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fjson_5fno_5fdigits_5fin_5ffractional_5fpart_13',['FFC_PARSE_OUTCOME_JSON_NO_DIGITS_IN_FRACTIONAL_PART',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a4a13b7914ccf9ea2f8f970d01b555d38',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fjson_5fno_5fdigits_5fin_5finteger_5fpart_14',['FFC_PARSE_OUTCOME_JSON_NO_DIGITS_IN_INTEGER_PART',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a6e4a3c540031db574a07dea3de7fd1ca',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fmissing_5fexponential_5fpart_15',['FFC_PARSE_OUTCOME_MISSING_EXPONENTIAL_PART',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a8b4857353565b02f69911e7b6d8c474e',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fmissing_5finteger_5for_5fdot_5fafter_5fsign_16',['FFC_PARSE_OUTCOME_MISSING_INTEGER_OR_DOT_AFTER_SIGN',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a861afe010a444eef45cbe595fa9ad156',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fno_5fdigits_5fin_5fmantissa_17',['FFC_PARSE_OUTCOME_NO_DIGITS_IN_MANTISSA',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a3b8378f8d5fd7a65375fcf9d358bc108',1,'ffc.h']]],
+  ['ffc_5fparse_5foutcome_5fno_5ferror_18',['FFC_PARSE_OUTCOME_NO_ERROR',['../ffc_8h.html#a7127842a2ee734187f86788a18860d53a28a94ef0dbcef573106c7f5bf3c8def4',1,'ffc.h']]],
+  ['ffc_5fpreset_5ffortran_19',['FFC_PRESET_FORTRAN',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba00bb31145ccfd2f42bc3ec8ed30d3b47',1,'ffc.h']]],
+  ['ffc_5fpreset_5fgeneral_20',['FFC_PRESET_GENERAL',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba29e6b1b7efdc123ca3aa6f374bc22bef',1,'ffc.h']]],
+  ['ffc_5fpreset_5fjson_21',['FFC_PRESET_JSON',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfbac4aff15bebc7bcfe76656539fe1b8fab',1,'ffc.h']]],
+  ['ffc_5fpreset_5fjson_5for_5finfnan_22',['FFC_PRESET_JSON_OR_INFNAN',['../ffc_8h.html#ae5ff0400d5be1f1c854cf397eb2f7dfba7d3f6cd15a7179daa623481f55c3d672',1,'ffc.h']]]
+];

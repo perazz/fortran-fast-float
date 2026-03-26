@@ -1,0 +1,33 @@
+<map id="fast_float_module::bigint_pow5" name="fast_float_module::bigint_pow5">
+<area shape="rect" id="Node000001" title="Multiply bigint by 5^e." alt="" coords="5,173,152,213"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="200,144,347,184"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,180,186,174,187,180,152,185"/>
+<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="589,157,736,197"/>
+<area shape="poly" id="edge18_Node000001_Node000010" title=" " alt="" coords="152,193,200,193,347,193,575,181,576,186,347,199,200,199,152,198"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#ad98fe8fd5fd40de02b95ef6ecb89e9e2" title="Long multiplication of a bigint by an integer array." alt="" coords="395,93,541,133"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="346,142,381,133,382,138,347,148"/>
+<area shape="poly" id="edge17_Node000002_Node000010" title=" " alt="" coords="347,164,575,172,575,177,347,169"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a6cc376dc34496d73ae9ef44281731e4a" title="Add a large integer array to a bigint." alt="" coords="589,29,736,69"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="529,91,587,71,589,76,530,96"/>
+<area shape="poly" id="edge11_Node000003_Node000010" title=" " alt="" coords="530,131,589,150,587,155,529,136"/>
+<area shape="rect" id="Node000013" href="$namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="589,93,736,133"/>
+<area shape="poly" id="edge16_Node000003_Node000013" title=" " alt="" coords="541,111,575,111,575,116,541,116"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="784,29,931,69"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="736,47,770,47,770,52,736,52"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#aaf36fda7a41a25d08d834da8b6a11767" title="Add two unsigned 64&#45;bit integers with carry detection." alt="" coords="979,29,1125,69"/>
+<area shape="poly" id="edge9_Node000004_Node000006" title=" " alt="" coords="726,27,784,15,857,8,931,15,975,23,974,29,930,20,857,14,784,20,727,32"/>
+<area shape="rect" id="Node000009" href="$namespacefast__float__module.html#a72c9120674e18ebc2546897244c69ad9" title="Try to reserve space in the stack vector." alt="" coords="784,93,931,133"/>
+<area shape="poly" id="edge10_Node000004_Node000009" title=" " alt="" coords="725,67,784,86,782,91,723,72"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="931,47,965,47,965,52,931,52"/>
+<area shape="rect" id="Node000008" href="$namespacefast__float__module.html#a2819b2bf016df7fb47d348462167ace9" title="Try to push a value onto the stack vector." alt="" coords="979,119,1125,159"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="906,67,932,79,998,110,996,115,930,84,903,72"/>
+<area shape="rect" id="Node000007" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="1173,29,1320,69"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1125,47,1159,47,1159,52,1125,52"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="1210,30,1208,20,1214,11,1227,5,1247,3,1270,6,1282,13,1279,17,1268,11,1247,8,1228,10,1217,15,1213,21,1215,28"/>
+<area shape="poly" id="edge15_Node000010_Node000008" title=" " alt="" coords="736,167,964,145,965,150,737,173"/>
+<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a32497bc4b6aef058013f832ee776f071" title="Multiply with carry for big integer arithmetic." alt="" coords="784,208,931,248"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="737,194,771,203,770,208,735,199"/>
+<area shape="poly" id="edge14_Node000011_Node000006" title=" " alt="" coords="875,206,977,105,1011,76,1015,80,980,109,879,210"/>
+<area shape="rect" id="Node000012" href="$namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="979,208,1125,248"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="931,225,965,225,965,231,931,231"/>
+</map>

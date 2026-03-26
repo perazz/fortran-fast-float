@@ -1,0 +1,15 @@
+<map id="fast_float_module::bigint_large_add" name="fast_float_module::bigint_large_add">
+<area shape="rect" id="Node000001" title="Add a large integer array to a bigint." alt="" coords="5,87,152,127"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="200,87,347,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,104,186,104,186,109,152,109"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#aaf36fda7a41a25d08d834da8b6a11767" title="Add two unsigned 64&#45;bit integers with carry detection." alt="" coords="395,29,541,69"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="147,84,200,72,293,59,381,51,381,57,294,64,200,77,148,89"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#a72c9120674e18ebc2546897244c69ad9" title="Try to reserve space in the stack vector." alt="" coords="200,151,347,191"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="141,124,200,144,198,149,139,129"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="341,84,386,71,387,76,343,89"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a2819b2bf016df7fb47d348462167ace9" title="Try to push a value onto the stack vector." alt="" coords="395,93,541,133"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="347,107,381,108,380,113,347,112"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="589,29,736,69"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="541,47,575,47,575,52,541,52"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="626,30,624,20,630,11,643,5,663,3,686,6,698,13,695,17,684,11,663,8,644,10,633,15,629,21,631,28"/>
+</map>

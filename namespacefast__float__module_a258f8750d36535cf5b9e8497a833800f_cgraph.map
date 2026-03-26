@@ -1,0 +1,7 @@
+<map id="fast_float_module::bigint_ctlz" name="fast_float_module::bigint_ctlz">
+<area shape="rect" id="Node000001" title="Count leading zeros of a bigint." alt="" coords="5,29,152,69"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="41,30,39,20,45,11,58,5,79,3,102,6,115,13,112,18,100,11,79,8,60,10,49,15,44,21,47,28"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="200,29,355,69"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="152,47,186,47,186,52,152,52"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="240,30,238,20,244,11,257,5,277,3,301,6,313,13,311,18,299,11,277,8,258,10,247,15,243,21,245,28"/>
+</map>

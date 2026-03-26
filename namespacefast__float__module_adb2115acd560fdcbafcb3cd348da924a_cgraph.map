@@ -1,0 +1,10 @@
+<map id="fast_float_module::bigint_small_add" name="fast_float_module::bigint_small_add">
+<area shape="rect" id="Node000001" title="Add a small value to a bigint starting at a given position." alt="" coords="5,61,152,101"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#aaf36fda7a41a25d08d834da8b6a11767" title="Add two unsigned 64&#45;bit integers with carry detection." alt="" coords="200,29,347,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,67,186,61,187,66,152,72"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a2819b2bf016df7fb47d348462167ace9" title="Try to push a value onto the stack vector." alt="" coords="200,93,347,133"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="152,91,187,96,186,102,152,96"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="395,29,541,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="347,47,381,47,381,52,347,52"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="431,30,429,20,435,11,448,5,468,3,491,6,503,13,501,17,489,11,468,8,449,10,438,15,434,21,436,28"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="fast_float_module::round_nearest_tie_even" name="fast_float_module::round_nearest_tie_even">
+<area shape="rect" id="Node000001" title="Round to nearest with tie&#45;even." alt="" coords="5,29,184,69"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="232,29,379,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,47,218,47,218,52,184,52"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="266,30,263,20,270,10,284,5,305,3,330,6,343,13,341,18,328,11,305,8,285,10,273,15,269,21,271,28"/>
+</map>

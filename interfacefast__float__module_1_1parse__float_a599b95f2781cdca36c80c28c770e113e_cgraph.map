@@ -1,0 +1,34 @@
+<map id="fast_float_module::parse_float::parse_fp_opts_res" name="fast_float_module::parse_float::parse_fp_opts_res">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,110,164,165"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#aefae1d21e5a95ebf7a390199813224cb" title="Parse a string range to float, subroutine form." alt="" coords="212,117,380,157"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,135,198,135,198,140,164,140"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a982324823ffb8ed4eb402f9f8b989d72" title="Check if a character is whitespace." alt="" coords="434,53,581,93"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="362,115,427,95,428,100,364,120"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a4dce7df665fed9ed55c773d4acaff319" title="Parse inf/nan for single precision." alt="" coords="434,117,581,157"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="380,135,420,135,420,140,380,140"/>
+<area shape="rect" id="Node000007" href="$namespacefast__float__module.html#ac55e14914ae42c302e7606bbb1023575" title="Parse a number string into mantissa, exponent, and sign." alt="" coords="428,225,587,265"/>
+<area shape="poly" id="edge9_Node000002_Node000007" title=" " alt="" coords="337,155,456,217,454,221,335,160"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="470,54,467,44,473,35,487,29,507,27,531,30,544,37,541,42,529,35,507,32,488,34,477,39,473,45,475,52"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="635,29,781,69"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="558,115,586,103,634,79,647,73,650,77,636,84,588,108,560,120"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="635,117,781,157"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="581,135,621,135,621,140,581,140"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="671,30,669,20,675,11,688,5,708,3,731,6,743,13,741,17,729,11,708,8,689,10,678,15,674,21,676,28"/>
+<area shape="poly" id="edge8_Node000006_Node000006" title=" " alt="" coords="671,118,669,108,675,99,688,93,708,91,731,94,743,101,741,105,729,99,708,96,689,98,678,103,674,109,676,116"/>
+<area shape="rect" id="Node000008" href="$namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="635,181,781,221"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="586,225,620,218,622,223,587,231"/>
+<area shape="rect" id="Node000012" href="$namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="635,269,781,309"/>
+<area shape="poly" id="edge16_Node000007_Node000012" title=" " alt="" coords="587,260,622,268,620,273,586,265"/>
+<area shape="rect" id="Node000013" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="635,357,781,397"/>
+<area shape="poly" id="edge18_Node000007_Node000013" title=" " alt="" coords="540,263,667,347,664,352,537,268"/>
+<area shape="rect" id="Node000009" href="$namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="829,117,976,157"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="769,179,827,159,829,164,770,184"/>
+<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="829,181,976,221"/>
+<area shape="poly" id="edge13_Node000008_Node000010" title=" " alt="" coords="781,199,815,199,815,204,781,204"/>
+<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="829,269,976,309"/>
+<area shape="poly" id="edge14_Node000008_Node000011" title=" " alt="" coords="756,219,782,231,848,261,845,266,780,236,754,224"/>
+<area shape="poly" id="edge12_Node000009_Node000009" title=" " alt="" coords="866,118,864,108,870,99,883,93,903,91,926,94,938,101,935,105,924,99,903,96,884,98,873,103,869,109,871,116"/>
+<area shape="poly" id="edge15_Node000011_Node000011" title=" " alt="" coords="866,270,864,260,870,251,883,245,903,243,926,246,938,253,935,257,924,251,903,248,884,250,873,255,869,261,871,268"/>
+<area shape="poly" id="edge17_Node000012_Node000012" title=" " alt="" coords="671,270,669,260,675,251,688,245,708,243,731,246,743,253,741,257,729,251,708,248,689,250,678,255,674,261,676,268"/>
+<area shape="poly" id="edge19_Node000013_Node000013" title=" " alt="" coords="671,358,669,348,675,339,688,333,708,331,731,334,743,341,741,345,729,339,708,336,689,338,678,343,674,349,676,356"/>
+</map>

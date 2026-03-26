@@ -1,0 +1,8 @@
+<map id="fast_float_module::to_extended_halfway" name="fast_float_module::to_extended_halfway">
+<area shape="rect" id="Node000001" title="Convert a float to its extended halfway representation." alt="" coords="5,29,167,69"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="215,29,361,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,47,201,47,201,52,167,52"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a8d4f5ec2e98533d0b21691be1a283d05" title="Reinterpret a double as its 64&#45;bit integer representation." alt="" coords="409,29,556,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="361,47,395,47,395,52,361,52"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="446,30,444,20,450,11,463,5,483,3,506,6,518,13,515,17,504,11,483,8,464,10,453,15,449,21,451,28"/>
+</map>

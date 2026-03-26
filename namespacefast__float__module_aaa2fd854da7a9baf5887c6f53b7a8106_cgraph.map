@@ -1,0 +1,16 @@
+<map id="fast_float_module::round_tie_even" name="fast_float_module::round_tie_even">
+<area shape="rect" id="Node000001" title="Round tie&#45;even for subnormals." alt="" coords="5,111,152,151"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a0a805e389062ab308ce01b45b44304cf" title="Finish rounding: handle overflow and infinity." alt="" coords="216,41,363,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,108,214,83,216,88,141,113"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a99df78a3217b18e7783e681ed9a2f249" title="Round to nearest with tie&#45;even." alt="" coords="200,111,379,151"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="152,128,186,128,186,133,152,133"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="216,199,363,239"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="129,148,229,191,227,196,127,153"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="427,29,573,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="363,55,413,52,413,57,363,60"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="460,30,458,20,464,10,479,5,500,3,525,6,538,13,536,18,523,11,500,8,480,10,468,15,463,21,466,28"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="427,117,573,157"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="379,131,413,132,413,137,379,136"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="460,118,458,108,464,98,479,93,500,91,525,94,538,101,536,106,523,99,500,96,480,98,468,103,463,109,466,116"/>
+<area shape="poly" id="edge8_Node000006_Node000006" title=" " alt="" coords="250,199,247,189,254,180,268,174,289,172,314,175,327,182,325,187,312,180,289,177,269,179,257,184,253,190,255,198"/>
+</map>

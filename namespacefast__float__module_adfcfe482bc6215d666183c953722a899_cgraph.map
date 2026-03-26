@@ -1,0 +1,13 @@
+<map id="fast_float_module::try_fast_path" name="fast_float_module::try_fast_path">
+<area shape="rect" id="Node000001" title="Unified fast path for integers and simple fixed&#45;point decimals." alt="" coords="5,93,152,133"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="200,93,347,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,111,186,111,186,116,152,116"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="395,29,541,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,91,393,71,394,76,336,96"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="395,93,541,133"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="347,111,381,111,381,116,347,116"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="395,181,541,221"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="320,131,412,173,410,178,318,136"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="431,30,429,20,435,11,448,5,468,3,491,6,503,13,501,17,489,11,468,8,449,10,438,15,434,21,436,28"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="431,182,429,172,435,163,448,157,468,155,491,158,503,165,501,169,489,163,468,160,449,162,438,167,434,173,436,180"/>
+</map>
