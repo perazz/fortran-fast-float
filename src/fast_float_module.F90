@@ -1886,11 +1886,9 @@ contains
     pure elemental integer function bigint_compare(a, b)
         type(bigint), intent(in) :: a, b
         integer :: j
-        if (a%vec%ln > b%vec%ln) then
-            bigint_compare = 1
-            return
-        else if (a%vec%ln < b%vec%ln) then
-            bigint_compare = -1
+        j = a%vec%ln - b%vec%ln
+        if (j/=0) then
+            bigint_compare = sign(1,j)
             return
         end if
         bigint_compare = 0
