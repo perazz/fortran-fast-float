@@ -868,18 +868,6 @@ contains
 
     ! ===== Character and digit utilities =====
 
-    !> Reinterpret a double as its 64-bit integer representation.
-    pure elemental integer(i8) function get_double_bits(d)
-        real(dp), intent(in) :: d
-        get_double_bits = transfer(d, 0_i8)
-    end function get_double_bits
-
-    !> Reinterpret a float as its 32-bit integer representation.
-    pure elemental integer(i4) function get_float_bits(f)
-        real(sp), intent(in) :: f
-        get_float_bits = transfer(f, 0_i4)
-    end function get_float_bits
-
     !> Count leading zero bits in a 64-bit integer.
     pure elemental integer function count_leading_zeros(x)
         integer(i8), intent(in) :: x
@@ -1940,7 +1928,7 @@ contains
         integer(i8) :: b
         integer(i4) :: bi
         bi = int(f%mantissa_bits - f%min_exponent, i4)
-        b = get_double_bits(vd)
+        b = transfer(vd, b)
         if (iand(b, f%exponent_mask) == 0) then
             res = adjusted_mantissa( iand(b, f%mantissa_mask), 1 - bi)
         else
