@@ -4,5 +4,6 @@ build/
 *.o
 project/doxygen/
 project/doxygen/html/
+.cache/
 .claude/
 CLAUDE.md
