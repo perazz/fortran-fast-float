@@ -3,8 +3,8 @@ program benchmark_compare
     use iso_fortran_env, only: int64, output_unit, real64
     use fast_float_module, only: outcomes, outcome, parse_double, DEFAULT_PARSING, &
                                   operator(==), operator(/=)
-    use fast_float_module, only: parse_double_range_sub, parse_result
-    use ffc_c_bridge, only: ffc_parse_double_c
+    use fast_float_module, only: parse_double_range_sub, parse_result, parse_double_batch
+    use ffc_c_bridge, only: ffc_parse_double_c, benchmark_ffc_lines_c
     use str2real_m, only: str2real
     use stdlib_str2num, only: to_num
     implicit none(type, external)
@@ -277,19 +277,26 @@ contains
         integer(c_int32_t) :: c_outcome
         integer(int64) :: count_end, count_rate, count_start
         type(parse_result) :: f_result
+        ! Pre-computed integer start/end arrays (avoid c_size_t conversion in hot loop)
+        integer, allocatable :: istart(:), iend(:)
 
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
         min_ns = huge(1.0_real64)
         avg_ns = 0.0_real64
         checksum = 0.0_real64
 
+        ! Pre-compute integer offsets to avoid int() conversion in timed loops
+        allocate(istart(nlines), iend(nlines))
+        do i = 1, nlines
+            istart(i) = int(offsets(i)) + 1
+            iend(i) = int(offsets(i) + lengths(i))
+        end do
+
         ! Compute XOR checksums in a single untimed pass
         xor_checksum = 0_int64
         do i = 1, nlines
             call parse_double_range_sub( &
-                packed_text, &
-                int(offsets(i), kind=kind(i)) + 1, &
-                int(offsets(i) + lengths(i), kind=kind(i)), &
+                packed_text, istart(i), iend(i), &
                 x_f, f_result, DEFAULT_PARSING)
             if (f_result%outcome == outcomes%OK) &
                 xor_checksum(B_RSUB) = ieor(xor_checksum(B_RSUB), transfer(x_f, 0_int64))
@@ -316,9 +323,7 @@ contains
             call system_clock(count=count_start)
             do i = 1, nlines
                 call parse_double_range_sub( &
-                    packed_text, &
-                    int(offsets(i), kind=kind(i)) + 1, &
-                    int(offsets(i) + lengths(i), kind=kind(i)), &
+                    packed_text, istart(i), iend(i), &
                     x_f, f_result, DEFAULT_PARSING)
                 if (f_result%outcome /= outcomes%OK) cycle
                 if (x_f > answer) answer = x_f
@@ -367,18 +372,15 @@ contains
         end do
 
         do r = 1, repeat_count
-            answer = 0.0_real64
             call system_clock(count=count_start)
-            do i = 1, nlines
-                call ffc_parse_double_c(lines(i)%c_text, len(lines(i)%text), x_c, c_outcome)
-                if (c_outcome /= outcomes%OK%state) cycle
-                if (real(x_c, real64) > answer) answer = real(x_c, real64)
-            end do
+            call benchmark_ffc_lines_c(packed_data, offsets, lengths, nlines, x_c, c_outcome)
+            answer = x_c
             call system_clock(count=count_end)
             call tally(B_CLOOP, answer, count_start, count_end, count_rate, &
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        deallocate(istart, iend)
         avg_ns = avg_ns / real(repeat_count, real64)
 
         write(output_unit, "(a)") ""

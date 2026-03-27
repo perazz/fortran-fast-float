@@ -12,7 +12,7 @@ module ffc_c_bridge
     end type c_ffc_result
 
     interface
-        function c_ffc_parse_double(len, input, out) bind(c, name="ffc_parse_double")
+        function c_ffc_parse_double(len, input, out) bind(c, name="ffc_parse_double_ws")
             import :: c_ffc_result, c_ptr, c_size_t
             integer(c_size_t), value :: len
             type(c_ptr), value :: input
