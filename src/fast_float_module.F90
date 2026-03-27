@@ -64,6 +64,7 @@ module fast_float_module
     integer(i4), parameter :: INVALID_AM = -32768_i4
     integer(i8), parameter :: SB64 = ishft(1_i8, 63)
     integer(i8), parameter :: M32 = int(z'00000000FFFFFFFF', i8)
+    integer(i8), parameter :: ZERO8_U64 = int(z'3030303030303030', i8)
 
     ! 128-bit integer support: compile-time detection
 #if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
@@ -1086,12 +1087,13 @@ contains
         en = 0_i8
         hse = .false.
         if (p <= last) then
-            hse = (iand(fmt, FMT_SCIENTIFIC) /= 0 .and. scan(str(p:p), 'eE') > 0) .or. &
-                  (iand(fmt, FMT_FORTRAN) /= 0 .and. scan(str(p:p), '+-dD') > 0)
+            hse = (iand(fmt, FMT_SCIENTIFIC) /= 0 .and. (str(p:p) == 'e' .or. str(p:p) == 'E')) .or. &
+                  (iand(fmt, FMT_FORTRAN) /= 0 .and. (str(p:p) == '+' .or. str(p:p) == '-' .or. &
+                                                     str(p:p) == 'd' .or. str(p:p) == 'D'))
         end if
         if (hse) then
             le = p
-            if (scan(str(p:p), 'eEdD') > 0) p = p + 1
+            if (str(p:p) == 'e' .or. str(p:p) == 'E' .or. str(p:p) == 'd' .or. str(p:p) == 'D') p = p + 1
             ne = .false.
             if (p <= last) then
                 if (str(p:p) == '-') then
@@ -1234,7 +1236,7 @@ contains
         end if
         p = p0
         ms = (str(p:p) == '-')
-        if (scan(str(p:p), '-+') > 0) p = p + 1
+        if (str(p:p) == '-' .or. str(p:p) == '+') p = p + 1
         if (la - p + 1 >= 3) then
             if (strcmpi3(str(p:), 'nan')) then
                 p = p + 3
@@ -2088,7 +2090,29 @@ contains
     pure elemental logical function is_truncated(str, fi, la)
         character(len=*), intent(in) :: str
         integer, intent(in) :: fi, la
-        is_truncated = verify(str(fi:la), '0') > 0
+        integer :: p
+        integer(i8) :: v
+
+        is_truncated = .false.
+        p = fi
+        if (p > la) return
+
+        do while (la - p + 1 >= 8)
+            v = read8_to_u64(str(p:))
+            if (v /= ZERO8_U64) then
+                is_truncated = .true.
+                return
+            end if
+            p = p + 8
+        end do
+
+        do while (p <= la)
+            if (str(p:p) /= '0') then
+                is_truncated = .true.
+                return
+            end if
+            p = p + 1
+        end do
     end function is_truncated
 
     !> Skip leading zero characters.
@@ -2096,6 +2120,13 @@ contains
         character(*), intent(in) :: str
         integer, intent(inout) :: p
         integer, intent(in) :: la
+        integer(i8) :: v
+
+        do while (la - p + 1 >= 8)
+            v = read8_to_u64(str(p:))
+            if (v /= ZERO8_U64) exit
+            p = p + 8
+        end do
         do while (p <= la)
             if (str(p:p) /= '0') return
             p = p + 1
