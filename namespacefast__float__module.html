@@ -465,6 +465,8 @@ Variables</h2></td></tr>
 <tr class="separator:a2e23f2846a832b2d0407a276d8c103f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a448466ee32908aefb52b80289fd93f24" id="r_a448466ee32908aefb52b80289fd93f24"><td class="memItemLeft" align="right" valign="top">integer(i8), parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a448466ee32908aefb52b80289fd93f24">m32</a> = int(z'00000000FFFFFFFF', i8)</td></tr>
 <tr class="separator:a448466ee32908aefb52b80289fd93f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca80dc249112abcfbf17b57e8bdf2a1b" id="r_aca80dc249112abcfbf17b57e8bdf2a1b"><td class="memItemLeft" align="right" valign="top">integer(i8), parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca80dc249112abcfbf17b57e8bdf2a1b">zero8_u64</a> = int(z'3030303030303030', i8)</td></tr>
+<tr class="separator:aca80dc249112abcfbf17b57e8bdf2a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7669ff0e1931ba5df4d0d9bdaad2d03" id="r_aa7669ff0e1931ba5df4d0d9bdaad2d03"><td class="memItemLeft" align="right" valign="top">logical, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7669ff0e1931ba5df4d0d9bdaad2d03">has_int128</a> = c_int128_t &gt; 0</td></tr>
 <tr class="separator:aa7669ff0e1931ba5df4d0d9bdaad2d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a435d927d5e2e28e38dcf4cb84bc73e" id="r_a2a435d927d5e2e28e38dcf4cb84bc73e"><td class="memItemLeft" align="right" valign="top">integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a435d927d5e2e28e38dcf4cb84bc73e">ik128</a> = merge(c_int128_t, i8, HAS_INT128)</td></tr>
@@ -2140,7 +2142,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="833,744,980,784"/>
 <area shape="poly" title=" " alt="" coords="763,728,821,741,820,747,762,733"/>
 <area shape="rect" href="namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="1239,801,1385,841"/>
-<area shape="poly" title=" " alt="" coords="750,731,771,743,786,757,795,771,804,783,819,794,869,814,922,829,977,838,1032,843,1137,842,1225,834,1225,839,1137,847,1032,848,977,843,921,834,867,819,816,798,800,787,790,774,782,760,768,747,747,736"/>
+<area shape="poly" title=" " alt="" coords="750,731,771,743,786,757,795,771,804,783,819,794,869,814,922,829,977,838,1032,843,1136,842,1225,834,1225,839,1137,848,1032,848,976,843,921,834,867,819,816,798,800,787,790,774,782,760,768,747,747,736"/>
 <area shape="rect" href="namespacefast__float__module.html#ad98fe8fd5fd40de02b95ef6ecb89e9e2" title="Long multiplication of a bigint by an integer array." alt="" coords="1044,744,1191,784"/>
 <area shape="poly" title=" " alt="" coords="980,761,1030,761,1030,767,980,767"/>
 <area shape="poly" title=" " alt="" coords="981,780,1044,793,1138,806,1225,814,1225,819,1137,811,1044,799,980,786"/>
@@ -2166,26 +2168,28 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="758,65,823,47,824,52,759,71"/>
 <area shape="rect" href="namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="833,120,980,160"/>
 <area shape="poly" title=" " alt="" coords="769,148,819,144,820,150,770,154"/>
-<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="1044,940,1191,980"/>
-<area shape="poly" title=" " alt="" coords="749,1147,768,1135,782,1120,791,1104,799,1088,816,1073,840,1058,863,1049,903,1041,945,1036,995,1022,1070,985,1072,989,997,1026,946,1041,904,1046,864,1054,843,1063,819,1077,804,1091,795,1107,787,1123,771,1139,751,1152"/>
-<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="833,1327,980,1367"/>
-<area shape="poly" title=" " alt="" coords="711,1188,758,1235,819,1289,860,1317,857,1322,816,1293,755,1239,707,1191"/>
-<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="833,1087,980,1127"/>
-<area shape="poly" title=" " alt="" coords="758,1147,823,1128,824,1133,759,1152"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="833,1175,980,1215"/>
-<area shape="poly" title=" " alt="" coords="763,1175,820,1182,819,1187,762,1180"/>
-<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="833,972,980,1012"/>
-<area shape="poly" title=" " alt="" coords="752,1147,768,1135,778,1122,785,1110,791,1084,797,1057,804,1043,815,1029,830,1017,833,1021,819,1033,808,1046,802,1059,796,1085,790,1112,783,1125,771,1139,755,1151"/>
-<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="833,1239,980,1279"/>
-<area shape="poly" title=" " alt="" coords="734,1187,818,1224,837,1231,835,1236,816,1229,732,1192"/>
-<area shape="poly" title=" " alt="" coords="1138,938,1190,889,1237,851,1247,845,1249,850,1240,856,1194,893,1142,942"/>
+<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="1044,953,1191,993"/>
+<area shape="poly" title=" " alt="" coords="747,1147,768,1135,782,1123,791,1110,800,1097,816,1084,863,1062,904,1054,945,1048,995,1034,1069,997,1072,1002,997,1038,946,1053,905,1059,865,1068,819,1089,804,1101,795,1113,786,1126,771,1140,750,1152"/>
+<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="833,1301,980,1341"/>
+<area shape="poly" title=" " alt="" coords="720,1187,867,1291,864,1295,717,1192"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="1044,1220,1191,1260"/>
+<area shape="poly" title=" " alt="" coords="738,1187,818,1212,928,1229,1030,1236,1030,1241,927,1234,817,1217,737,1192"/>
+<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="833,1099,980,1139"/>
+<area shape="poly" title=" " alt="" coords="762,1150,820,1136,821,1141,763,1155"/>
+<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="833,984,980,1024"/>
+<area shape="poly" title=" " alt="" coords="751,1147,767,1135,784,1112,791,1089,798,1065,815,1041,831,1029,834,1033,819,1045,803,1068,796,1091,789,1115,771,1139,754,1151"/>
+<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="833,1163,980,1203"/>
+<area shape="poly" title=" " alt="" coords="762,1171,820,1175,819,1180,762,1176"/>
+<area shape="poly" title=" " alt="" coords="1133,951,1177,903,1206,876,1237,851,1246,846,1249,850,1240,856,1209,880,1181,906,1137,955"/>
 <area shape="rect" href="namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="1239,865,1385,905"/>
-<area shape="poly" title=" " alt="" coords="1169,938,1245,908,1247,913,1171,942"/>
+<area shape="poly" title=" " alt="" coords="1162,951,1254,909,1256,913,1164,956"/>
 <area shape="poly" title=" " alt="" coords="1365,863,1384,851,1398,836,1407,821,1416,806,1432,790,1438,785,1442,789,1435,794,1420,809,1412,824,1403,839,1387,855,1368,868"/>
 <area shape="poly" title=" " alt="" coords="1385,878,1478,868,1580,853,1618,845,1619,850,1580,859,1479,874,1386,883"/>
-<area shape="poly" title=" " alt="" coords="867,1327,865,1317,871,1308,885,1302,907,1300,931,1303,945,1310,942,1315,930,1308,907,1305,886,1307,874,1312,870,1318,872,1326"/>
-<area shape="poly" title=" " alt="" coords="867,1175,865,1165,871,1156,885,1150,907,1148,931,1151,945,1158,942,1163,930,1156,907,1153,886,1155,874,1160,870,1166,872,1174"/>
-<area shape="poly" title=" " alt="" coords="980,978,1030,970,1031,976,981,984"/>
+<area shape="poly" title=" " alt="" coords="867,1302,865,1292,871,1282,885,1277,907,1275,931,1278,945,1285,942,1290,930,1283,907,1280,886,1282,874,1287,870,1293,872,1300"/>
+<area shape="poly" title=" " alt="" coords="958,1299,1051,1262,1053,1267,960,1304"/>
+<area shape="poly" title=" " alt="" coords="1081,1220,1078,1210,1084,1201,1097,1195,1117,1193,1140,1196,1153,1204,1150,1208,1139,1201,1117,1199,1099,1201,1088,1205,1084,1211,1086,1219"/>
+<area shape="poly" title=" " alt="" coords="980,991,1030,983,1031,989,981,996"/>
+<area shape="poly" title=" " alt="" coords="981,1200,1031,1214,1030,1219,979,1205"/>
 <area shape="rect" href="namespacefast__float__module.html#a2efdc55b08697ee5b6659a673cd023a9" title="Compute bit length of a bigint." alt="" coords="407,781,554,821"/>
 <area shape="poly" title=" " alt="" coords="354,799,393,799,393,804,354,804"/>
 <area shape="rect" href="namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="407,889,554,929"/>
@@ -2198,9 +2202,9 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="namespacefast__float__module.html#a258f8750d36535cf5b9e8497a833800f" title="Count leading zeros of a bigint." alt="" coords="615,781,762,821"/>
 <area shape="poly" title=" " alt="" coords="554,799,602,799,602,804,554,804"/>
 <area shape="poly" title=" " alt="" coords="650,782,647,772,653,762,667,757,689,755,713,758,726,765,724,770,711,763,689,760,669,762,657,767,652,773,655,780"/>
-<area shape="rect" href="namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="829,908,984,948"/>
-<area shape="poly" title=" " alt="" coords="746,819,771,831,867,898,864,902,768,836,743,824"/>
-<area shape="poly" title=" " alt="" coords="867,908,865,898,871,889,885,883,907,881,931,884,945,892,942,896,930,889,907,887,886,889,874,893,870,899,872,907"/>
+<area shape="rect" href="namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="829,920,984,960"/>
+<area shape="poly" title=" " alt="" coords="748,819,771,831,796,852,819,875,866,910,863,914,816,879,792,856,768,836,746,824"/>
+<area shape="poly" title=" " alt="" coords="867,920,865,910,871,901,885,895,907,893,931,896,945,904,942,908,930,901,907,899,886,901,874,905,870,911,872,919"/>
 <area shape="rect" href="namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700" title="Extract high 64 bits from a single limb." alt="" coords="615,845,762,885"/>
 <area shape="poly" title=" " alt="" coords="554,891,602,881,603,886,555,896"/>
 <area shape="rect" href="namespacefast__float__module.html#a70e0d2a9188d831137ab521f9c1a1639" title="Extract high 64 bits from two limbs." alt="" coords="615,1085,762,1125"/>
@@ -2209,8 +2213,8 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="528,927,561,946,586,964,610,983,649,1011,645,1016,606,987,583,968,559,950,525,932"/>
 <area shape="rect" href="namespacefast__float__module.html#ab1f7a43febc992caa75416e62b4beefd" title="Get element at reverse index from the stack vector." alt="" coords="615,933,762,973"/>
 <area shape="poly" title=" " alt="" coords="555,922,603,932,602,938,554,927"/>
-<area shape="poly" title=" " alt="" coords="759,883,824,902,823,907,758,888"/>
-<area shape="poly" title=" " alt="" coords="752,1083,767,1071,779,1058,785,1044,790,1016,796,987,803,973,815,958,820,954,824,958,819,962,808,976,801,989,796,1017,790,1046,783,1060,771,1075,755,1087"/>
+<area shape="poly" title=" " alt="" coords="749,883,836,913,834,918,747,888"/>
+<area shape="poly" title=" " alt="" coords="751,1083,767,1071,785,1047,791,1022,797,996,815,970,821,965,824,970,819,974,802,998,796,1023,789,1049,771,1075,755,1087"/>
 <area shape="poly" title=" " alt="" coords="650,1022,647,1012,653,1002,667,997,689,995,713,998,726,1005,724,1010,711,1003,689,1000,669,1002,657,1007,652,1013,655,1020"/>
 <area shape="poly" title=" " alt="" coords="650,934,647,924,653,914,667,909,689,907,713,910,726,917,724,922,711,915,689,912,669,914,657,919,652,925,655,932"/>
 <area shape="poly" title=" " alt="" coords="546,691,609,671,611,676,547,696"/>
@@ -2580,7 +2584,10 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="namespacefast__float__module_a3f48e3ecda2e48d30e35736ac1d4396b_cgraph.png" border="0" usemap="#anamespacefast__float__module_a3f48e3ecda2e48d30e35736ac1d4396b_cgraph" alt=""/></div>
 <map name="anamespacefast__float__module_a3f48e3ecda2e48d30e35736ac1d4396b_cgraph" id="anamespacefast__float__module_a3f48e3ecda2e48d30e35736ac1d4396b_cgraph">
 <area shape="rect" title="Check if a substring contains any non&#45;zero digits." alt="" coords="5,29,152,69"/>
-<area shape="poly" title=" " alt="" coords="50,29,49,20,53,11,63,5,79,3,96,6,106,13,103,17,94,11,79,8,65,10,57,14,54,21,56,28"/>
+<area shape="poly" title=" " alt="" coords="42,30,40,20,46,11,59,5,79,3,102,6,114,13,111,17,100,11,79,8,60,10,49,15,45,21,47,28"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="200,29,347,69"/>
+<area shape="poly" title=" " alt="" coords="152,47,186,47,186,52,152,52"/>
+<area shape="poly" title=" " alt="" coords="237,30,234,20,240,11,253,5,273,3,296,6,309,13,306,17,295,11,273,8,255,10,244,15,240,21,242,28"/>
 </map>
 </div>
 
@@ -3891,39 +3898,41 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacefast__float__module_af7d24a49942e0dabf1cabaf827a1c07f_cgraph.png" border="0" usemap="#anamespacefast__float__module_af7d24a49942e0dabf1cabaf827a1c07f_cgraph" alt=""/></div>
 <map name="anamespacefast__float__module_af7d24a49942e0dabf1cabaf827a1c07f_cgraph" id="anamespacefast__float__module_af7d24a49942e0dabf1cabaf827a1c07f_cgraph">
-<area shape="rect" title="Parse mantissa digits into a bigint." alt="" coords="5,170,152,210"/>
-<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="395,130,541,170"/>
-<area shape="poly" title=" " alt="" coords="85,169,101,135,125,94,157,54,177,37,199,24,238,8,273,3,307,9,348,24,380,42,408,66,449,117,445,120,404,70,377,46,346,29,306,14,273,8,240,13,201,29,180,42,161,58,129,97,105,137,90,171"/>
-<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="200,62,347,102"/>
-<area shape="poly" title=" " alt="" coords="108,168,199,112,211,106,213,110,201,117,111,172"/>
-<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="200,126,347,166"/>
-<area shape="poly" title=" " alt="" coords="151,171,186,163,187,168,153,176"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="200,214,347,254"/>
-<area shape="poly" title=" " alt="" coords="153,204,187,212,186,217,151,209"/>
-<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="200,278,347,318"/>
-<area shape="poly" title=" " alt="" coords="111,208,201,264,213,270,211,275,199,269,108,213"/>
-<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="200,342,347,382"/>
-<area shape="poly" title=" " alt="" coords="95,209,139,267,168,299,202,328,209,333,206,338,198,332,165,303,134,270,91,212"/>
-<area shape="rect" href="namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="589,98,736,138"/>
-<area shape="poly" title=" " alt="" coords="541,136,575,130,576,135,542,141"/>
-<area shape="rect" href="namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="589,162,736,202"/>
-<area shape="poly" title=" " alt="" coords="542,160,576,165,575,171,541,165"/>
-<area shape="rect" href="namespacefast__float__module.html#aaf36fda7a41a25d08d834da8b6a11767" title="Add two unsigned 64&#45;bit integers with carry detection." alt="" coords="979,98,1125,138"/>
-<area shape="poly" title=" " alt="" coords="736,113,784,112,931,112,965,112,965,118,931,117,784,117,736,118"/>
-<area shape="rect" href="namespacefast__float__module.html#a2819b2bf016df7fb47d348462167ace9" title="Try to push a value onto the stack vector." alt="" coords="784,126,931,166"/>
-<area shape="poly" title=" " alt="" coords="736,126,771,131,770,136,736,131"/>
-<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="1173,98,1320,138"/>
-<area shape="poly" title=" " alt="" coords="1125,116,1159,116,1159,121,1125,121"/>
-<area shape="poly" title=" " alt="" coords="1210,98,1208,89,1214,79,1227,74,1247,72,1270,74,1282,82,1279,86,1268,79,1247,77,1228,79,1217,83,1213,89,1215,97"/>
-<area shape="poly" title=" " alt="" coords="736,166,770,160,771,165,737,171"/>
-<area shape="rect" href="namespacefast__float__module.html#a32497bc4b6aef058013f832ee776f071" title="Multiply with carry for big integer arithmetic." alt="" coords="784,190,931,230"/>
-<area shape="poly" title=" " alt="" coords="736,190,771,195,770,200,736,195"/>
-<area shape="poly" title=" " alt="" coords="903,188,930,176,998,142,1001,147,932,181,906,193"/>
-<area shape="rect" href="namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="979,190,1125,230"/>
-<area shape="poly" title=" " alt="" coords="931,208,965,208,965,213,931,213"/>
-<area shape="poly" title=" " alt="" coords="237,62,234,53,240,43,253,38,273,36,296,38,309,46,306,50,295,43,273,41,255,43,244,47,240,53,242,61"/>
-<area shape="poly" title=" " alt="" coords="237,214,234,205,240,195,253,190,273,188,296,190,309,198,306,202,295,195,273,193,255,195,244,199,240,205,242,213"/>
-<area shape="poly" title=" " alt="" coords="325,276,345,264,397,222,439,179,443,182,401,226,348,268,327,280"/>
+<area shape="rect" title="Parse mantissa digits into a bigint." alt="" coords="5,176,152,216"/>
+<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="395,61,541,101"/>
+<area shape="poly" title=" " alt="" coords="91,174,134,122,164,95,199,75,244,62,291,56,338,56,381,61,381,66,338,62,292,61,245,67,201,80,167,99,137,125,95,177"/>
+<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="200,356,347,396"/>
+<area shape="poly" title=" " alt="" coords="100,214,145,263,202,318,235,346,232,350,198,322,141,267,96,218"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="395,268,541,308"/>
+<area shape="poly" title=" " alt="" coords="152,179,197,174,247,173,298,177,348,189,375,202,401,219,442,256,438,260,397,223,373,207,346,195,297,183,246,178,197,180,153,184"/>
+<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="200,204,347,244"/>
+<area shape="poly" title=" " alt="" coords="152,204,187,209,186,214,152,209"/>
+<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="200,89,347,129"/>
+<area shape="poly" title=" " alt="" coords="123,173,214,133,216,138,126,178"/>
+<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="200,268,347,308"/>
+<area shape="poly" title=" " alt="" coords="120,214,201,254,215,260,213,265,199,258,118,219"/>
+<area shape="rect" href="namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="589,29,736,69"/>
+<area shape="poly" title=" " alt="" coords="541,67,575,61,576,66,542,72"/>
+<area shape="rect" href="namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="589,93,736,133"/>
+<area shape="poly" title=" " alt="" coords="542,91,576,96,575,102,541,96"/>
+<area shape="rect" href="namespacefast__float__module.html#aaf36fda7a41a25d08d834da8b6a11767" title="Add two unsigned 64&#45;bit integers with carry detection." alt="" coords="979,29,1125,69"/>
+<area shape="poly" title=" " alt="" coords="736,44,784,43,931,43,965,43,965,49,931,48,784,48,736,49"/>
+<area shape="rect" href="namespacefast__float__module.html#a2819b2bf016df7fb47d348462167ace9" title="Try to push a value onto the stack vector." alt="" coords="784,57,931,97"/>
+<area shape="poly" title=" " alt="" coords="736,57,771,62,770,67,736,62"/>
+<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="1173,29,1320,69"/>
+<area shape="poly" title=" " alt="" coords="1125,47,1159,47,1159,52,1125,52"/>
+<area shape="poly" title=" " alt="" coords="1210,30,1208,20,1214,11,1227,5,1247,3,1270,6,1282,13,1279,17,1268,11,1247,8,1228,10,1217,15,1213,21,1215,28"/>
+<area shape="poly" title=" " alt="" coords="736,97,770,91,771,96,737,102"/>
+<area shape="rect" href="namespacefast__float__module.html#a32497bc4b6aef058013f832ee776f071" title="Multiply with carry for big integer arithmetic." alt="" coords="784,121,931,161"/>
+<area shape="poly" title=" " alt="" coords="736,121,771,126,770,131,736,126"/>
+<area shape="poly" title=" " alt="" coords="903,119,930,107,998,73,1001,78,932,112,906,124"/>
+<area shape="rect" href="namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="979,121,1125,161"/>
+<area shape="poly" title=" " alt="" coords="931,139,965,139,965,144,931,144"/>
+<area shape="poly" title=" " alt="" coords="237,356,234,346,240,337,253,331,273,329,296,332,309,340,306,344,295,337,273,335,255,337,244,341,240,347,242,355"/>
+<area shape="poly" title=" " alt="" coords="318,353,410,311,412,316,320,358"/>
+<area shape="poly" title=" " alt="" coords="431,268,429,258,435,249,448,243,468,241,491,244,503,252,501,256,489,249,468,247,449,249,438,253,434,259,436,267"/>
+<area shape="poly" title=" " alt="" coords="346,96,381,91,381,96,347,101"/>
+<area shape="poly" title=" " alt="" coords="347,285,381,285,381,291,347,291"/>
 </map>
 </div>
 
@@ -4728,6 +4737,17 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Skip leading zero characters. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacefast__float__module_a134579beab04e58230aa2217956e5b6f_cgraph.png" border="0" usemap="#anamespacefast__float__module_a134579beab04e58230aa2217956e5b6f_cgraph" alt=""/></div>
+<map name="anamespacefast__float__module_a134579beab04e58230aa2217956e5b6f_cgraph" id="anamespacefast__float__module_a134579beab04e58230aa2217956e5b6f_cgraph">
+<area shape="rect" title="Skip leading zero characters." alt="" coords="5,29,152,69"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="200,29,347,69"/>
+<area shape="poly" title=" " alt="" coords="152,47,186,47,186,52,152,52"/>
+<area shape="poly" title=" " alt="" coords="237,30,234,20,240,11,253,5,273,3,296,6,309,13,306,17,295,11,273,8,255,10,244,15,240,21,242,28"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -6340,6 +6360,28 @@ Here is the call graph for this function:</div>
       <table class="memname">
         <tr>
           <td class="memname">integer, parameter fast_float_module::stackvec_capacity = BIGINT_BITS / LIMB_BITS</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca80dc249112abcfbf17b57e8bdf2a1b" name="aca80dc249112abcfbf17b57e8bdf2a1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca80dc249112abcfbf17b57e8bdf2a1b">&#9670;&#160;</a></span>zero8_u64</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">integer(i8), parameter fast_float_module::zero8_u64 = int(z'3030303030303030', i8)</td>
         </tr>
       </table>
   </td>

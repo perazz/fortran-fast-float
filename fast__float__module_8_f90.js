@@ -165,5 +165,6 @@ var fast__float__module_8_f90 =
     [ "fast_float_module::preset_json", "namespacefast__float__module.html#a924a2e571ece1ee30473ddb5ae371055", null ],
     [ "fast_float_module::sb64", "namespacefast__float__module.html#a2e23f2846a832b2d0407a276d8c103f6", null ],
     [ "fast_float_module::small_power_of_five", "namespacefast__float__module.html#a7da53a9afe0d9399f489f4539155be00", null ],
-    [ "fast_float_module::stackvec_capacity", "namespacefast__float__module.html#aa42dc65e2414bc63a31d18b58cb21766", null ]
+    [ "fast_float_module::stackvec_capacity", "namespacefast__float__module.html#aa42dc65e2414bc63a31d18b58cb21766", null ],
+    [ "fast_float_module::zero8_u64", "namespacefast__float__module.html#aca80dc249112abcfbf17b57e8bdf2a1b", null ]
 ];
