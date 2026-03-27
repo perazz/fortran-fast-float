@@ -14,6 +14,7 @@ module fast_float_module
 
     public :: parse_double
     public :: parse_double_range_sub
+    public :: parse_double_batch
     public :: parse_float
     public :: parse_i64, parse_i32
     public :: parse_options, parse_result
@@ -90,8 +91,8 @@ module fast_float_module
     type(parse_options), parameter :: DEFAULT_PARSING = parse_options(PRESET_GENERAL, '.')
 
     type :: u128
-        integer(i8) :: lo = 0_i8
-        integer(i8) :: hi = 0_i8
+        integer(i8) :: lo
+        integer(i8) :: hi
     end type u128
 
     type :: float_format
@@ -154,21 +155,21 @@ module fast_float_module
         max_digits = 114)
 
     type :: parsed_number
-        integer(i8) :: exponent = 0
-        integer(i8) :: mantissa = 0
-        integer :: last_idx = 0
-        logical :: negative = .false.
-        logical :: valid = .false.
-        logical :: too_many_digits = .false.
-        integer :: int_start = 0
-        integer :: int_len = 0
-        integer :: frac_start = 0
-        integer :: frac_len = 0
+        integer(i8) :: exponent
+        integer(i8) :: mantissa
+        integer :: last_idx
+        logical :: negative
+        logical :: valid
+        logical :: too_many_digits
+        integer :: int_start
+        integer :: int_len
+        integer :: frac_start
+        integer :: frac_len
     end type parsed_number
 
     type :: adjusted_mantissa
-        integer(i8) :: mantissa = 0
-        integer(i4) :: power2 = 0
+        integer(i8) :: mantissa
+        integer(i4) :: power2
     end type adjusted_mantissa
 
     integer, parameter :: LIMB_BITS   = 64
@@ -176,8 +177,8 @@ module fast_float_module
     integer, parameter :: STACKVEC_CAPACITY = BIGINT_BITS / LIMB_BITS
 
     type :: stackvec
-        integer(i8) :: d(STACKVEC_CAPACITY) = 0_i8
-        integer :: ln = 0
+        integer(i8) :: d(STACKVEC_CAPACITY)
+        integer :: ln
     end type stackvec
 
     type :: bigint
@@ -1053,6 +1054,8 @@ contains
         end if
 
         exp = 0_i8
+        a%frac_start = 0
+        a%frac_len = 0
         hdp = .false.
         if (p <= last) hdp = (str(p:p) == dp)
 
@@ -1130,6 +1133,7 @@ contains
 
         a%last_idx = p
         a%valid = .true.
+        a%too_many_digits = .false.
 
         if (dc > 19) then
             sp = sd
@@ -2449,11 +2453,12 @@ contains
         type(parse_result), intent(out) :: res
         type(parse_options), intent(in) :: o
         type(parsed_number) :: p
-        logical :: bj
+        integer :: ic
 
         if (iand(o%format, FMT_SKIP_WS) /= 0) then
             do while (first <= last)
-                if (.not. is_space(str(first:first))) exit
+                ic = iachar(str(first:first))
+                if (.not. ((ic >= 9 .and. ic <= 13) .or. ic == 32)) exit
                 first = first + 1
             end do
         end if
@@ -2462,9 +2467,7 @@ contains
             out = 0.0_dp
             return
         end if
-        bj = iand(o%format, FMT_JSON) /= 0
-        call try_fast_path(first, last, str, o, bj, p)
-        if (.not. p%valid) call parse_number_string(first, last, str, o, bj, p)
+        call parse_number_string(first, last, str, o, iand(o%format, FMT_JSON) /= 0, p)
         if (.not. p%valid) then
             if (iand(o%format, FMT_NO_INFNAN) /= 0) then
                 res = parse_result(first, OUTCOMES%INVALID_INPUT)
@@ -2678,5 +2681,23 @@ contains
         type(outcome), intent(in) :: this,that
         outcome_ne = this%state/=that%state
     end function outcome_ne
+
+    !> Batch parse: process nlines substrings from str, returning max value.
+    !> istart(i)/iend(i) are 1-based start/end positions in str.
+    subroutine parse_double_batch(str, istart, iend, nlines, answer, o)
+        character(len=*), intent(in) :: str
+        integer, intent(in) :: istart(*), iend(*), nlines
+        real(dp), intent(out) :: answer
+        type(parse_options), intent(in) :: o
+        real(dp) :: x
+        type(parse_result) :: res
+        integer :: i
+        answer = 0.0_dp
+        do i = 1, nlines
+            call parse_double_range_sub(str, istart(i), iend(i), x, res, o)
+            if (res%outcome%state /= 0_i1) cycle
+            if (x > answer) answer = x
+        end do
+    end subroutine parse_double_batch
 
 end module fast_float_module
