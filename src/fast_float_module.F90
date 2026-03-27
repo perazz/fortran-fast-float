@@ -64,6 +64,7 @@ module fast_float_module
     integer(i4), parameter :: INVALID_AM = -32768_i4
     integer(i8), parameter :: SB64 = ishft(1_i8, 63)
     integer(i8), parameter :: M32 = int(z'00000000FFFFFFFF', i8)
+    integer(i8), parameter :: ZERO8_U64 = int(z'3030303030303030', i8)
 
     ! 128-bit integer support: compile-time detection
 #if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
@@ -2089,7 +2090,29 @@ contains
     pure elemental logical function is_truncated(str, fi, la)
         character(len=*), intent(in) :: str
         integer, intent(in) :: fi, la
-        is_truncated = verify(str(fi:la), '0') > 0
+        integer :: p
+        integer(i8) :: v
+
+        is_truncated = .false.
+        p = fi
+        if (p > la) return
+
+        do while (la - p + 1 >= 8)
+            v = read8_to_u64(str(p:))
+            if (v /= ZERO8_U64) then
+                is_truncated = .true.
+                return
+            end if
+            p = p + 8
+        end do
+
+        do while (p <= la)
+            if (str(p:p) /= '0') then
+                is_truncated = .true.
+                return
+            end if
+            p = p + 1
+        end do
     end function is_truncated
 
     !> Skip leading zero characters.
@@ -2097,6 +2120,13 @@ contains
         character(*), intent(in) :: str
         integer, intent(inout) :: p
         integer, intent(in) :: la
+        integer(i8) :: v
+
+        do while (la - p + 1 >= 8)
+            v = read8_to_u64(str(p:))
+            if (v /= ZERO8_U64) exit
+            p = p + 8
+        end do
         do while (p <= la)
             if (str(p:p) /= '0') return
             p = p + 1
