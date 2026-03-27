@@ -1086,12 +1086,13 @@ contains
         en = 0_i8
         hse = .false.
         if (p <= last) then
-            hse = (iand(fmt, FMT_SCIENTIFIC) /= 0 .and. scan(str(p:p), 'eE') > 0) .or. &
-                  (iand(fmt, FMT_FORTRAN) /= 0 .and. scan(str(p:p), '+-dD') > 0)
+            hse = (iand(fmt, FMT_SCIENTIFIC) /= 0 .and. (str(p:p) == 'e' .or. str(p:p) == 'E')) .or. &
+                  (iand(fmt, FMT_FORTRAN) /= 0 .and. (str(p:p) == '+' .or. str(p:p) == '-' .or. &
+                                                     str(p:p) == 'd' .or. str(p:p) == 'D'))
         end if
         if (hse) then
             le = p
-            if (scan(str(p:p), 'eEdD') > 0) p = p + 1
+            if (str(p:p) == 'e' .or. str(p:p) == 'E' .or. str(p:p) == 'd' .or. str(p:p) == 'D') p = p + 1
             ne = .false.
             if (p <= last) then
                 if (str(p:p) == '-') then
@@ -1234,7 +1235,7 @@ contains
         end if
         p = p0
         ms = (str(p:p) == '-')
-        if (scan(str(p:p), '-+') > 0) p = p + 1
+        if (str(p:p) == '-' .or. str(p:p) == '+') p = p + 1
         if (la - p + 1 >= 3) then
             if (strcmpi3(str(p:), 'nan')) then
                 p = p + 3
