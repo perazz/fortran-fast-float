@@ -62,6 +62,7 @@ var fast__float__module_8_f90 =
     [ "fast_float_module::negative_digit_comp", "namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a", null ],
     [ "fast_float_module::outcome_eq", "namespacefast__float__module.html#aeaf3e1007edfdfc1718a045b2e360394", null ],
     [ "fast_float_module::outcome_ne", "namespacefast__float__module.html#a95a16dc0a3781ea918120a564167b302", null ],
+    [ "fast_float_module::parse_double_batch", "namespacefast__float__module.html#a5ae1424c51e61205e9627d735d7b6acd", null ],
     [ "fast_float_module::parse_double_range_sub", "namespacefast__float__module.html#ae989fabf07ecc6ad52c17d513a0ce11b", null ],
     [ "fast_float_module::parse_dp", "namespacefast__float__module.html#abe020c2419fc730e78d6069ff9137256", null ],
     [ "fast_float_module::parse_dp_opts", "namespacefast__float__module.html#a1abb2aa0f43af0a6b2056d2690049ad3", null ],

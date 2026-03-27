@@ -434,6 +434,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="separator:aeaf3e1007edfdfc1718a045b2e360394"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95a16dc0a3781ea918120a564167b302" id="r_a95a16dc0a3781ea918120a564167b302"><td class="memItemLeft" align="right" valign="top">elemental logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95a16dc0a3781ea918120a564167b302">outcome_ne</a> (this, that)</td></tr>
 <tr class="separator:a95a16dc0a3781ea918120a564167b302"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ae1424c51e61205e9627d735d7b6acd" id="r_a5ae1424c51e61205e9627d735d7b6acd"><td class="memItemLeft" align="right" valign="top">subroutine, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ae1424c51e61205e9627d735d7b6acd">parse_double_batch</a> (str, istart, iend, nlines, answer, o)</td></tr>
+<tr class="memdesc:a5ae1424c51e61205e9627d735d7b6acd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Batch parse: process nlines substrings from str, returning max value. istart(i)/iend(i) are 1-based start/end positions in str.  <br /></td></tr>
+<tr class="separator:a5ae1424c51e61205e9627d735d7b6acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -2878,6 +2881,85 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="a5ae1424c51e61205e9627d735d7b6acd" name="a5ae1424c51e61205e9627d735d7b6acd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ae1424c51e61205e9627d735d7b6acd">&#9670;&#160;</a></span>parse_double_batch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine, public fast_float_module::parse_double_batch </td>
+          <td>(</td>
+          <td class="paramtype">character(len=*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">integer, dimension(*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>istart</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">integer, dimension(*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>iend</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">integer, intent(in)</td>          <td class="paramname"><span class="paramname"><em>nlines</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real(dp), intent(out)</td>          <td class="paramname"><span class="paramname"><em>answer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1parse__options.html">parse_options</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>o</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Batch parse: process nlines substrings from str, returning max value. istart(i)/iend(i) are 1-based start/end positions in str. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph.png" border="0" usemap="#anamespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph" alt=""/></div>
+<map name="anamespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph" id="anamespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph">
+<area shape="rect" title="Batch parse: process nlines substrings from str, returning max value. istart(i)/iend(i) are 1&#45;based s..." alt="" coords="5,193,157,233"/>
+<area shape="rect" href="namespacefast__float__module.html#ae989fabf07ecc6ad52c17d513a0ce11b" title="Parse a string range to double, subroutine form." alt="" coords="205,193,388,233"/>
+<area shape="poly" title=" " alt="" coords="158,211,192,211,192,216,158,216"/>
+<area shape="rect" href="namespacefast__float__module.html#aa6ba76c7b322acedfb93e014aa22d8ec" title="Parse inf/nan for double precision." alt="" coords="442,117,589,157"/>
+<area shape="poly" title=" " alt="" coords="354,191,443,159,445,164,356,196"/>
+<area shape="rect" href="namespacefast__float__module.html#ac55e14914ae42c302e7606bbb1023575" title="Parse a number string into mantissa, exponent, and sign." alt="" coords="436,225,595,265"/>
+<area shape="poly" title=" " alt="" coords="389,224,423,229,422,234,388,229"/>
+<area shape="rect" href="namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="643,29,789,69"/>
+<area shape="poly" title=" " alt="" coords="561,115,656,73,658,77,563,120"/>
+<area shape="rect" href="namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="643,117,789,157"/>
+<area shape="poly" title=" " alt="" coords="589,135,629,135,629,140,589,140"/>
+<area shape="poly" title=" " alt="" coords="679,30,677,20,683,11,696,5,716,3,739,6,751,13,749,17,737,11,716,8,697,10,686,15,682,21,684,28"/>
+<area shape="poly" title=" " alt="" coords="679,118,677,108,683,99,696,93,716,91,739,94,751,101,749,105,737,99,716,96,697,98,686,103,682,109,684,116"/>
+<area shape="rect" href="namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="643,181,789,221"/>
+<area shape="poly" title=" " alt="" coords="594,225,628,218,630,223,595,231"/>
+<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="643,269,789,309"/>
+<area shape="poly" title=" " alt="" coords="595,260,630,268,628,273,594,265"/>
+<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="643,357,789,397"/>
+<area shape="poly" title=" " alt="" coords="548,263,675,347,672,352,545,268"/>
+<area shape="rect" href="namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="837,117,984,157"/>
+<area shape="poly" title=" " alt="" coords="777,179,835,159,837,164,778,184"/>
+<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="837,181,984,221"/>
+<area shape="poly" title=" " alt="" coords="789,199,823,199,823,204,789,204"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="837,269,984,309"/>
+<area shape="poly" title=" " alt="" coords="764,219,790,231,856,261,853,266,788,236,762,224"/>
+<area shape="poly" title=" " alt="" coords="874,118,872,108,878,99,891,93,911,91,934,94,946,101,943,105,932,99,911,96,892,98,881,103,877,109,879,116"/>
+<area shape="poly" title=" " alt="" coords="874,270,872,260,878,251,891,245,911,243,934,246,946,253,943,257,932,251,911,248,892,250,881,255,877,261,879,268"/>
+<area shape="poly" title=" " alt="" coords="679,270,677,260,683,251,696,245,716,243,739,246,751,253,749,257,737,251,716,248,697,250,686,255,682,261,684,268"/>
+<area shape="poly" title=" " alt="" coords="679,358,677,348,683,339,696,333,716,331,739,334,751,341,749,345,737,339,716,336,697,338,686,343,682,349,684,356"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="ae989fabf07ecc6ad52c17d513a0ce11b" name="ae989fabf07ecc6ad52c17d513a0ce11b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae989fabf07ecc6ad52c17d513a0ce11b">&#9670;&#160;</a></span>parse_double_range_sub()</h2>
 
@@ -2923,28 +3005,23 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph.png" border="0" usemap="#anamespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph" alt=""/></div>
 <map name="anamespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph" id="anamespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph">
-<area shape="rect" title="Parse a string range to double, subroutine form." alt="" coords="5,149,188,189"/>
-<area shape="rect" href="namespacefast__float__module.html#a982324823ffb8ed4eb402f9f8b989d72" title="Check if a character is whitespace." alt="" coords="242,53,389,93"/>
-<area shape="poly" title=" " alt="" coords="139,147,235,103,251,96,253,101,237,108,141,152"/>
+<area shape="rect" title="Parse a string range to double, subroutine form." alt="" coords="5,193,188,233"/>
 <area shape="rect" href="namespacefast__float__module.html#aa6ba76c7b322acedfb93e014aa22d8ec" title="Parse inf/nan for double precision." alt="" coords="242,117,389,157"/>
-<area shape="poly" title=" " alt="" coords="188,153,228,147,229,153,189,159"/>
-<area shape="rect" href="namespacefast__float__module.html#ac55e14914ae42c302e7606bbb1023575" title="Parse a number string into mantissa, exponent, and sign." alt="" coords="236,257,395,297"/>
-<area shape="poly" title=" " alt="" coords="139,187,263,249,260,253,137,192"/>
-<area shape="rect" href="namespacefast__float__module.html#adfcfe482bc6215d666183c953722a899" title="Unified fast path for integers and simple fixed&#45;point decimals." alt="" coords="242,181,389,221"/>
-<area shape="poly" title=" " alt="" coords="189,180,229,186,228,191,188,185"/>
-<area shape="poly" title=" " alt="" coords="278,54,275,44,281,35,295,29,315,27,339,30,352,37,349,42,337,35,315,32,296,34,285,39,281,45,283,52"/>
+<area shape="poly" title=" " alt="" coords="154,191,243,159,245,164,156,196"/>
+<area shape="rect" href="namespacefast__float__module.html#ac55e14914ae42c302e7606bbb1023575" title="Parse a number string into mantissa, exponent, and sign." alt="" coords="236,225,395,265"/>
+<area shape="poly" title=" " alt="" coords="189,224,223,229,222,234,188,229"/>
 <area shape="rect" href="namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="443,29,589,69"/>
-<area shape="poly" title=" " alt="" coords="366,115,394,103,442,79,455,73,458,77,444,84,396,108,368,120"/>
+<area shape="poly" title=" " alt="" coords="361,115,456,73,458,77,363,120"/>
 <area shape="rect" href="namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="443,117,589,157"/>
 <area shape="poly" title=" " alt="" coords="389,135,429,135,429,140,389,140"/>
 <area shape="poly" title=" " alt="" coords="479,30,477,20,483,11,496,5,516,3,539,6,551,13,549,17,537,11,516,8,497,10,486,15,482,21,484,28"/>
 <area shape="poly" title=" " alt="" coords="479,118,477,108,483,99,496,93,516,91,539,94,551,101,549,105,537,99,516,96,497,98,486,103,482,109,484,116"/>
 <area shape="rect" href="namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="443,181,589,221"/>
-<area shape="poly" title=" " alt="" coords="368,255,449,224,451,229,370,260"/>
+<area shape="poly" title=" " alt="" coords="394,225,428,218,430,223,395,231"/>
 <area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="443,269,589,309"/>
-<area shape="poly" title=" " alt="" coords="395,279,429,281,428,287,395,285"/>
+<area shape="poly" title=" " alt="" coords="395,260,430,268,428,273,394,265"/>
 <area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="443,357,589,397"/>
-<area shape="poly" title=" " alt="" coords="358,295,464,349,462,354,356,300"/>
+<area shape="poly" title=" " alt="" coords="348,263,475,347,472,352,345,268"/>
 <area shape="rect" href="namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="637,117,784,157"/>
 <area shape="poly" title=" " alt="" coords="577,179,635,159,637,164,578,184"/>
 <area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="637,181,784,221"/>
@@ -2955,7 +3032,6 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="674,270,672,260,678,251,691,245,711,243,734,246,746,253,743,257,732,251,711,248,692,250,681,255,677,261,679,268"/>
 <area shape="poly" title=" " alt="" coords="479,270,477,260,483,251,496,245,516,243,539,246,551,253,549,257,537,251,516,248,497,250,486,255,482,261,484,268"/>
 <area shape="poly" title=" " alt="" coords="479,358,477,348,483,339,496,333,516,331,539,334,551,341,549,345,537,339,516,336,497,338,486,343,482,349,484,356"/>
-<area shape="poly" title=" " alt="" coords="389,199,429,199,429,204,389,204"/>
 </map>
 </div>
 
