@@ -27,7 +27,8 @@ str2real = { git = "https://github.com/Carltoffel/Fortran-String-to-Real" }
 # on BOZ literal constants with the high bit set. This is a known gfortran-9
 # strictness issue; the Fortran 2008+ standard says int(BOZ, kind) should
 # interpret bits directly. -fno-range-check is the standard workaround.
-boz-compat.gfortran.flags = "-fno-range-check"
+boz-compat.gfortran.flags = "-fno-range-check -flto"
+boz-compat.gfortran.link-time-flags = "-flto"
 
 [profiles]
 default = ["boz-compat"]

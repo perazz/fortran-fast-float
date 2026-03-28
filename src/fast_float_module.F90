@@ -14,8 +14,9 @@ module fast_float_module
 
     public :: parse_double
     public :: parse_double_range_sub
-    public :: parse_double_batch
+    public :: parse_double_array
     public :: parse_float
+    public :: parse_float_array
     public :: parse_i64, parse_i32
     public :: parse_options, parse_result
     public :: OUTCOME
@@ -1760,7 +1761,7 @@ contains
     ! ===== Big integer powers =====
 
     !> Raise bigint to a power of 2.
-    pure subroutine bigint_pow2(bi, e, ok)
+    elemental pure subroutine bigint_pow2(bi, e, ok)
         type(bigint), intent(inout) :: bi
         integer, intent(in) :: e
         logical, intent(out) :: ok
@@ -1768,7 +1769,7 @@ contains
     end subroutine bigint_pow2
 
     !> Multiply bigint by 5^e.
-    pure subroutine bigint_pow5(bi, ei, bp5_ok)
+    pure elemental subroutine bigint_pow5(bi, ei, bp5_ok)
         type(bigint), intent(inout) :: bi
         integer, intent(in) :: ei
         logical, intent(out) :: bp5_ok
@@ -1796,7 +1797,7 @@ contains
     end subroutine bigint_pow5
 
     !> Multiply bigint by 10^e.
-    pure subroutine bigint_pow10(bi, e, ok)
+    pure elemental subroutine bigint_pow10(bi, e, ok)
         type(bigint), intent(inout) :: bi
         integer, intent(in) :: e
         logical, intent(out) :: ok
@@ -2445,6 +2446,8 @@ contains
     end function parse_dp_range_opts_res
 
     !> Parse a string range to double, subroutine form.
+    !> Parse a string range to double, subroutine form.
+    !> Hot-path routines manually inlined for performance without LTO.
     elemental subroutine parse_double_range_sub(str, first, last, out, res, o)
         character(len=*), intent(in) :: str
         integer, value :: first
@@ -2453,7 +2456,26 @@ contains
         type(parse_result), intent(out) :: res
         type(parse_options), intent(in) :: o
         type(parsed_number) :: p
+        type(adjusted_mantissa) :: cf_am, fc_ap
+        logical :: fc_eq, fc_cfok
         integer :: ic
+        real(dp) :: fc_out
+        ! parse_number_string inline variables
+        integer :: pns_first, pns_last
+        logical :: pns_bj
+        type(parse_options) :: pns_opts
+        integer(i8) :: pns_i, pns_dc, pns_exp, pns_en
+        integer :: pns_p, pns_sd, pns_eip, pns_bf, pns_le, pns_ic, pns_ie, pns_fe, pns_sp_
+        logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
+        ! compute_float inline variables
+        integer(i8) :: cf_q, cf_wi, cf_w
+        type(float_format) :: cf_f
+        integer(i4) :: cf_lz
+        type(u128) :: cf_pr
+        integer :: cf_ub, cf_sa
+        integer(i8) :: cp_pm, cp_bp
+        integer :: cp_idx
+        type(u128) :: cp_sp
 
         if (iand(o%format, FMT_SKIP_WS) /= 0) then
             do while (first <= last)
@@ -2467,7 +2489,12 @@ contains
             out = 0.0_dp
             return
         end if
-        call parse_number_string(first, last, str, o, iand(o%format, FMT_JSON) /= 0, p)
+
+        ! --- Inlined parse_number_string ---
+        pns_first = first; pns_last = last; pns_opts = o
+        pns_bj = iand(o%format, FMT_JSON) /= 0
+#include "parse_number_string_body.inc"
+
         if (.not. p%valid) then
             if (iand(o%format, FMT_NO_INFNAN) /= 0) then
                 res = parse_result(first, OUTCOMES%INVALID_INPUT)
@@ -2475,12 +2502,45 @@ contains
             else
                 call parse_infnan_64(str, first, last, out, res)
             end if
-        else
-            call from_chars(str, p, out, DOUBLE_FMT, res)
+            return
         end if
+
+        ! --- Inlined from_chars_64 ---
+        fc_out = 0.0_dp
+        res%outcome = OUTCOMES%OK
+        res%pos     = p%last_idx
+
+        if (.not. p%too_many_digits) then
+            call clinger_fast_path_64(p%mantissa, p%exponent, p%negative, fc_out, DOUBLE_FMT, fc_cfok)
+            if (fc_cfok) then
+                out = fc_out
+                return
+            end if
+        end if
+
+        ! --- Inlined compute_float (primary call) ---
+        cf_q = p%exponent; cf_wi = p%mantissa; cf_f = DOUBLE_FMT
+#include "compute_float_body.inc"
+
+        if (p%too_many_digits .and. cf_am%power2 >= 0) then
+            ! Cold path: second compute_float call — use module-level version
+            call compute_float(p%exponent, p%mantissa + 1, DOUBLE_FMT, fc_ap)
+            fc_eq = cf_am%mantissa == fc_ap%mantissa .and. cf_am%power2 == fc_ap%power2
+            if (.not. fc_eq) call compute_error(p%exponent, p%mantissa, DOUBLE_FMT, cf_am)
+        end if
+        if (cf_am%power2 < 0) then
+            fc_ap = cf_am
+            call digit_comp(str, p, fc_ap, DOUBLE_FMT, cf_am)
+        end if
+
+        out = am_to_double(p%negative, cf_am)
+
+        if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
+             cf_am%power2 == int(DOUBLE_FMT%inf_power, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
     end subroutine parse_double_range_sub
 
     !> Parse a string range to float, subroutine form.
+    !> Hot-path routines manually inlined for performance without LTO.
     elemental subroutine parse_float_range_sub(str, first, last, out, res, o)
         character(len=*), intent(in) :: str
         integer, intent(in), value :: first, last
@@ -2488,8 +2548,26 @@ contains
         type(parse_result), intent(out) :: res
         type(parse_options), intent(in) :: o
         type(parsed_number) :: p
+        type(adjusted_mantissa) :: cf_am, fc_ap
+        logical :: fc_eq, fc_cfok
         integer :: ps
-        logical :: bj
+        real(sp) :: fc_outf
+        ! parse_number_string inline variables
+        integer :: pns_first, pns_last
+        logical :: pns_bj
+        type(parse_options) :: pns_opts
+        integer(i8) :: pns_i, pns_dc, pns_exp, pns_en
+        integer :: pns_p, pns_sd, pns_eip, pns_bf, pns_le, pns_ic, pns_ie, pns_fe, pns_sp_
+        logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
+        ! compute_float inline variables
+        integer(i8) :: cf_q, cf_wi, cf_w
+        type(float_format) :: cf_f
+        integer(i4) :: cf_lz
+        type(u128) :: cf_pr
+        integer :: cf_ub, cf_sa
+        integer(i8) :: cp_pm, cp_bp
+        integer :: cp_idx
+        type(u128) :: cp_sp
 
         ps = first
         if (iand(o%format, FMT_SKIP_WS) /= 0) then
@@ -2503,8 +2581,12 @@ contains
             out = 0.0_sp
             return
         end if
-        bj = iand(o%format, FMT_JSON) /= 0
-        call parse_number_string(ps, last, str, o, bj, p)
+
+        ! --- Inlined parse_number_string ---
+        pns_first = ps; pns_last = last; pns_opts = o
+        pns_bj = iand(o%format, FMT_JSON) /= 0
+#include "parse_number_string_body.inc"
+
         if (.not. p%valid) then
             if (iand(o%format, FMT_NO_INFNAN) /= 0) then
                 res = parse_result(ps, OUTCOMES%INVALID_INPUT)
@@ -2512,9 +2594,40 @@ contains
             else
                 call parse_infnan_32(str, ps, last, out, res)
             end if
-        else
-            call from_chars(str, p, out, FLOAT_FMT, res)
+            return
         end if
+
+        ! --- Inlined from_chars_32 ---
+        fc_outf = 0.0_sp
+        res%outcome = OUTCOMES%OK
+        res%pos     = p%last_idx
+
+        if (.not. p%too_many_digits) then
+            call clinger_fast_path_32(p%mantissa, p%exponent, p%negative, fc_outf, FLOAT_FMT, fc_cfok)
+            if (fc_cfok) then
+                out = fc_outf
+                return
+            end if
+        end if
+
+        ! --- Inlined compute_float (primary) ---
+        cf_q = p%exponent; cf_wi = p%mantissa; cf_f = FLOAT_FMT
+#include "compute_float_body.inc"
+
+        if (p%too_many_digits .and. cf_am%power2 >= 0) then
+            call compute_float(p%exponent, p%mantissa + 1, FLOAT_FMT, fc_ap)
+            fc_eq = cf_am%mantissa == fc_ap%mantissa .and. cf_am%power2 == fc_ap%power2
+            if (.not. fc_eq) call compute_error(p%exponent, p%mantissa, FLOAT_FMT, cf_am)
+        end if
+        if (cf_am%power2 < 0) then
+            fc_ap = cf_am
+            call digit_comp(str, p, fc_ap, FLOAT_FMT, cf_am)
+        end if
+
+        out = am_to_float(p%negative, cf_am)
+
+        if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
+            cf_am%power2 == int(FLOAT_FMT%inf_power, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
     end subroutine parse_float_range_sub
 
     ! --- parse_float: pure elemental (no parse_result) ---
@@ -2682,22 +2795,210 @@ contains
         outcome_ne = this%state/=that%state
     end function outcome_ne
 
-    !> Batch parse: process nlines substrings from str, returning max value.
-    !> istart(i)/iend(i) are 1-based start/end positions in str.
-    subroutine parse_double_batch(str, istart, iend, nlines, answer, o)
-        character(len=*), intent(in) :: str
-        integer, intent(in) :: istart(*), iend(*), nlines
-        real(dp), intent(out) :: answer
-        type(parse_options), intent(in) :: o
-        real(dp) :: x
+    !> Parse a whitespace-delimited stream of double-precision floats into an array.
+    !> Hot-path routines manually inlined for performance without LTO.
+    pure subroutine parse_double_array(stream, values, n, err, o)
+        character(*), intent(in) :: stream
+        real(dp), intent(out) :: values(:)
+        integer, intent(out) :: n
+        type(outcome), intent(out) :: err
+        type(parse_options), intent(in), optional :: o
+        type(parse_options) :: opts
         type(parse_result) :: res
-        integer :: i
-        answer = 0.0_dp
-        do i = 1, nlines
-            call parse_double_range_sub(str, istart(i), iend(i), x, res, o)
-            if (res%outcome%state /= 0_i1) cycle
-            if (x > answer) answer = x
+        type(parsed_number) :: p
+        type(adjusted_mantissa) :: cf_am, fc_ap
+        logical :: fc_eq, fc_cfok
+        integer :: pos, slen, ic
+        real(dp) :: fc_out
+        ! parse_number_string inline variables
+        integer :: pns_first, pns_last
+        logical :: pns_bj
+        type(parse_options) :: pns_opts
+        integer(i8) :: pns_i, pns_dc, pns_exp, pns_en
+        integer :: pns_p, pns_sd, pns_eip, pns_bf, pns_le, pns_ic, pns_ie, pns_fe, pns_sp_
+        logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
+        ! compute_float inline variables
+        integer(i8) :: cf_q, cf_wi, cf_w
+        type(float_format) :: cf_f
+        integer(i4) :: cf_lz
+        type(u128) :: cf_pr
+        integer :: cf_ub, cf_sa
+        integer(i8) :: cp_pm, cp_bp
+        integer :: cp_idx
+        type(u128) :: cp_sp
+
+        opts = DEFAULT_PARSING
+        if (present(o)) opts = o
+        opts%format = ior(opts%format, FMT_SKIP_WS)
+
+        slen = len(stream)
+        n = 0
+        err = OUTCOMES%OK
+        pos = 1
+
+        do while (pos <= slen .and. n < size(values))
+            ! Whitespace skip
+            do while (pos <= slen)
+                ic = iachar(stream(pos:pos))
+                if (.not. ((ic >= 9 .and. ic <= 13) .or. ic == 32)) exit
+                pos = pos + 1
+            end do
+            if (pos > slen) exit
+
+            ! --- Inlined parse_number_string ---
+            pns_first = pos; pns_last = slen; pns_opts = opts
+            pns_bj = iand(opts%format, FMT_JSON) /= 0
+#define str stream
+#include "parse_number_string_body.inc"
+#undef str
+
+            if (.not. p%valid) then
+                if (p%last_idx <= pos) exit
+                err = OUTCOMES%INVALID_INPUT
+                return
+            end if
+
+            ! --- Inlined from_chars_64 ---
+            fc_out = 0.0_dp
+            res%outcome = OUTCOMES%OK
+            res%pos     = p%last_idx
+
+            if (.not. p%too_many_digits) then
+                call clinger_fast_path_64(p%mantissa, p%exponent, p%negative, fc_out, DOUBLE_FMT, fc_cfok)
+                if (fc_cfok) then
+                    values(n + 1) = fc_out
+                    n = n + 1
+                    pos = res%pos
+                    cycle
+                end if
+            end if
+
+            ! --- Inlined compute_float ---
+            cf_q = p%exponent; cf_wi = p%mantissa; cf_f = DOUBLE_FMT
+#include "compute_float_body.inc"
+
+            if (p%too_many_digits .and. cf_am%power2 >= 0) then
+                call compute_float(p%exponent, p%mantissa + 1, DOUBLE_FMT, fc_ap)
+                fc_eq = cf_am%mantissa == fc_ap%mantissa .and. cf_am%power2 == fc_ap%power2
+                if (.not. fc_eq) call compute_error(p%exponent, p%mantissa, DOUBLE_FMT, cf_am)
+            end if
+            if (cf_am%power2 < 0) then
+                fc_ap = cf_am
+                call digit_comp(stream, p, fc_ap, DOUBLE_FMT, cf_am)
+            end if
+
+            values(n + 1) = am_to_double(p%negative, cf_am)
+
+            if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
+                 cf_am%power2 == int(DOUBLE_FMT%inf_power, i4)) then
+                err = OUTCOMES%OUT_OF_RANGE
+                return
+            end if
+            n = n + 1
+            pos = res%pos
         end do
-    end subroutine parse_double_batch
+    end subroutine parse_double_array
+
+    !> Parse a whitespace-delimited stream of single-precision floats into an array.
+    !> Hot-path routines manually inlined for performance without LTO.
+    pure subroutine parse_float_array(stream, values, n, err, o)
+        character(*), intent(in) :: stream
+        real(sp), intent(out) :: values(:)
+        integer, intent(out) :: n
+        type(outcome), intent(out) :: err
+        type(parse_options), intent(in), optional :: o
+        type(parse_options) :: opts
+        type(parse_result) :: res
+        type(parsed_number) :: p
+        type(adjusted_mantissa) :: cf_am, fc_ap
+        logical :: fc_eq, fc_cfok
+        integer :: pos, slen, ic
+        real(sp) :: fc_outf
+        ! parse_number_string inline variables
+        integer :: pns_first, pns_last
+        logical :: pns_bj
+        type(parse_options) :: pns_opts
+        integer(i8) :: pns_i, pns_dc, pns_exp, pns_en
+        integer :: pns_p, pns_sd, pns_eip, pns_bf, pns_le, pns_ic, pns_ie, pns_fe, pns_sp_
+        logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
+        ! compute_float inline variables
+        integer(i8) :: cf_q, cf_wi, cf_w
+        type(float_format) :: cf_f
+        integer(i4) :: cf_lz
+        type(u128) :: cf_pr
+        integer :: cf_ub, cf_sa
+        integer(i8) :: cp_pm, cp_bp
+        integer :: cp_idx
+        type(u128) :: cp_sp
+
+        opts = DEFAULT_PARSING
+        if (present(o)) opts = o
+        opts%format = ior(opts%format, FMT_SKIP_WS)
+
+        slen = len(stream)
+        n = 0
+        err = OUTCOMES%OK
+        pos = 1
+
+        do while (pos <= slen .and. n < size(values))
+            do while (pos <= slen)
+                if (.not. is_space(stream(pos:pos))) exit
+                pos = pos + 1
+            end do
+            if (pos > slen) exit
+
+            ! --- Inlined parse_number_string ---
+            pns_first = pos; pns_last = slen; pns_opts = opts
+            pns_bj = iand(opts%format, FMT_JSON) /= 0
+#define str stream
+#include "parse_number_string_body.inc"
+#undef str
+
+            if (.not. p%valid) then
+                if (p%last_idx <= pos) exit
+                err = OUTCOMES%INVALID_INPUT
+                return
+            end if
+
+            ! --- Inlined from_chars_32 ---
+            fc_outf = 0.0_sp
+            res%outcome = OUTCOMES%OK
+            res%pos     = p%last_idx
+
+            if (.not. p%too_many_digits) then
+                call clinger_fast_path_32(p%mantissa, p%exponent, p%negative, fc_outf, FLOAT_FMT, fc_cfok)
+                if (fc_cfok) then
+                    values(n + 1) = fc_outf
+                    n = n + 1
+                    pos = res%pos
+                    cycle
+                end if
+            end if
+
+            ! --- Inlined compute_float ---
+            cf_q = p%exponent; cf_wi = p%mantissa; cf_f = FLOAT_FMT
+#include "compute_float_body.inc"
+
+            if (p%too_many_digits .and. cf_am%power2 >= 0) then
+                call compute_float(p%exponent, p%mantissa + 1, FLOAT_FMT, fc_ap)
+                fc_eq = cf_am%mantissa == fc_ap%mantissa .and. cf_am%power2 == fc_ap%power2
+                if (.not. fc_eq) call compute_error(p%exponent, p%mantissa, FLOAT_FMT, cf_am)
+            end if
+            if (cf_am%power2 < 0) then
+                fc_ap = cf_am
+                call digit_comp(stream, p, fc_ap, FLOAT_FMT, cf_am)
+            end if
+
+            values(n + 1) = am_to_float(p%negative, cf_am)
+
+            if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
+                cf_am%power2 == int(FLOAT_FMT%inf_power, i4)) then
+                err = OUTCOMES%OUT_OF_RANGE
+                return
+            end if
+            n = n + 1
+            pos = res%pos
+        end do
+    end subroutine parse_float_array
 
 end module fast_float_module

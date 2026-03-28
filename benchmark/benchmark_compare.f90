@@ -3,7 +3,7 @@ program benchmark_compare
     use iso_fortran_env, only: int64, output_unit, real64
     use fast_float_module, only: outcomes, outcome, parse_double, DEFAULT_PARSING, &
                                   operator(==), operator(/=)
-    use fast_float_module, only: parse_double_range_sub, parse_result, parse_double_batch
+    use fast_float_module, only: parse_double_range_sub, parse_result, parse_double_array
     use ffc_c_bridge, only: ffc_parse_double_c, benchmark_ffc_lines_c
     use str2real_m, only: str2real
     use stdlib_str2num, only: to_num
@@ -273,12 +273,15 @@ contains
         real(real64) :: elapsed_ns, volume_mb, x_f
         real(real64) :: x_stdlib, x_str2real, x_read
         real(c_double) :: x_c
-        integer :: i, k, r, ios_read
+        integer :: i, k, r, ios_read, nparse, cursor
         integer(c_int32_t) :: c_outcome
         integer(int64) :: count_end, count_rate, count_start
         type(parse_result) :: f_result
+        type(outcome) :: arr_err
         ! Pre-computed integer start/end arrays (avoid c_size_t conversion in hot loop)
         integer, allocatable :: istart(:), iend(:)
+        real(real64), allocatable :: values(:)
+        character(:), allocatable :: packed_text_ws
 
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
         min_ns = huge(1.0_real64)
@@ -286,21 +289,29 @@ contains
         checksum = 0.0_real64
 
         ! Pre-compute integer offsets to avoid int() conversion in timed loops
-        allocate(istart(nlines), iend(nlines))
+        allocate(istart(nlines), iend(nlines), values(nlines))
         do i = 1, nlines
             istart(i) = int(offsets(i)) + 1
             iend(i) = int(offsets(i) + lengths(i))
         end do
 
+        ! Build whitespace-separated text for parse_double_array
+        allocate(character(len=volume + nlines) :: packed_text_ws)
+        cursor = 1
+        do i = 1, nlines
+            k = len(lines(i)%text)
+            packed_text_ws(cursor:cursor+k-1) = lines(i)%text
+            packed_text_ws(cursor+k:cursor+k) = char(10)
+            cursor = cursor + k + 1
+        end do
+
         ! Compute XOR checksums in a single untimed pass
         xor_checksum = 0_int64
+        call parse_double_array(packed_text_ws, values, nparse, arr_err)
+        do i = 1, nparse
+            xor_checksum(B_RSUB) = ieor(xor_checksum(B_RSUB), transfer(values(i), 0_int64))
+        end do
         do i = 1, nlines
-            call parse_double_range_sub( &
-                packed_text, istart(i), iend(i), &
-                x_f, f_result, DEFAULT_PARSING)
-            if (f_result%outcome == outcomes%OK) &
-                xor_checksum(B_RSUB) = ieor(xor_checksum(B_RSUB), transfer(x_f, 0_int64))
-
             x_stdlib = 0.0_real64
             x_stdlib = to_num(lines(i)%text, x_stdlib)
             xor_checksum(B_STDLIB) = ieor(xor_checksum(B_STDLIB), transfer(x_stdlib, 0_int64))
@@ -319,15 +330,9 @@ contains
 
         call system_clock(count_rate=count_rate)
         do r = 1, repeat_count
-            answer = 0.0_real64
             call system_clock(count=count_start)
-            do i = 1, nlines
-                call parse_double_range_sub( &
-                    packed_text, istart(i), iend(i), &
-                    x_f, f_result, DEFAULT_PARSING)
-                if (f_result%outcome /= outcomes%OK) cycle
-                if (x_f > answer) answer = x_f
-            end do
+            call parse_double_array(packed_text_ws, values, nparse, arr_err)
+            answer = maxval(values(1:nparse))
             call system_clock(count=count_end)
             call tally(B_RSUB, answer, count_start, count_end, count_rate, &
                         elapsed_ns, avg_ns, min_ns, checksum)

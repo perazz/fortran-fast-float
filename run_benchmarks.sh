@@ -2,7 +2,17 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPEAT_COUNT="${1:-10}"
+REPEAT_COUNT=10
+USE_PGO=false
+
+for arg in "$@"; do
+    case "${arg}" in
+        --pgo) USE_PGO=true ;;
+        [0-9]*) REPEAT_COUNT="${arg}" ;;
+        *)  echo "Usage: $0 [repeat_count] [--pgo]"; exit 1 ;;
+    esac
+done
+
 DATA_FILES=("canada_short.txt" "canada.txt" "mesh.txt")
 
 # Locate or clone the C++ benchmark repo
@@ -23,28 +33,50 @@ if command -v xcrun &>/dev/null; then
     export SDKROOT
 fi
 
-# Build C++ benchmarks if needed
-CPP_BENCH="${CPP_DIR}/build/benchmarks/benchmark"
+# Build C++ benchmarks
+CPP_BUILD_DIR="${CPP_DIR}/build"
+CPP_BENCH="${CPP_BUILD_DIR}/benchmarks/benchmark"
+CPP_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release"
+if [[ "${USE_PGO}" == "true" ]]; then
+    CPP_CMAKE_FLAGS="${CPP_CMAKE_FLAGS} -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
+fi
+cpp_needs_rebuild=false
 if [[ ! -x "${CPP_BENCH}" ]]; then
+    cpp_needs_rebuild=true
+elif [[ "${USE_PGO}" == "true" ]] && ! grep -q "INTERPROCEDURAL_OPTIMIZATION:BOOL=ON" "${CPP_BUILD_DIR}/CMakeCache.txt" 2>/dev/null; then
+    cpp_needs_rebuild=true
+elif [[ "${USE_PGO}" == "false" ]] && grep -q "INTERPROCEDURAL_OPTIMIZATION:BOOL=ON" "${CPP_BUILD_DIR}/CMakeCache.txt" 2>/dev/null; then
+    cpp_needs_rebuild=true
+fi
+if [[ "${cpp_needs_rebuild}" == "true" ]]; then
     echo "=== Building C++ benchmarks ==="
-    cmake -S "${CPP_DIR}" -B "${CPP_DIR}/build" -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -1
-    cmake --build "${CPP_DIR}/build" --target benchmark --parallel 2>&1 | tail -1
+    cmake -S "${CPP_DIR}" -B "${CPP_BUILD_DIR}" ${CPP_CMAKE_FLAGS} 2>&1 | tail -1
+    cmake --build "${CPP_BUILD_DIR}" --target benchmark --parallel 2>&1 | tail -1
 fi
 
-# ---- Manual PGO build for maximum performance ----
+# ---- Fortran benchmark build ----
 # fpm's -fPIC and build-hash system prevent PGO from working optimally,
-# so we build the benchmark binary manually with full PGO.
+# so we build the benchmark binary manually.
 
-BUILD_DIR="${ROOT_DIR}/build/bench_pgo"
-PROF_DIR="${BUILD_DIR}/prof"
 FC="${FC:-gfortran}"
 CC="${CC:-gcc}"
 
-# LTO + aggressive inlining flags
-INLINE_FLAGS="--param max-inline-insns-auto=2000 --param max-inline-insns-single=4000 --param large-function-growth=400"
-BASE_FFLAGS="-O3 -cpp -flto -fno-range-check ${INLINE_FLAGS}"
-BASE_CFLAGS="-O3 -DNDEBUG -flto"
-BASE_LDFLAGS="-flto -O3 ${INLINE_FLAGS}"
+if [[ "${USE_PGO}" == "true" ]]; then
+    BUILD_DIR="${ROOT_DIR}/build/bench_pgo"
+else
+    BUILD_DIR="${ROOT_DIR}/build/bench"
+fi
+PROF_DIR="${BUILD_DIR}/prof"
+
+# Detect if CC is actually Clang (common on macOS where gcc → Apple Clang)
+CC_IS_CLANG=false
+if $CC --version 2>&1 | grep -qi clang; then
+    CC_IS_CLANG=true
+fi
+
+BASE_FFLAGS="-O3 -cpp -flto -fno-range-check"
+BASE_CFLAGS="-O3 -DNDEBUG"
+BASE_LDFLAGS="-O3 -flto"
 
 # Dependency sources
 STDLIB_KINDS="${ROOT_DIR}/build/dependencies/stdlib/src/stdlib_kinds.f90"
@@ -59,10 +91,11 @@ if [[ ! -f "${STDLIB_KINDS}" ]]; then
 fi
 
 compile_all() {
-    local extra_flags="$1"
-    local fflags="${BASE_FFLAGS} ${extra_flags} -J${BUILD_DIR}"
-    local cflags="${BASE_CFLAGS} ${extra_flags} -I${ROOT_DIR}/benchmark"
-    local ldflags="${BASE_LDFLAGS} ${extra_flags}"
+    local fc_extra="$1"       # PGO flags for Fortran (gfortran)
+    local cc_extra="${2:-}"    # PGO flags for C (may be empty if CC is Clang)
+    local fflags="${BASE_FFLAGS} ${fc_extra} -J${BUILD_DIR}"
+    local cflags="${BASE_CFLAGS} ${cc_extra} -I${ROOT_DIR}/benchmark"
+    local ldflags="${BASE_LDFLAGS} ${fc_extra}"
 
     $FC $fflags -c "${STDLIB_KINDS}"  -o "${BUILD_DIR}/stdlib_kinds.o"
     $FC $fflags -c "${STDLIB_STR2NUM}" -o "${BUILD_DIR}/stdlib_str2num.o"
@@ -89,22 +122,42 @@ elif [[ "${ROOT_DIR}/src/fast_float_module.F90" -nt "${FORT_BENCH}" ]] || \
 fi
 
 if [[ "${needs_rebuild}" == "true" ]]; then
-    mkdir -p "${BUILD_DIR}" "${PROF_DIR}"
+    mkdir -p "${BUILD_DIR}"
 
-    echo "=== Building Fortran benchmark (PGO step 1: instrument) ==="
-    compile_all "-fprofile-generate=${PROF_DIR}"
+    if [[ "${USE_PGO}" == "true" ]]; then
+        mkdir -p "${PROF_DIR}"
 
-    echo "=== PGO step 2: collecting profile data ==="
-    # Train on uniform data
-    "${FORT_BENCH}" -m uniform -r 3 >/dev/null 2>&1 || true
-    # Train on file data (if available)
-    for f in "${DATA_FILES[@]}"; do
-        filepath="${DATA_DIR}/${f}"
-        [[ -f "${filepath}" ]] && "${FORT_BENCH}" -f "${filepath}" -r 3 >/dev/null 2>&1 || true
-    done
+        # PGO flags: only gfortran gets PGO; skip for CC when it's Clang (incompatible profile format)
+        PGO_GEN="-fprofile-generate=${PROF_DIR}"
+        if [[ "${CC_IS_CLANG}" == "true" ]]; then
+            CC_PGO_GEN=""
+        else
+            CC_PGO_GEN="${PGO_GEN}"
+        fi
 
-    echo "=== PGO step 3: optimized rebuild ==="
-    compile_all "-fprofile-use=${PROF_DIR} -fprofile-correction"
+        echo "=== Building Fortran benchmark (PGO step 1: instrument) ==="
+        compile_all "${PGO_GEN}" "${CC_PGO_GEN}"
+
+        echo "=== PGO step 2: collecting profile data ==="
+        "${FORT_BENCH}" -m uniform -r 3 >/dev/null 2>&1 || true
+        for f in "${DATA_FILES[@]}"; do
+            filepath="${DATA_DIR}/${f}"
+            [[ -f "${filepath}" ]] && "${FORT_BENCH}" -f "${filepath}" -r 3 >/dev/null 2>&1 || true
+        done
+
+        PGO_USE="-fprofile-use=${PROF_DIR}"
+        if [[ "${CC_IS_CLANG}" == "true" ]]; then
+            CC_PGO_USE=""
+        else
+            CC_PGO_USE="${PGO_USE}"
+        fi
+
+        echo "=== PGO step 3: optimized rebuild ==="
+        compile_all "${PGO_USE}" "${CC_PGO_USE}"
+    else
+        echo "=== Building Fortran benchmark ==="
+        compile_all "" ""
+    fi
 
     echo ""
 fi
