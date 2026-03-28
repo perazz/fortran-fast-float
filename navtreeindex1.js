@@ -1,5 +1,10 @@
 var NAVTREEINDEX1 =
 {
+"structfast__float__module_1_1bigint.html#a9a090ea9b4716e5658c2d41671982e3d":[8,0,0,1,0],
+"structfast__float__module_1_1float__format.html":[7,0,0,2],
+"structfast__float__module_1_1float__format.html":[8,0,0,2],
+"structfast__float__module_1_1float__format.html#a07bd496a173c687540e0cad685774870":[7,0,0,2,8],
+"structfast__float__module_1_1float__format.html#a07bd496a173c687540e0cad685774870":[8,0,0,2,8],
 "structfast__float__module_1_1float__format.html#a2cc41e3c5d8f371ba9f370346d9785c7":[7,0,0,2,5],
 "structfast__float__module_1_1float__format.html#a2cc41e3c5d8f371ba9f370346d9785c7":[8,0,0,2,5],
 "structfast__float__module_1_1float__format.html#a50c073efef4d618bee3978a582f4e62e":[7,0,0,2,6],

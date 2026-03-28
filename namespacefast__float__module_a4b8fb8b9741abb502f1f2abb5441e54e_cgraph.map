@@ -16,9 +16,9 @@
 <area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="501,374,547,335,607,298,660,276,715,259,819,237,820,242,717,264,662,281,609,302,551,339,505,378"/>
 <area shape="rect" id="Node000008" href="$namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="615,565,762,605"/>
 <area shape="poly" id="edge10_Node000003_Node000008" title=" " alt="" coords="501,415,549,467,610,526,647,555,644,560,606,530,545,470,497,418"/>
-<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a44ab9e5eb41173a4b6cab50e07d837f3" title="Raise bigint to a power of 2." alt="" coords="615,629,762,669"/>
+<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="615,629,762,669"/>
 <area shape="poly" id="edge13_Node000003_Node000011" title=" " alt="" coords="491,415,506,456,531,510,566,566,587,592,610,615,615,620,612,624,606,619,583,596,561,569,527,512,501,458,486,417"/>
-<area shape="rect" id="Node000016" href="$namespacefast__float__module.html#a0e6511c045258a13909aa42982eed342" title="Multiply bigint by 5^e." alt="" coords="615,693,762,733"/>
+<area shape="rect" id="Node000016" href="$namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="615,693,762,733"/>
 <area shape="poly" id="edge18_Node000003_Node000016" title=" " alt="" coords="488,416,500,468,523,538,559,613,582,648,610,679,614,683,611,687,606,683,578,652,554,616,518,540,495,469,483,417"/>
 <area shape="rect" id="Node000026" href="$namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="615,376,762,416"/>
 <area shape="poly" id="edge29_Node000003_Node000026" title=" " alt="" coords="560,393,602,393,602,399,560,399"/>
@@ -100,7 +100,7 @@
 <area shape="poly" id="edge58_Node000041_Node000042" title=" " alt="" coords="354,799,393,799,393,804,354,804"/>
 <area shape="rect" id="Node000045" href="$namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="407,889,554,929"/>
 <area shape="poly" id="edge64_Node000041_Node000045" title=" " alt="" coords="317,819,431,880,429,885,314,824"/>
-<area shape="rect" id="Node000050" href="$namespacefast__float__module.html#acad198c8aa1792793357b6e72e529ca8" title="Multiply bigint by 10^e." alt="" coords="407,693,554,733"/>
+<area shape="rect" id="Node000050" href="$namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="407,693,554,733"/>
 <area shape="poly" id="edge73_Node000041_Node000050" title=" " alt="" coords="320,779,400,743,416,736,418,741,402,748,322,784"/>
 <area shape="rect" id="Node000051" href="$namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="615,476,762,516"/>
 <area shape="poly" id="edge76_Node000041_Node000051" title=" " alt="" coords="326,779,351,761,367,741,375,722,384,701,399,680,456,629,517,585,578,548,630,520,633,525,580,553,520,589,459,633,403,683,388,704,380,724,372,743,355,765,329,783"/>

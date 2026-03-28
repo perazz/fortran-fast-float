@@ -162,7 +162,7 @@ Data Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr class="memitem:adfcfe482bc6215d666183c953722a899" id="r_adfcfe482bc6215d666183c953722a899"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfcfe482bc6215d666183c953722a899">try_fast_path</a> (first, last, str, opts, bj, a)</td></tr>
+<tr class="memitem:adfcfe482bc6215d666183c953722a899" id="r_adfcfe482bc6215d666183c953722a899"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfcfe482bc6215d666183c953722a899">try_fast_path</a> (first, last, <a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, opts, bj, a)</td></tr>
 <tr class="memdesc:adfcfe482bc6215d666183c953722a899"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unified fast path for integers and simple fixed-point decimals.  <br /></td></tr>
 <tr class="separator:adfcfe482bc6215d666183c953722a899"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3d2ff1091ab63f957e579c14addc497" id="r_ab3d2ff1091ab63f957e579c14addc497"><td class="memItemLeft" align="right" valign="top">pure elemental logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab3d2ff1091ab63f957e579c14addc497">unsigned_lt</a> (a, b)</td></tr>
@@ -191,7 +191,7 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:aa691cfaaff3fdcb545d8f272706a457e" id="r_aa691cfaaff3fdcb545d8f272706a457e"><td class="memItemLeft" align="right" valign="top">pure elemental integer function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa691cfaaff3fdcb545d8f272706a457e">char_to_digit</a> (c)</td></tr>
 <tr class="memdesc:aa691cfaaff3fdcb545d8f272706a457e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map a character to its digit value using the lookup table.  <br /></td></tr>
 <tr class="separator:aa691cfaaff3fdcb545d8f272706a457e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e89687239dfcc9e5a221be0a5dc7b61" id="r_a0e89687239dfcc9e5a221be0a5dc7b61"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e89687239dfcc9e5a221be0a5dc7b61">read8_to_u64</a> (str)</td></tr>
+<tr class="memitem:a0e89687239dfcc9e5a221be0a5dc7b61" id="r_a0e89687239dfcc9e5a221be0a5dc7b61"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e89687239dfcc9e5a221be0a5dc7b61">read8_to_u64</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>)</td></tr>
 <tr class="memdesc:a0e89687239dfcc9e5a221be0a5dc7b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reinterpret 8 characters as a single i8 (little-endian).  <br /></td></tr>
 <tr class="separator:a0e89687239dfcc9e5a221be0a5dc7b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5251b2e39d7a2dfa5dd9c13a3426934" id="r_ab5251b2e39d7a2dfa5dd9c13a3426934"><td class="memItemLeft" align="right" valign="top">pure elemental logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5251b2e39d7a2dfa5dd9c13a3426934">is_eight_digits</a> (val)</td></tr>
@@ -200,22 +200,22 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:aba01f9db3a5d740ec15c6c52d2ce0149" id="r_aba01f9db3a5d740ec15c6c52d2ce0149"><td class="memItemLeft" align="right" valign="top">pure elemental integer function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba01f9db3a5d740ec15c6c52d2ce0149">parse_eight_digits</a> (val)</td></tr>
 <tr class="memdesc:aba01f9db3a5d740ec15c6c52d2ce0149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse 8 ASCII digit bytes into an integer.  <br /></td></tr>
 <tr class="separator:aba01f9db3a5d740ec15c6c52d2ce0149"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66b36874b482cf577a5844429e1f2767" id="r_a66b36874b482cf577a5844429e1f2767"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66b36874b482cf577a5844429e1f2767">loop_parse_eight</a> (pos, last, str, <a class="el" href="#a236b70e3d91ba75babb96f15c08a77bb">i</a>)</td></tr>
+<tr class="memitem:a66b36874b482cf577a5844429e1f2767" id="r_a66b36874b482cf577a5844429e1f2767"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66b36874b482cf577a5844429e1f2767">loop_parse_eight</a> (pos, last, <a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, <a class="el" href="#a236b70e3d91ba75babb96f15c08a77bb">i</a>)</td></tr>
 <tr class="memdesc:a66b36874b482cf577a5844429e1f2767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse groups of 8 digits in a loop.  <br /></td></tr>
 <tr class="separator:a66b36874b482cf577a5844429e1f2767"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96f3f461976be4c25cde0924707d0a4c" id="r_a96f3f461976be4c25cde0924707d0a4c"><td class="memItemLeft" align="right" valign="top">pure logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96f3f461976be4c25cde0924707d0a4c">strcmpi3</a> (str, e3)</td></tr>
+<tr class="memitem:a96f3f461976be4c25cde0924707d0a4c" id="r_a96f3f461976be4c25cde0924707d0a4c"><td class="memItemLeft" align="right" valign="top">pure logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96f3f461976be4c25cde0924707d0a4c">strcmpi3</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, e3)</td></tr>
 <tr class="memdesc:a96f3f461976be4c25cde0924707d0a4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Case-insensitive comparison of 3 characters.  <br /></td></tr>
 <tr class="separator:a96f3f461976be4c25cde0924707d0a4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a473f6dd0167ab6680c1ded0616ec7054" id="r_a473f6dd0167ab6680c1ded0616ec7054"><td class="memItemLeft" align="right" valign="top">pure logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a473f6dd0167ab6680c1ded0616ec7054">strcmpi5</a> (str, e5)</td></tr>
+<tr class="memitem:a473f6dd0167ab6680c1ded0616ec7054" id="r_a473f6dd0167ab6680c1ded0616ec7054"><td class="memItemLeft" align="right" valign="top">pure logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a473f6dd0167ab6680c1ded0616ec7054">strcmpi5</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, e5)</td></tr>
 <tr class="memdesc:a473f6dd0167ab6680c1ded0616ec7054"><td class="mdescLeft">&#160;</td><td class="mdescRight">Case-insensitive comparison of 5 characters.  <br /></td></tr>
 <tr class="separator:a473f6dd0167ab6680c1ded0616ec7054"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac55e14914ae42c302e7606bbb1023575" id="r_ac55e14914ae42c302e7606bbb1023575"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac55e14914ae42c302e7606bbb1023575">parse_number_string</a> (first, last, str, opts, bj, a)</td></tr>
+<tr class="memitem:ac55e14914ae42c302e7606bbb1023575" id="r_ac55e14914ae42c302e7606bbb1023575"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac55e14914ae42c302e7606bbb1023575">parse_number_string</a> (first, last, <a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, opts, bj, a)</td></tr>
 <tr class="memdesc:ac55e14914ae42c302e7606bbb1023575"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a number string into mantissa, exponent, and sign.  <br /></td></tr>
 <tr class="separator:ac55e14914ae42c302e7606bbb1023575"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dce7df665fed9ed55c773d4acaff319" id="r_a4dce7df665fed9ed55c773d4acaff319"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4dce7df665fed9ed55c773d4acaff319">parse_infnan_32</a> (str, p0, la, vf, res)</td></tr>
+<tr class="memitem:a4dce7df665fed9ed55c773d4acaff319" id="r_a4dce7df665fed9ed55c773d4acaff319"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4dce7df665fed9ed55c773d4acaff319">parse_infnan_32</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, p0, la, vf, res)</td></tr>
 <tr class="memdesc:a4dce7df665fed9ed55c773d4acaff319"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse inf/nan for single precision.  <br /></td></tr>
 <tr class="separator:a4dce7df665fed9ed55c773d4acaff319"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6ba76c7b322acedfb93e014aa22d8ec" id="r_aa6ba76c7b322acedfb93e014aa22d8ec"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6ba76c7b322acedfb93e014aa22d8ec">parse_infnan_64</a> (str, p0, la, vd, res)</td></tr>
+<tr class="memitem:aa6ba76c7b322acedfb93e014aa22d8ec" id="r_aa6ba76c7b322acedfb93e014aa22d8ec"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6ba76c7b322acedfb93e014aa22d8ec">parse_infnan_64</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, p0, la, vd, res)</td></tr>
 <tr class="memdesc:aa6ba76c7b322acedfb93e014aa22d8ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse inf/nan for double precision.  <br /></td></tr>
 <tr class="separator:aa6ba76c7b322acedfb93e014aa22d8ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b56697a868ca3f61bdb494294b6e93c" id="r_a5b56697a868ca3f61bdb494294b6e93c"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b56697a868ca3f61bdb494294b6e93c">b10_to_b2</a> (q)</td></tr>
@@ -293,15 +293,15 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:ac29febd139e388e5a914d247e3a232b5" id="r_ac29febd139e388e5a914d247e3a232b5"><td class="memItemLeft" align="right" valign="top">pure subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac29febd139e388e5a914d247e3a232b5">bigint_shl</a> (sv, n, ok)</td></tr>
 <tr class="memdesc:ac29febd139e388e5a914d247e3a232b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift bigint left by n bits.  <br /></td></tr>
 <tr class="separator:ac29febd139e388e5a914d247e3a232b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44ab9e5eb41173a4b6cab50e07d837f3" id="r_a44ab9e5eb41173a4b6cab50e07d837f3"><td class="memItemLeft" align="right" valign="top">pure subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44ab9e5eb41173a4b6cab50e07d837f3">bigint_pow2</a> (bi, e, ok)</td></tr>
-<tr class="memdesc:a44ab9e5eb41173a4b6cab50e07d837f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raise bigint to a power of 2.  <br /></td></tr>
-<tr class="separator:a44ab9e5eb41173a4b6cab50e07d837f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e6511c045258a13909aa42982eed342" id="r_a0e6511c045258a13909aa42982eed342"><td class="memItemLeft" align="right" valign="top">pure subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e6511c045258a13909aa42982eed342">bigint_pow5</a> (bi, ei, bp5_ok)</td></tr>
-<tr class="memdesc:a0e6511c045258a13909aa42982eed342"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply bigint by 5^e.  <br /></td></tr>
-<tr class="separator:a0e6511c045258a13909aa42982eed342"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acad198c8aa1792793357b6e72e529ca8" id="r_acad198c8aa1792793357b6e72e529ca8"><td class="memItemLeft" align="right" valign="top">pure subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acad198c8aa1792793357b6e72e529ca8">bigint_pow10</a> (bi, e, ok)</td></tr>
-<tr class="memdesc:acad198c8aa1792793357b6e72e529ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply bigint by 10^e.  <br /></td></tr>
-<tr class="separator:acad198c8aa1792793357b6e72e529ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f40eee02d5c92d84babd7fa209680e4" id="r_a0f40eee02d5c92d84babd7fa209680e4"><td class="memItemLeft" align="right" valign="top">elemental pure subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f40eee02d5c92d84babd7fa209680e4">bigint_pow2</a> (bi, e, ok)</td></tr>
+<tr class="memdesc:a0f40eee02d5c92d84babd7fa209680e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raise bigint to a power of 2.  <br /></td></tr>
+<tr class="separator:a0f40eee02d5c92d84babd7fa209680e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affa7971ebde566ba2c964585a26c959c" id="r_affa7971ebde566ba2c964585a26c959c"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affa7971ebde566ba2c964585a26c959c">bigint_pow5</a> (bi, ei, bp5_ok)</td></tr>
+<tr class="memdesc:affa7971ebde566ba2c964585a26c959c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply bigint by 5^e.  <br /></td></tr>
+<tr class="separator:affa7971ebde566ba2c964585a26c959c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae41bdc257f1c71001c73607601777e5e" id="r_ae41bdc257f1c71001c73607601777e5e"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae41bdc257f1c71001c73607601777e5e">bigint_pow10</a> (bi, e, ok)</td></tr>
+<tr class="memdesc:ae41bdc257f1c71001c73607601777e5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply bigint by 10^e.  <br /></td></tr>
+<tr class="separator:ae41bdc257f1c71001c73607601777e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2453dc687ba088d39f6fb73ac54df0c4" id="r_a2453dc687ba088d39f6fb73ac54df0c4"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2453dc687ba088d39f6fb73ac54df0c4">bigint_make</a> (v, res)</td></tr>
 <tr class="memdesc:a2453dc687ba088d39f6fb73ac54df0c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a bigint from a single value.  <br /></td></tr>
 <tr class="separator:a2453dc687ba088d39f6fb73ac54df0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -356,10 +356,10 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a25e25f3ff77a20878482b54f08b5a5dd" id="r_a25e25f3ff77a20878482b54f08b5a5dd"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25e25f3ff77a20878482b54f08b5a5dd">round_tie_even_cmp</a> (am, ord, f)</td></tr>
 <tr class="memdesc:a25e25f3ff77a20878482b54f08b5a5dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Round tie-even using digit comparison ordering.  <br /></td></tr>
 <tr class="separator:a25e25f3ff77a20878482b54f08b5a5dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f48e3ecda2e48d30e35736ac1d4396b" id="r_a3f48e3ecda2e48d30e35736ac1d4396b"><td class="memItemLeft" align="right" valign="top">pure elemental logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f48e3ecda2e48d30e35736ac1d4396b">is_truncated</a> (str, fi, la)</td></tr>
+<tr class="memitem:a3f48e3ecda2e48d30e35736ac1d4396b" id="r_a3f48e3ecda2e48d30e35736ac1d4396b"><td class="memItemLeft" align="right" valign="top">pure elemental logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f48e3ecda2e48d30e35736ac1d4396b">is_truncated</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, fi, la)</td></tr>
 <tr class="memdesc:a3f48e3ecda2e48d30e35736ac1d4396b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a substring contains any non-zero digits.  <br /></td></tr>
 <tr class="separator:a3f48e3ecda2e48d30e35736ac1d4396b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a134579beab04e58230aa2217956e5b6f" id="r_a134579beab04e58230aa2217956e5b6f"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a134579beab04e58230aa2217956e5b6f">skip_zeros</a> (str, p, la)</td></tr>
+<tr class="memitem:a134579beab04e58230aa2217956e5b6f" id="r_a134579beab04e58230aa2217956e5b6f"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a134579beab04e58230aa2217956e5b6f">skip_zeros</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, p, la)</td></tr>
 <tr class="memdesc:a134579beab04e58230aa2217956e5b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip leading zero characters.  <br /></td></tr>
 <tr class="separator:a134579beab04e58230aa2217956e5b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1db88dc18443b1549048848293d4714f" id="r_a1db88dc18443b1549048848293d4714f"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1db88dc18443b1549048848293d4714f">add_native</a> (bi, pw, v)</td></tr>
@@ -368,75 +368,78 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:aef95c70434b6fe537bec512cf5b0c1c1" id="r_aef95c70434b6fe537bec512cf5b0c1c1"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef95c70434b6fe537bec512cf5b0c1c1">round_up_bigint</a> (bi, cn)</td></tr>
 <tr class="memdesc:aef95c70434b6fe537bec512cf5b0c1c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Round up a bigint by adding one digit.  <br /></td></tr>
 <tr class="separator:aef95c70434b6fe537bec512cf5b0c1c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7d24a49942e0dabf1cabaf827a1c07f" id="r_af7d24a49942e0dabf1cabaf827a1c07f"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7d24a49942e0dabf1cabaf827a1c07f">parse_mantissa</a> (str, num, md, rb, dg)</td></tr>
+<tr class="memitem:af7d24a49942e0dabf1cabaf827a1c07f" id="r_af7d24a49942e0dabf1cabaf827a1c07f"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7d24a49942e0dabf1cabaf827a1c07f">parse_mantissa</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, num, md, rb, dg)</td></tr>
 <tr class="memdesc:af7d24a49942e0dabf1cabaf827a1c07f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse mantissa digits into a bigint.  <br /></td></tr>
 <tr class="separator:af7d24a49942e0dabf1cabaf827a1c07f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab08f4623be79e78dafe3019051379980" id="r_ab08f4623be79e78dafe3019051379980"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab08f4623be79e78dafe3019051379980">positive_digit_comp</a> (str, bm, ev, f, res)</td></tr>
+<tr class="memitem:ab08f4623be79e78dafe3019051379980" id="r_ab08f4623be79e78dafe3019051379980"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab08f4623be79e78dafe3019051379980">positive_digit_comp</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, bm, ev, f, res)</td></tr>
 <tr class="memdesc:ab08f4623be79e78dafe3019051379980"><td class="mdescLeft">&#160;</td><td class="mdescRight">Positive digit comparison path.  <br /></td></tr>
 <tr class="separator:ab08f4623be79e78dafe3019051379980"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc82d4772f909b9eef4f59363e3e133a" id="r_acc82d4772f909b9eef4f59363e3e133a"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc82d4772f909b9eef4f59363e3e133a">negative_digit_comp</a> (str, bm, ai, ev, f, res)</td></tr>
+<tr class="memitem:acc82d4772f909b9eef4f59363e3e133a" id="r_acc82d4772f909b9eef4f59363e3e133a"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc82d4772f909b9eef4f59363e3e133a">negative_digit_comp</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, bm, ai, ev, f, res)</td></tr>
 <tr class="memdesc:acc82d4772f909b9eef4f59363e3e133a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Negative digit comparison path.  <br /></td></tr>
 <tr class="separator:acc82d4772f909b9eef4f59363e3e133a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b8fb8b9741abb502f1f2abb5441e54e" id="r_a4b8fb8b9741abb502f1f2abb5441e54e"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b8fb8b9741abb502f1f2abb5441e54e">digit_comp</a> (str, num, ai, f, res)</td></tr>
+<tr class="memitem:a4b8fb8b9741abb502f1f2abb5441e54e" id="r_a4b8fb8b9741abb502f1f2abb5441e54e"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b8fb8b9741abb502f1f2abb5441e54e">digit_comp</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, num, ai, f, res)</td></tr>
 <tr class="memdesc:a4b8fb8b9741abb502f1f2abb5441e54e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Digit comparison fallback.  <br /></td></tr>
 <tr class="separator:a4b8fb8b9741abb502f1f2abb5441e54e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2040cdf38b5422319d60df6201fecde" id="r_ae2040cdf38b5422319d60df6201fecde"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2040cdf38b5422319d60df6201fecde">from_chars_64</a> (str, p, vd, f, res)</td></tr>
+<tr class="memitem:ae2040cdf38b5422319d60df6201fecde" id="r_ae2040cdf38b5422319d60df6201fecde"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2040cdf38b5422319d60df6201fecde">from_chars_64</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, p, vd, f, res)</td></tr>
 <tr class="memdesc:ae2040cdf38b5422319d60df6201fecde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert parsed number string to double (<a class="el" href="interfacefast__float__module_1_1from__chars.html">from_chars</a> path).  <br /></td></tr>
 <tr class="separator:ae2040cdf38b5422319d60df6201fecde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a207c3638c8ad236c4f7e286b0c645a1c" id="r_a207c3638c8ad236c4f7e286b0c645a1c"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a207c3638c8ad236c4f7e286b0c645a1c">from_chars_32</a> (str, p, vf, f, res)</td></tr>
+<tr class="memitem:a207c3638c8ad236c4f7e286b0c645a1c" id="r_a207c3638c8ad236c4f7e286b0c645a1c"><td class="memItemLeft" align="right" valign="top">pure elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a207c3638c8ad236c4f7e286b0c645a1c">from_chars_32</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, p, vf, f, res)</td></tr>
 <tr class="memdesc:a207c3638c8ad236c4f7e286b0c645a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert parsed number string to float (<a class="el" href="interfacefast__float__module_1_1from__chars.html">from_chars</a> path).  <br /></td></tr>
 <tr class="separator:a207c3638c8ad236c4f7e286b0c645a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe020c2419fc730e78d6069ff9137256" id="r_abe020c2419fc730e78d6069ff9137256"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe020c2419fc730e78d6069ff9137256">parse_dp</a> (str)</td></tr>
+<tr class="memitem:abe020c2419fc730e78d6069ff9137256" id="r_abe020c2419fc730e78d6069ff9137256"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe020c2419fc730e78d6069ff9137256">parse_dp</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>)</td></tr>
 <tr class="separator:abe020c2419fc730e78d6069ff9137256"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1abb2aa0f43af0a6b2056d2690049ad3" id="r_a1abb2aa0f43af0a6b2056d2690049ad3"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1abb2aa0f43af0a6b2056d2690049ad3">parse_dp_opts</a> (str, opts)</td></tr>
+<tr class="memitem:a1abb2aa0f43af0a6b2056d2690049ad3" id="r_a1abb2aa0f43af0a6b2056d2690049ad3"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1abb2aa0f43af0a6b2056d2690049ad3">parse_dp_opts</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, opts)</td></tr>
 <tr class="separator:a1abb2aa0f43af0a6b2056d2690049ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3e1a1c4bce0eb934bff2b988b3a7fc3" id="r_af3e1a1c4bce0eb934bff2b988b3a7fc3"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3e1a1c4bce0eb934bff2b988b3a7fc3">parse_dp_range</a> (str, first, last)</td></tr>
+<tr class="memitem:af3e1a1c4bce0eb934bff2b988b3a7fc3" id="r_af3e1a1c4bce0eb934bff2b988b3a7fc3"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3e1a1c4bce0eb934bff2b988b3a7fc3">parse_dp_range</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, first, last)</td></tr>
 <tr class="separator:af3e1a1c4bce0eb934bff2b988b3a7fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16d2fbd3e4ba64d9d25408857d17530d" id="r_a16d2fbd3e4ba64d9d25408857d17530d"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16d2fbd3e4ba64d9d25408857d17530d">parse_dp_range_opts</a> (str, first, last, opts)</td></tr>
+<tr class="memitem:a16d2fbd3e4ba64d9d25408857d17530d" id="r_a16d2fbd3e4ba64d9d25408857d17530d"><td class="memItemLeft" align="right" valign="top">pure elemental real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16d2fbd3e4ba64d9d25408857d17530d">parse_dp_range_opts</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, first, last, opts)</td></tr>
 <tr class="separator:a16d2fbd3e4ba64d9d25408857d17530d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1da42b09f5b1f5d98d85d2bac332767a" id="r_a1da42b09f5b1f5d98d85d2bac332767a"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1da42b09f5b1f5d98d85d2bac332767a">parse_dp_res</a> (str, res)</td></tr>
+<tr class="memitem:a1da42b09f5b1f5d98d85d2bac332767a" id="r_a1da42b09f5b1f5d98d85d2bac332767a"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1da42b09f5b1f5d98d85d2bac332767a">parse_dp_res</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, res)</td></tr>
 <tr class="separator:a1da42b09f5b1f5d98d85d2bac332767a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bb7eb7d4c3a9659067eb5ab04432c17" id="r_a2bb7eb7d4c3a9659067eb5ab04432c17"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bb7eb7d4c3a9659067eb5ab04432c17">parse_dp_opts_res</a> (str, opts, res)</td></tr>
+<tr class="memitem:a2bb7eb7d4c3a9659067eb5ab04432c17" id="r_a2bb7eb7d4c3a9659067eb5ab04432c17"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bb7eb7d4c3a9659067eb5ab04432c17">parse_dp_opts_res</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, opts, res)</td></tr>
 <tr class="separator:a2bb7eb7d4c3a9659067eb5ab04432c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeef0e8881f4bea6e1d5daa94df6e712d" id="r_aeef0e8881f4bea6e1d5daa94df6e712d"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeef0e8881f4bea6e1d5daa94df6e712d">parse_dp_range_res</a> (str, first, last, res)</td></tr>
+<tr class="memitem:aeef0e8881f4bea6e1d5daa94df6e712d" id="r_aeef0e8881f4bea6e1d5daa94df6e712d"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeef0e8881f4bea6e1d5daa94df6e712d">parse_dp_range_res</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, first, last, res)</td></tr>
 <tr class="separator:aeef0e8881f4bea6e1d5daa94df6e712d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefb1421e047b28fc9cd0845106327381" id="r_aefb1421e047b28fc9cd0845106327381"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefb1421e047b28fc9cd0845106327381">parse_dp_range_opts_res</a> (str, first, last, opts, res)</td></tr>
+<tr class="memitem:aefb1421e047b28fc9cd0845106327381" id="r_aefb1421e047b28fc9cd0845106327381"><td class="memItemLeft" align="right" valign="top">real(dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefb1421e047b28fc9cd0845106327381">parse_dp_range_opts_res</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, first, last, opts, res)</td></tr>
 <tr class="separator:aefb1421e047b28fc9cd0845106327381"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae989fabf07ecc6ad52c17d513a0ce11b" id="r_ae989fabf07ecc6ad52c17d513a0ce11b"><td class="memItemLeft" align="right" valign="top">elemental subroutine, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae989fabf07ecc6ad52c17d513a0ce11b">parse_double_range_sub</a> (str, first, last, out, res, o)</td></tr>
-<tr class="memdesc:ae989fabf07ecc6ad52c17d513a0ce11b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a string range to double, subroutine form.  <br /></td></tr>
+<tr class="memitem:ae989fabf07ecc6ad52c17d513a0ce11b" id="r_ae989fabf07ecc6ad52c17d513a0ce11b"><td class="memItemLeft" align="right" valign="top">elemental subroutine, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae989fabf07ecc6ad52c17d513a0ce11b">parse_double_range_sub</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, first, last, out, res, o)</td></tr>
+<tr class="memdesc:ae989fabf07ecc6ad52c17d513a0ce11b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a string range to double, subroutine form. Parse a string range to double, subroutine form. Hot-path routines manually inlined for performance without LTO.  <br /></td></tr>
 <tr class="separator:ae989fabf07ecc6ad52c17d513a0ce11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefae1d21e5a95ebf7a390199813224cb" id="r_aefae1d21e5a95ebf7a390199813224cb"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefae1d21e5a95ebf7a390199813224cb">parse_float_range_sub</a> (str, first, last, out, res, o)</td></tr>
-<tr class="memdesc:aefae1d21e5a95ebf7a390199813224cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a string range to float, subroutine form.  <br /></td></tr>
+<tr class="memitem:aefae1d21e5a95ebf7a390199813224cb" id="r_aefae1d21e5a95ebf7a390199813224cb"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefae1d21e5a95ebf7a390199813224cb">parse_float_range_sub</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, first, last, out, res, o)</td></tr>
+<tr class="memdesc:aefae1d21e5a95ebf7a390199813224cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a string range to float, subroutine form. Hot-path routines manually inlined for performance without LTO.  <br /></td></tr>
 <tr class="separator:aefae1d21e5a95ebf7a390199813224cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab798f64407fd1a9013f66e5c18f4d620" id="r_ab798f64407fd1a9013f66e5c18f4d620"><td class="memItemLeft" align="right" valign="top">pure elemental real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab798f64407fd1a9013f66e5c18f4d620">parse_fp</a> (str)</td></tr>
+<tr class="memitem:ab798f64407fd1a9013f66e5c18f4d620" id="r_ab798f64407fd1a9013f66e5c18f4d620"><td class="memItemLeft" align="right" valign="top">pure elemental real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab798f64407fd1a9013f66e5c18f4d620">parse_fp</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>)</td></tr>
 <tr class="separator:ab798f64407fd1a9013f66e5c18f4d620"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55e7c1a3306505073226ac990b6b6740" id="r_a55e7c1a3306505073226ac990b6b6740"><td class="memItemLeft" align="right" valign="top">pure elemental real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55e7c1a3306505073226ac990b6b6740">parse_fp_opts</a> (str, opts)</td></tr>
+<tr class="memitem:a55e7c1a3306505073226ac990b6b6740" id="r_a55e7c1a3306505073226ac990b6b6740"><td class="memItemLeft" align="right" valign="top">pure elemental real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55e7c1a3306505073226ac990b6b6740">parse_fp_opts</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, opts)</td></tr>
 <tr class="separator:a55e7c1a3306505073226ac990b6b6740"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeef0d85ceaa167bf989a6500a215bfb4" id="r_aeef0d85ceaa167bf989a6500a215bfb4"><td class="memItemLeft" align="right" valign="top">real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeef0d85ceaa167bf989a6500a215bfb4">parse_fp_res</a> (str, res)</td></tr>
+<tr class="memitem:aeef0d85ceaa167bf989a6500a215bfb4" id="r_aeef0d85ceaa167bf989a6500a215bfb4"><td class="memItemLeft" align="right" valign="top">real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeef0d85ceaa167bf989a6500a215bfb4">parse_fp_res</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, res)</td></tr>
 <tr class="separator:aeef0d85ceaa167bf989a6500a215bfb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ee8507a251b553e84d7c045c66ce52a" id="r_a1ee8507a251b553e84d7c045c66ce52a"><td class="memItemLeft" align="right" valign="top">real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ee8507a251b553e84d7c045c66ce52a">parse_fp_opts_res</a> (str, opts, res)</td></tr>
+<tr class="memitem:a1ee8507a251b553e84d7c045c66ce52a" id="r_a1ee8507a251b553e84d7c045c66ce52a"><td class="memItemLeft" align="right" valign="top">real(sp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ee8507a251b553e84d7c045c66ce52a">parse_fp_opts_res</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, opts, res)</td></tr>
 <tr class="separator:a1ee8507a251b553e84d7c045c66ce52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa19389ab6d00ac2ae029ddba7f778fb" id="r_afa19389ab6d00ac2ae029ddba7f778fb"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa19389ab6d00ac2ae029ddba7f778fb">parse_i64_sub</a> (str, base, out, res)</td></tr>
+<tr class="memitem:afa19389ab6d00ac2ae029ddba7f778fb" id="r_afa19389ab6d00ac2ae029ddba7f778fb"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa19389ab6d00ac2ae029ddba7f778fb">parse_i64_sub</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, base, out, res)</td></tr>
 <tr class="memdesc:afa19389ab6d00ac2ae029ddba7f778fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a string to a 64-bit integer (subroutine form).  <br /></td></tr>
 <tr class="separator:afa19389ab6d00ac2ae029ddba7f778fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a805b7010bf5e214929747f2e169364d7" id="r_a805b7010bf5e214929747f2e169364d7"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a805b7010bf5e214929747f2e169364d7">parse_i32_sub</a> (str, base, out, res)</td></tr>
+<tr class="memitem:a805b7010bf5e214929747f2e169364d7" id="r_a805b7010bf5e214929747f2e169364d7"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a805b7010bf5e214929747f2e169364d7">parse_i32_sub</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, base, out, res)</td></tr>
 <tr class="memdesc:a805b7010bf5e214929747f2e169364d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a string to a 32-bit integer (subroutine form).  <br /></td></tr>
 <tr class="separator:a805b7010bf5e214929747f2e169364d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2f9c4094ca259deb3a7447b520f1b0a" id="r_ac2f9c4094ca259deb3a7447b520f1b0a"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2f9c4094ca259deb3a7447b520f1b0a">parse_i64_pure</a> (str, base)</td></tr>
+<tr class="memitem:ac2f9c4094ca259deb3a7447b520f1b0a" id="r_ac2f9c4094ca259deb3a7447b520f1b0a"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2f9c4094ca259deb3a7447b520f1b0a">parse_i64_pure</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, base)</td></tr>
 <tr class="separator:ac2f9c4094ca259deb3a7447b520f1b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8eb81a938ba381aff1b6fefc752b80c" id="r_ab8eb81a938ba381aff1b6fefc752b80c"><td class="memItemLeft" align="right" valign="top">integer(i8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8eb81a938ba381aff1b6fefc752b80c">parse_i64_std</a> (str, base, res)</td></tr>
+<tr class="memitem:ab8eb81a938ba381aff1b6fefc752b80c" id="r_ab8eb81a938ba381aff1b6fefc752b80c"><td class="memItemLeft" align="right" valign="top">integer(i8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8eb81a938ba381aff1b6fefc752b80c">parse_i64_std</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, base, res)</td></tr>
 <tr class="separator:ab8eb81a938ba381aff1b6fefc752b80c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c7538b09a0958122db400c305fbcba6" id="r_a4c7538b09a0958122db400c305fbcba6"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c7538b09a0958122db400c305fbcba6">parse_i32_pure</a> (str, base)</td></tr>
+<tr class="memitem:a4c7538b09a0958122db400c305fbcba6" id="r_a4c7538b09a0958122db400c305fbcba6"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c7538b09a0958122db400c305fbcba6">parse_i32_pure</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, base)</td></tr>
 <tr class="separator:a4c7538b09a0958122db400c305fbcba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdcd1ffbdb545e3492fa9881251fd5a4" id="r_afdcd1ffbdb545e3492fa9881251fd5a4"><td class="memItemLeft" align="right" valign="top">integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdcd1ffbdb545e3492fa9881251fd5a4">parse_i32_std</a> (str, base, res)</td></tr>
+<tr class="memitem:afdcd1ffbdb545e3492fa9881251fd5a4" id="r_afdcd1ffbdb545e3492fa9881251fd5a4"><td class="memItemLeft" align="right" valign="top">integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdcd1ffbdb545e3492fa9881251fd5a4">parse_i32_std</a> (<a class="el" href="fast__float__module_8_f90.html#a94688a4a25a03cfbc6929fe15b1f8df0">str</a>, base, res)</td></tr>
 <tr class="separator:afdcd1ffbdb545e3492fa9881251fd5a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaf3e1007edfdfc1718a045b2e360394" id="r_aeaf3e1007edfdfc1718a045b2e360394"><td class="memItemLeft" align="right" valign="top">elemental logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeaf3e1007edfdfc1718a045b2e360394">outcome_eq</a> (this, that)</td></tr>
 <tr class="separator:aeaf3e1007edfdfc1718a045b2e360394"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95a16dc0a3781ea918120a564167b302" id="r_a95a16dc0a3781ea918120a564167b302"><td class="memItemLeft" align="right" valign="top">elemental logical function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95a16dc0a3781ea918120a564167b302">outcome_ne</a> (this, that)</td></tr>
 <tr class="separator:a95a16dc0a3781ea918120a564167b302"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ae1424c51e61205e9627d735d7b6acd" id="r_a5ae1424c51e61205e9627d735d7b6acd"><td class="memItemLeft" align="right" valign="top">subroutine, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ae1424c51e61205e9627d735d7b6acd">parse_double_batch</a> (str, istart, iend, nlines, answer, o)</td></tr>
-<tr class="memdesc:a5ae1424c51e61205e9627d735d7b6acd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Batch parse: process nlines substrings from str, returning max value. istart(i)/iend(i) are 1-based start/end positions in str.  <br /></td></tr>
-<tr class="separator:a5ae1424c51e61205e9627d735d7b6acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b77e1eb2340eb2237171efc75b2fba6" id="r_a1b77e1eb2340eb2237171efc75b2fba6"><td class="memItemLeft" align="right" valign="top">pure subroutine, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b77e1eb2340eb2237171efc75b2fba6">parse_double_array</a> (stream, values, n, err, o)</td></tr>
+<tr class="memdesc:a1b77e1eb2340eb2237171efc75b2fba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a whitespace-delimited stream of double-precision floats into an array. Hot-path routines manually inlined for performance without LTO.  <br /></td></tr>
+<tr class="separator:a1b77e1eb2340eb2237171efc75b2fba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5568d7560f743b7ae59a61f5681641bb" id="r_a5568d7560f743b7ae59a61f5681641bb"><td class="memItemLeft" align="right" valign="top">pure subroutine, public&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5568d7560f743b7ae59a61f5681641bb">parse_float_array</a> (stream, values, n, err, o)</td></tr>
+<tr class="memdesc:a5568d7560f743b7ae59a61f5681641bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a whitespace-delimited stream of single-precision floats into an array. Hot-path routines manually inlined for performance without LTO.  <br /></td></tr>
+<tr class="separator:a5568d7560f743b7ae59a61f5681641bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -1179,8 +1182,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="acad198c8aa1792793357b6e72e529ca8" name="acad198c8aa1792793357b6e72e529ca8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acad198c8aa1792793357b6e72e529ca8">&#9670;&#160;</a></span>bigint_pow10()</h2>
+<a id="ae41bdc257f1c71001c73607601777e5e" name="ae41bdc257f1c71001c73607601777e5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae41bdc257f1c71001c73607601777e5e">&#9670;&#160;</a></span>bigint_pow10()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1189,7 +1192,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">pure subroutine fast_float_module::bigint_pow10 </td>
+          <td class="memname">pure elemental subroutine fast_float_module::bigint_pow10 </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1bigint.html">bigint</a>), intent(inout)</td>          <td class="paramname"><span class="paramname"><em>bi</em></span>, </td>
         </tr>
@@ -1215,12 +1218,12 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacefast__float__module_acad198c8aa1792793357b6e72e529ca8_cgraph.png" border="0" usemap="#anamespacefast__float__module_acad198c8aa1792793357b6e72e529ca8_cgraph" alt=""/></div>
-<map name="anamespacefast__float__module_acad198c8aa1792793357b6e72e529ca8_cgraph" id="anamespacefast__float__module_acad198c8aa1792793357b6e72e529ca8_cgraph">
+<div class="center"><img src="namespacefast__float__module_ae41bdc257f1c71001c73607601777e5e_cgraph.png" border="0" usemap="#anamespacefast__float__module_ae41bdc257f1c71001c73607601777e5e_cgraph" alt=""/></div>
+<map name="anamespacefast__float__module_ae41bdc257f1c71001c73607601777e5e_cgraph" id="anamespacefast__float__module_ae41bdc257f1c71001c73607601777e5e_cgraph">
 <area shape="rect" title="Multiply bigint by 10^e." alt="" coords="5,101,152,141"/>
-<area shape="rect" href="namespacefast__float__module.html#a44ab9e5eb41173a4b6cab50e07d837f3" title="Raise bigint to a power of 2." alt="" coords="200,69,347,109"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="200,69,347,109"/>
 <area shape="poly" title=" " alt="" coords="152,107,186,101,187,106,152,112"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e6511c045258a13909aa42982eed342" title="Multiply bigint by 5^e." alt="" coords="200,133,347,173"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="200,133,347,173"/>
 <area shape="poly" title=" " alt="" coords="152,131,187,136,186,142,152,136"/>
 <area shape="rect" href="namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="395,69,541,109"/>
 <area shape="poly" title=" " alt="" coords="347,87,381,87,381,92,347,92"/>
@@ -1264,8 +1267,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a44ab9e5eb41173a4b6cab50e07d837f3" name="a44ab9e5eb41173a4b6cab50e07d837f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44ab9e5eb41173a4b6cab50e07d837f3">&#9670;&#160;</a></span>bigint_pow2()</h2>
+<a id="a0f40eee02d5c92d84babd7fa209680e4" name="a0f40eee02d5c92d84babd7fa209680e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f40eee02d5c92d84babd7fa209680e4">&#9670;&#160;</a></span>bigint_pow2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1274,7 +1277,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">pure subroutine fast_float_module::bigint_pow2 </td>
+          <td class="memname">elemental pure subroutine fast_float_module::bigint_pow2 </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1bigint.html">bigint</a>), intent(inout)</td>          <td class="paramname"><span class="paramname"><em>bi</em></span>, </td>
         </tr>
@@ -1300,8 +1303,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacefast__float__module_a44ab9e5eb41173a4b6cab50e07d837f3_cgraph.png" border="0" usemap="#anamespacefast__float__module_a44ab9e5eb41173a4b6cab50e07d837f3_cgraph" alt=""/></div>
-<map name="anamespacefast__float__module_a44ab9e5eb41173a4b6cab50e07d837f3_cgraph" id="anamespacefast__float__module_a44ab9e5eb41173a4b6cab50e07d837f3_cgraph">
+<div class="center"><img src="namespacefast__float__module_a0f40eee02d5c92d84babd7fa209680e4_cgraph.png" border="0" usemap="#anamespacefast__float__module_a0f40eee02d5c92d84babd7fa209680e4_cgraph" alt=""/></div>
+<map name="anamespacefast__float__module_a0f40eee02d5c92d84babd7fa209680e4_cgraph" id="anamespacefast__float__module_a0f40eee02d5c92d84babd7fa209680e4_cgraph">
 <area shape="rect" title="Raise bigint to a power of 2." alt="" coords="5,37,152,77"/>
 <area shape="rect" href="namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="200,37,347,77"/>
 <area shape="poly" title=" " alt="" coords="152,55,186,55,186,60,152,60"/>
@@ -1316,8 +1319,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a0e6511c045258a13909aa42982eed342" name="a0e6511c045258a13909aa42982eed342"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e6511c045258a13909aa42982eed342">&#9670;&#160;</a></span>bigint_pow5()</h2>
+<a id="affa7971ebde566ba2c964585a26c959c" name="affa7971ebde566ba2c964585a26c959c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affa7971ebde566ba2c964585a26c959c">&#9670;&#160;</a></span>bigint_pow5()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1326,7 +1329,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">pure subroutine fast_float_module::bigint_pow5 </td>
+          <td class="memname">pure elemental subroutine fast_float_module::bigint_pow5 </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1bigint.html">bigint</a>), intent(inout)</td>          <td class="paramname"><span class="paramname"><em>bi</em></span>, </td>
         </tr>
@@ -1352,8 +1355,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacefast__float__module_a0e6511c045258a13909aa42982eed342_cgraph.png" border="0" usemap="#anamespacefast__float__module_a0e6511c045258a13909aa42982eed342_cgraph" alt=""/></div>
-<map name="anamespacefast__float__module_a0e6511c045258a13909aa42982eed342_cgraph" id="anamespacefast__float__module_a0e6511c045258a13909aa42982eed342_cgraph">
+<div class="center"><img src="namespacefast__float__module_affa7971ebde566ba2c964585a26c959c_cgraph.png" border="0" usemap="#anamespacefast__float__module_affa7971ebde566ba2c964585a26c959c_cgraph" alt=""/></div>
+<map name="anamespacefast__float__module_affa7971ebde566ba2c964585a26c959c_cgraph" id="anamespacefast__float__module_affa7971ebde566ba2c964585a26c959c_cgraph">
 <area shape="rect" title="Multiply bigint by 5^e." alt="" coords="5,173,152,213"/>
 <area shape="rect" href="namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="200,144,347,184"/>
 <area shape="poly" title=" " alt="" coords="152,180,186,174,187,180,152,185"/>
@@ -2113,9 +2116,9 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="501,374,547,335,607,298,660,276,715,259,819,237,820,242,717,264,662,281,609,302,551,339,505,378"/>
 <area shape="rect" href="namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="615,565,762,605"/>
 <area shape="poly" title=" " alt="" coords="501,415,549,467,610,526,647,555,644,560,606,530,545,470,497,418"/>
-<area shape="rect" href="namespacefast__float__module.html#a44ab9e5eb41173a4b6cab50e07d837f3" title="Raise bigint to a power of 2." alt="" coords="615,629,762,669"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="615,629,762,669"/>
 <area shape="poly" title=" " alt="" coords="491,415,506,456,531,510,566,566,587,592,610,615,615,620,612,624,606,619,583,596,561,569,527,512,501,458,486,417"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e6511c045258a13909aa42982eed342" title="Multiply bigint by 5^e." alt="" coords="615,693,762,733"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="615,693,762,733"/>
 <area shape="poly" title=" " alt="" coords="488,416,500,468,523,538,559,613,582,648,610,679,614,683,611,687,606,683,578,652,554,616,518,540,495,469,483,417"/>
 <area shape="rect" href="namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="615,376,762,416"/>
 <area shape="poly" title=" " alt="" coords="560,393,602,393,602,399,560,399"/>
@@ -2197,7 +2200,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="354,799,393,799,393,804,354,804"/>
 <area shape="rect" href="namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="407,889,554,929"/>
 <area shape="poly" title=" " alt="" coords="317,819,431,880,429,885,314,824"/>
-<area shape="rect" href="namespacefast__float__module.html#acad198c8aa1792793357b6e72e529ca8" title="Multiply bigint by 10^e." alt="" coords="407,693,554,733"/>
+<area shape="rect" href="namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="407,693,554,733"/>
 <area shape="poly" title=" " alt="" coords="320,779,400,743,416,736,418,741,402,748,322,784"/>
 <area shape="rect" href="namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="615,476,762,516"/>
 <area shape="poly" title=" " alt="" coords="326,779,351,761,367,741,375,722,384,701,399,680,456,629,517,585,578,548,630,520,633,525,580,553,520,589,459,633,403,683,388,704,380,724,372,743,355,765,329,783"/>
@@ -2749,9 +2752,9 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="97,324,145,260,210,187,247,158,250,162,214,191,149,264,102,327"/>
 <area shape="rect" href="namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="219,201,366,241"/>
 <area shape="poly" title=" " alt="" coords="114,323,211,260,238,245,240,250,213,265,116,327"/>
-<area shape="rect" href="namespacefast__float__module.html#a44ab9e5eb41173a4b6cab50e07d837f3" title="Raise bigint to a power of 2." alt="" coords="219,275,366,315"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="219,275,366,315"/>
 <area shape="poly" title=" " alt="" coords="164,323,205,313,207,318,165,329"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e6511c045258a13909aa42982eed342" title="Multiply bigint by 5^e." alt="" coords="219,357,366,397"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="219,357,366,397"/>
 <area shape="poly" title=" " alt="" coords="165,355,206,361,205,367,164,360"/>
 <area shape="rect" href="namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="219,507,366,547"/>
 <area shape="poly" title=" " alt="" coords="111,363,260,495,256,499,107,367"/>
@@ -2881,80 +2884,179 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a5ae1424c51e61205e9627d735d7b6acd" name="a5ae1424c51e61205e9627d735d7b6acd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ae1424c51e61205e9627d735d7b6acd">&#9670;&#160;</a></span>parse_double_batch()</h2>
+<a id="a1b77e1eb2340eb2237171efc75b2fba6" name="a1b77e1eb2340eb2237171efc75b2fba6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b77e1eb2340eb2237171efc75b2fba6">&#9670;&#160;</a></span>parse_double_array()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">subroutine, public fast_float_module::parse_double_batch </td>
+          <td class="memname">pure subroutine, public fast_float_module::parse_double_array </td>
           <td>(</td>
-          <td class="paramtype">character(len=*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
+          <td class="paramtype">character(*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>stream</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">integer, dimension(*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>istart</em></span>, </td>
+          <td class="paramtype">real(dp), dimension(:), intent(out)</td>          <td class="paramname"><span class="paramname"><em>values</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">integer, dimension(*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>iend</em></span>, </td>
+          <td class="paramtype">integer, intent(out)</td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">integer, intent(in)</td>          <td class="paramname"><span class="paramname"><em>nlines</em></span>, </td>
+          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1outcome.html">outcome</a>), intent(out)</td>          <td class="paramname"><span class="paramname"><em>err</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">real(dp), intent(out)</td>          <td class="paramname"><span class="paramname"><em>answer</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1parse__options.html">parse_options</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>o</em></span>&#160;)</td>
+          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1parse__options.html">parse_options</a>), intent(in), optional</td>          <td class="paramname"><span class="paramname"><em>o</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Batch parse: process nlines substrings from str, returning max value. istart(i)/iend(i) are 1-based start/end positions in str. </p>
+<p>Parse a whitespace-delimited stream of double-precision floats into an array. Hot-path routines manually inlined for performance without LTO. </p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph.png" border="0" usemap="#anamespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph" alt=""/></div>
-<map name="anamespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph" id="anamespacefast__float__module_a5ae1424c51e61205e9627d735d7b6acd_cgraph">
-<area shape="rect" title="Batch parse: process nlines substrings from str, returning max value. istart(i)/iend(i) are 1&#45;based s..." alt="" coords="5,193,157,233"/>
-<area shape="rect" href="namespacefast__float__module.html#ae989fabf07ecc6ad52c17d513a0ce11b" title="Parse a string range to double, subroutine form." alt="" coords="205,193,388,233"/>
-<area shape="poly" title=" " alt="" coords="158,211,192,211,192,216,158,216"/>
-<area shape="rect" href="namespacefast__float__module.html#aa6ba76c7b322acedfb93e014aa22d8ec" title="Parse inf/nan for double precision." alt="" coords="442,117,589,157"/>
-<area shape="poly" title=" " alt="" coords="354,191,443,159,445,164,356,196"/>
-<area shape="rect" href="namespacefast__float__module.html#ac55e14914ae42c302e7606bbb1023575" title="Parse a number string into mantissa, exponent, and sign." alt="" coords="436,225,595,265"/>
-<area shape="poly" title=" " alt="" coords="389,224,423,229,422,234,388,229"/>
-<area shape="rect" href="namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="643,29,789,69"/>
-<area shape="poly" title=" " alt="" coords="561,115,656,73,658,77,563,120"/>
-<area shape="rect" href="namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="643,117,789,157"/>
-<area shape="poly" title=" " alt="" coords="589,135,629,135,629,140,589,140"/>
-<area shape="poly" title=" " alt="" coords="679,30,677,20,683,11,696,5,716,3,739,6,751,13,749,17,737,11,716,8,697,10,686,15,682,21,684,28"/>
-<area shape="poly" title=" " alt="" coords="679,118,677,108,683,99,696,93,716,91,739,94,751,101,749,105,737,99,716,96,697,98,686,103,682,109,684,116"/>
-<area shape="rect" href="namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="643,181,789,221"/>
-<area shape="poly" title=" " alt="" coords="594,225,628,218,630,223,595,231"/>
-<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="643,269,789,309"/>
-<area shape="poly" title=" " alt="" coords="595,260,630,268,628,273,594,265"/>
-<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="643,357,789,397"/>
-<area shape="poly" title=" " alt="" coords="548,263,675,347,672,352,545,268"/>
-<area shape="rect" href="namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="837,117,984,157"/>
-<area shape="poly" title=" " alt="" coords="777,179,835,159,837,164,778,184"/>
-<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="837,181,984,221"/>
-<area shape="poly" title=" " alt="" coords="789,199,823,199,823,204,789,204"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="837,269,984,309"/>
-<area shape="poly" title=" " alt="" coords="764,219,790,231,856,261,853,266,788,236,762,224"/>
-<area shape="poly" title=" " alt="" coords="874,118,872,108,878,99,891,93,911,91,934,94,946,101,943,105,932,99,911,96,892,98,881,103,877,109,879,116"/>
-<area shape="poly" title=" " alt="" coords="874,270,872,260,878,251,891,245,911,243,934,246,946,253,943,257,932,251,911,248,892,250,881,255,877,261,879,268"/>
-<area shape="poly" title=" " alt="" coords="679,270,677,260,683,251,696,245,716,243,739,246,751,253,749,257,737,251,716,248,697,250,686,255,682,261,684,268"/>
-<area shape="poly" title=" " alt="" coords="679,358,677,348,683,339,696,333,716,331,739,334,751,341,749,345,737,339,716,336,697,338,686,343,682,349,684,356"/>
+<div class="center"><img src="namespacefast__float__module_a1b77e1eb2340eb2237171efc75b2fba6_cgraph.png" border="0" usemap="#anamespacefast__float__module_a1b77e1eb2340eb2237171efc75b2fba6_cgraph" alt=""/></div>
+<map name="anamespacefast__float__module_a1b77e1eb2340eb2237171efc75b2fba6_cgraph" id="anamespacefast__float__module_a1b77e1eb2340eb2237171efc75b2fba6_cgraph">
+<area shape="rect" title="Parse a whitespace&#45;delimited stream of double&#45;precision floats into an array. Hot&#45;path routines manua..." alt="" coords="5,672,156,712"/>
+<area shape="rect" href="namespacefast__float__module.html#abfc723432befd95d402dc92811c7a65a" title="Convert adjusted mantissa to double precision." alt="" coords="626,971,773,1011"/>
+<area shape="poly" title=" " alt="" coords="148,710,569,842,582,857,590,871,595,900,600,929,607,943,618,957,622,961,619,965,614,961,602,946,595,930,590,901,585,873,578,860,567,846,146,715"/>
+<area shape="rect" href="namespacefast__float__module.html#ab84ee3f6396f64b30d33a53edc845192" title="Clinger fast path for double precision." alt="" coords="204,615,361,655"/>
+<area shape="poly" title=" " alt="" coords="151,669,198,656,199,661,152,675"/>
+<area shape="rect" href="namespacefast__float__module.html#a34ebed8f392eed32171825921225c7d1" title="Compute error adjusted mantissa." alt="" coords="415,157,562,197"/>
+<area shape="poly" title=" " alt="" coords="94,670,219,498,310,378,407,258,455,206,459,209,411,262,314,381,223,501,98,673"/>
+<area shape="rect" href="namespacefast__float__module.html#a3dccfc96e927157dfe3c7d89c814cf75" title="Compute the Eisel&#45;Lemire float approximation." alt="" coords="415,633,562,673"/>
+<area shape="poly" title=" " alt="" coords="156,683,361,664,401,660,402,665,362,669,156,688"/>
+<area shape="rect" href="namespacefast__float__module.html#a4b8fb8b9741abb502f1f2abb5441e54e" title="Digit comparison fallback." alt="" coords="209,868,356,908"/>
+<area shape="poly" title=" " alt="" coords="98,711,143,770,206,835,236,858,233,863,202,839,139,773,94,714"/>
+<area shape="rect" href="namespacefast__float__module.html#a9c934c61ac0a9105f681ccabb3986043" title="Compute error&#45;scaled adjusted mantissa." alt="" coords="616,107,783,147"/>
+<area shape="poly" title=" " alt="" coords="562,157,602,147,604,152,563,162"/>
+<area shape="rect" href="namespacefast__float__module.html#af869682752534bd0deac3196f2502646" title="Compute the product approximation for Eisel&#45;Lemire." alt="" coords="626,539,773,579"/>
+<area shape="poly" title=" " alt="" coords="517,196,545,224,570,259,584,290,591,318,594,368,598,418,605,445,618,475,639,503,663,528,659,531,635,507,614,477,600,446,592,418,589,368,586,319,579,292,566,261,541,227,513,199"/>
+<area shape="rect" href="namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="1029,552,1184,592"/>
+<area shape="poly" title=" " alt="" coords="498,155,516,125,541,89,575,55,615,28,660,12,698,9,736,16,784,28,808,40,832,55,876,67,914,71,949,80,966,90,983,108,1002,135,1015,161,1023,187,1027,212,1025,262,1015,311,1005,360,1000,411,1007,464,1017,491,1032,520,1052,542,1048,546,1027,523,1012,493,1002,465,995,411,1000,359,1010,310,1019,261,1021,212,1018,188,1010,163,998,137,979,111,963,95,947,84,913,76,875,72,830,60,806,45,782,33,735,21,698,15,661,18,617,33,578,59,545,93,520,128,502,158"/>
+<area shape="rect" href="namespacefast__float__module.html#a5b56697a868ca3f61bdb494294b6e93c" title="Convert a base&#45;10 exponent to base&#45;2." alt="" coords="833,145,979,185"/>
+<area shape="poly" title=" " alt="" coords="784,140,820,147,819,152,783,145"/>
+<area shape="poly" title=" " alt="" coords="868,146,866,136,872,127,886,121,906,119,930,122,942,129,940,134,928,127,906,124,887,126,875,131,871,137,873,144"/>
+<area shape="rect" href="namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="833,413,979,453"/>
+<area shape="poly" title=" " alt="" coords="749,536,781,518,805,494,829,470,847,458,850,462,832,474,809,498,784,522,752,541"/>
+<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="833,907,979,947"/>
+<area shape="poly" title=" " alt="" coords="729,577,758,605,785,640,805,688,812,729,817,770,833,819,856,859,881,894,877,897,851,862,828,821,812,771,806,730,800,690,780,643,754,608,725,581"/>
+<area shape="poly" title=" " alt="" coords="868,907,866,897,872,888,886,882,906,880,930,883,942,890,940,895,928,888,906,885,887,887,875,892,871,898,873,906"/>
+<area shape="poly" title=" " alt="" coords="1069,552,1067,542,1073,533,1086,527,1107,525,1130,528,1143,536,1140,540,1128,533,1107,531,1088,533,1077,537,1072,543,1075,551"/>
+<area shape="poly" title=" " alt="" coords="503,631,549,578,580,549,615,524,639,513,662,507,704,505,743,500,762,491,781,474,801,445,811,417,813,390,812,362,809,302,814,270,828,235,845,212,864,192,868,196,849,215,833,237,819,271,814,303,817,361,819,390,816,418,806,448,785,478,765,495,745,505,705,511,663,513,641,518,617,529,583,553,553,582,507,635"/>
+<area shape="poly" title=" " alt="" coords="533,631,640,582,643,587,535,636"/>
+<area shape="poly" title=" " alt="" coords="517,672,544,697,570,728,585,759,591,786,599,811,618,835,644,848,695,865,820,902,819,907,693,870,642,853,614,839,594,813,586,787,580,760,566,731,540,701,513,676"/>
+<area shape="poly" title=" " alt="" coords="562,642,687,620,743,605,781,589,797,571,803,551,811,531,829,514,859,502,890,497,921,497,953,502,1012,520,1062,543,1060,548,1011,525,952,507,921,502,890,502,860,507,832,518,815,534,808,553,801,574,784,593,745,610,688,625,563,647"/>
+<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="1033,929,1180,969"/>
+<area shape="poly" title=" " alt="" coords="514,672,570,728,583,747,592,763,601,777,617,791,667,817,711,832,753,838,794,839,879,842,928,850,982,868,1029,892,1070,919,1067,923,1027,897,980,873,927,856,879,847,793,845,752,843,710,837,665,822,615,796,597,781,587,766,579,749,566,731,511,675"/>
+<area shape="poly" title=" " alt="" coords="1069,930,1067,920,1073,911,1086,905,1107,903,1130,906,1143,913,1140,918,1128,911,1107,908,1088,910,1077,915,1072,921,1075,928"/>
+<area shape="rect" href="namespacefast__float__module.html#ae12179bf230b567a0adbe36acc25f1fe" title="Create an empty bigint." alt="" coords="415,944,562,984"/>
+<area shape="poly" title=" " alt="" coords="339,906,422,937,420,942,337,911"/>
+<area shape="rect" href="namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a" title="Negative digit comparison path." alt="" coords="409,1187,568,1227"/>
+<area shape="poly" title=" " alt="" coords="299,907,469,1173,465,1176,295,910"/>
+<area shape="rect" href="namespacefast__float__module.html#af7d24a49942e0dabf1cabaf827a1c07f" title="Parse mantissa digits into a bigint." alt="" coords="415,272,562,312"/>
+<area shape="poly" title=" " alt="" coords="289,867,359,666,474,324,479,326,364,668,294,869"/>
+<area shape="rect" href="namespacefast__float__module.html#ab08f4623be79e78dafe3019051379980" title="Positive digit comparison path." alt="" coords="412,741,565,781"/>
+<area shape="poly" title=" " alt="" coords="315,866,442,787,445,791,318,870"/>
+<area shape="rect" href="namespacefast__float__module.html#ab5e6a40c5579c822b8de772cdcf68c22" title="Scale the exponent by the number of digits in the mantissa." alt="" coords="415,880,562,920"/>
+<area shape="poly" title=" " alt="" coords="356,890,402,892,401,898,356,895"/>
+<area shape="poly" title=" " alt="" coords="496,1185,514,1150,540,1107,574,1061,614,1021,622,1015,625,1020,618,1025,578,1064,544,1109,519,1153,501,1188"/>
+<area shape="rect" href="namespacefast__float__module.html#a3d67c988e0f66ee883836c8ae3339533" title="Compare two bigints." alt="" coords="626,1187,773,1227"/>
+<area shape="poly" title=" " alt="" coords="568,1204,612,1204,612,1209,568,1209"/>
+<area shape="rect" href="namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="626,1480,773,1520"/>
+<area shape="poly" title=" " alt="" coords="497,1226,510,1274,534,1338,569,1406,592,1438,618,1466,623,1470,620,1475,614,1470,588,1441,565,1409,529,1340,505,1276,492,1227"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="833,1333,979,1373"/>
+<area shape="poly" title=" " alt="" coords="507,1225,553,1274,583,1299,617,1319,667,1337,720,1347,771,1353,819,1355,819,1360,771,1358,719,1353,666,1342,615,1324,580,1304,549,1278,503,1229"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="833,1251,979,1291"/>
+<area shape="poly" title=" " alt="" coords="510,1225,556,1266,585,1285,617,1300,673,1311,731,1311,786,1304,835,1292,836,1297,787,1309,731,1317,672,1317,615,1305,582,1290,552,1270,506,1229"/>
+<area shape="rect" href="namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="626,1035,773,1075"/>
+<area shape="poly" title=" " alt="" coords="505,1184,551,1135,582,1108,615,1084,625,1078,628,1083,617,1089,585,1113,555,1139,509,1188"/>
+<area shape="rect" href="namespacefast__float__module.html#a25e25f3ff77a20878482b54f08b5a5dd" title="Round tie&#45;even using digit comparison ordering." alt="" coords="621,1099,778,1139"/>
+<area shape="poly" title=" " alt="" coords="533,1184,615,1148,632,1141,634,1146,617,1153,535,1189"/>
+<area shape="rect" href="namespacefast__float__module.html#a2b5f87588cdb53203c8c9c9b68225a66" title="Convert a float to its extended halfway representation." alt="" coords="619,1416,780,1456"/>
+<area shape="poly" title=" " alt="" coords="501,1226,545,1306,578,1353,618,1395,634,1407,631,1411,614,1399,574,1357,540,1309,497,1228"/>
+<area shape="poly" title=" " alt="" coords="741,1184,762,1169,780,1149,794,1123,801,1099,802,1053,804,1006,812,982,829,957,832,954,836,957,833,960,817,984,809,1007,807,1053,806,1100,799,1125,785,1152,766,1173,744,1189"/>
+<area shape="poly" title=" " alt="" coords="661,1187,658,1177,665,1168,678,1162,699,1160,723,1163,737,1170,734,1175,722,1168,699,1165,680,1167,668,1172,664,1178,666,1186"/>
+<area shape="rect" href="namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="833,1187,979,1227"/>
+<area shape="poly" title=" " alt="" coords="773,1204,819,1204,819,1209,773,1209"/>
+<area shape="poly" title=" " alt="" coords="868,1187,866,1177,872,1168,886,1162,906,1160,930,1163,942,1170,940,1175,928,1168,906,1165,887,1167,875,1172,871,1178,873,1186"/>
+<area shape="rect" href="namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="833,1480,979,1520"/>
+<area shape="poly" title=" " alt="" coords="773,1497,819,1497,819,1503,773,1503"/>
+<area shape="rect" href="namespacefast__float__module.html#a08efb715246ed5f2def9b97783e43d7a" title="Push a value onto the stack vector." alt="" coords="833,1544,979,1584"/>
+<area shape="poly" title=" " alt="" coords="765,1518,829,1537,827,1543,764,1523"/>
+<area shape="rect" href="namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="1033,1333,1180,1373"/>
+<area shape="poly" title=" " alt="" coords="979,1351,1019,1351,1019,1356,979,1356"/>
+<area shape="rect" href="namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="1033,1251,1180,1291"/>
+<area shape="poly" title=" " alt="" coords="979,1268,1019,1268,1019,1273,979,1273"/>
+<area shape="rect" href="namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="1232,1193,1379,1233"/>
+<area shape="poly" title=" " alt="" coords="975,1248,1029,1236,1127,1223,1218,1215,1219,1220,1127,1228,1030,1241,977,1253"/>
+<area shape="poly" title=" " alt="" coords="1176,1248,1221,1235,1223,1240,1177,1253"/>
+<area shape="poly" title=" " alt="" coords="762,1032,781,1021,796,1005,804,990,813,973,829,957,836,952,839,956,832,961,818,976,809,992,800,1008,784,1025,764,1037"/>
+<area shape="rect" href="namespacefast__float__module.html#a3a6b45e929ae58a5ebef3f7aaa6aa370" title="Round down implementation." alt="" coords="833,971,979,1011"/>
+<area shape="poly" title=" " alt="" coords="764,1032,827,1012,829,1017,765,1037"/>
+<area shape="rect" href="namespacefast__float__module.html#a0a805e389062ab308ce01b45b44304cf" title="Finish rounding: handle overflow and infinity." alt="" coords="833,1035,979,1075"/>
+<area shape="poly" title=" " alt="" coords="773,1052,819,1052,819,1057,773,1057"/>
+<area shape="poly" title=" " alt="" coords="955,1032,980,1020,1061,974,1063,979,983,1025,957,1037"/>
+<area shape="poly" title=" " alt="" coords="766,1096,781,1085,793,1069,800,1054,804,1023,809,990,816,974,829,957,833,953,836,957,833,960,821,976,814,992,810,1023,805,1055,798,1072,785,1089,769,1101"/>
+<area shape="poly" title=" " alt="" coords="764,1096,827,1076,829,1081,765,1101"/>
+<area shape="rect" href="namespacefast__float__module.html#a4a1f0051d9f6eb00ca382f6fa7e68b5c" title="Round to nearest using comparison ordering." alt="" coords="831,1099,981,1139"/>
+<area shape="poly" title=" " alt="" coords="778,1116,817,1116,817,1121,778,1121"/>
+<area shape="rect" href="namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="833,1416,979,1456"/>
+<area shape="poly" title=" " alt="" coords="780,1433,819,1433,819,1439,780,1439"/>
+<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="833,5,979,45"/>
+<area shape="poly" title=" " alt="" coords="536,269,680,206,781,157,876,54,880,58,784,161,682,211,538,274"/>
+<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="626,360,773,400"/>
+<area shape="poly" title=" " alt="" coords="539,310,639,352,637,357,537,315"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="833,272,979,312"/>
+<area shape="poly" title=" " alt="" coords="556,269,616,257,699,250,783,257,828,266,827,271,782,263,699,256,616,263,557,275"/>
+<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="626,424,773,464"/>
+<area shape="poly" title=" " alt="" coords="509,311,555,359,585,386,617,410,628,416,625,420,615,414,582,390,551,363,505,314"/>
+<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="626,43,773,83"/>
+<area shape="poly" title=" " alt="" coords="511,270,539,242,566,208,580,176,586,148,594,121,614,93,619,89,622,93,618,96,598,124,591,150,585,178,570,211,543,245,515,274"/>
+<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="626,272,773,312"/>
+<area shape="poly" title=" " alt="" coords="562,289,612,289,612,295,562,295"/>
+<area shape="poly" title=" " alt="" coords="959,43,983,62,1033,119,1070,171,1097,221,1118,270,1149,378,1187,515,1213,611,1236,709,1270,902,1292,1067,1304,1179,1299,1180,1287,1068,1265,903,1230,710,1208,612,1181,517,1144,380,1113,272,1092,223,1065,174,1029,122,980,66,956,48"/>
+<area shape="rect" href="namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="1033,5,1180,45"/>
+<area shape="poly" title=" " alt="" coords="979,23,1019,23,1019,28,979,28"/>
+<area shape="poly" title=" " alt="" coords="661,360,658,350,665,341,678,335,699,333,723,336,737,344,734,348,722,341,699,339,680,341,668,345,664,351,666,359"/>
+<area shape="poly" title=" " alt="" coords="746,357,845,315,847,320,749,362"/>
+<area shape="poly" title=" " alt="" coords="868,272,866,262,872,253,886,247,906,245,930,248,942,256,940,260,928,253,906,251,887,253,875,257,871,263,873,271"/>
+<area shape="poly" title=" " alt="" coords="773,47,819,38,820,44,774,52"/>
+<area shape="poly" title=" " alt="" coords="773,289,819,289,819,295,773,295"/>
+<area shape="rect" href="namespacefast__float__module.html#a2efdc55b08697ee5b6659a673cd023a9" title="Compute bit length of a bigint." alt="" coords="626,677,773,717"/>
+<area shape="poly" title=" " alt="" coords="554,739,619,719,621,724,556,744"/>
+<area shape="rect" href="namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="626,741,773,781"/>
+<area shape="poly" title=" " alt="" coords="566,759,612,759,612,764,566,764"/>
+<area shape="rect" href="namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="626,1251,773,1291"/>
+<area shape="poly" title=" " alt="" coords="518,780,546,807,570,843,590,901,595,954,590,1003,582,1049,576,1095,576,1140,588,1187,601,1212,618,1237,620,1240,616,1243,614,1240,596,1214,583,1189,571,1141,570,1094,577,1049,585,1002,589,954,585,902,566,845,542,811,514,783"/>
+<area shape="rect" href="namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="626,907,773,947"/>
+<area shape="poly" title=" " alt="" coords="544,779,570,798,587,821,594,843,602,864,618,886,633,898,630,902,614,890,597,867,589,845,582,824,566,802,540,784"/>
+<area shape="poly" title=" " alt="" coords="661,678,658,668,665,659,678,653,699,651,723,654,737,661,734,666,722,659,699,656,680,658,668,663,664,669,666,676"/>
+<area shape="rect" href="namespacefast__float__module.html#a258f8750d36535cf5b9e8497a833800f" title="Count leading zeros of a bigint." alt="" coords="833,552,979,592"/>
+<area shape="poly" title=" " alt="" coords="726,675,829,602,841,596,843,600,832,606,729,679"/>
+<area shape="poly" title=" " alt="" coords="979,569,1015,569,1015,575,979,575"/>
+<area shape="poly" title=" " alt="" coords="868,552,866,542,872,533,886,527,906,525,930,528,942,536,940,540,928,533,906,531,887,533,875,537,871,543,873,551"/>
+<area shape="rect" href="namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700" title="Extract high 64 bits from a single limb." alt="" coords="833,680,979,720"/>
+<area shape="poly" title=" " alt="" coords="767,739,824,721,826,726,768,744"/>
+<area shape="rect" href="namespacefast__float__module.html#a70e0d2a9188d831137ab521f9c1a1639" title="Extract high 64 bits from two limbs." alt="" coords="833,616,979,656"/>
+<area shape="poly" title=" " alt="" coords="762,739,781,727,796,712,804,698,813,682,829,666,836,661,840,665,832,670,818,685,809,700,800,716,784,731,764,743"/>
+<area shape="rect" href="namespacefast__float__module.html#a536da3d7a72ca4d6b052d813648fde0b" title="Check if any non&#45;zero elements exist after index i." alt="" coords="833,768,979,808"/>
+<area shape="poly" title=" " alt="" coords="774,768,819,774,819,779,773,773"/>
+<area shape="poly" title=" " alt="" coords="957,678,980,666,1029,633,1071,599,1074,603,1032,637,983,670,960,682"/>
+<area shape="poly" title=" " alt="" coords="969,613,1030,594,1031,599,970,618"/>
+<area shape="poly" title=" " alt="" coords="868,768,866,758,872,749,886,743,906,741,930,744,942,752,940,756,928,749,906,747,887,749,875,753,871,759,873,767"/>
+<area shape="poly" title=" " alt="" coords="751,1288,844,1326,842,1331,749,1293"/>
+<area shape="poly" title=" " alt="" coords="773,1268,819,1268,819,1273,773,1273"/>
+<area shape="poly" title=" " alt="" coords="773,924,819,924,819,929,773,929"/>
+<area shape="poly" title=" " alt="" coords="764,944,784,957,800,973,809,989,818,1005,832,1021,839,1025,836,1030,829,1025,813,1008,804,992,796,976,781,961,762,949"/>
+<area shape="poly" title=" " alt="" coords="450,880,448,870,454,861,468,855,489,853,513,856,526,864,523,868,511,861,489,859,469,861,457,865,453,871,455,879"/>
 </map>
 </div>
 
@@ -2999,39 +3101,144 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Parse a string range to double, subroutine form. </p>
+<p>Parse a string range to double, subroutine form. Parse a string range to double, subroutine form. Hot-path routines manually inlined for performance without LTO. </p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph.png" border="0" usemap="#anamespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph" alt=""/></div>
 <map name="anamespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph" id="anamespacefast__float__module_ae989fabf07ecc6ad52c17d513a0ce11b_cgraph">
-<area shape="rect" title="Parse a string range to double, subroutine form." alt="" coords="5,193,188,233"/>
-<area shape="rect" href="namespacefast__float__module.html#aa6ba76c7b322acedfb93e014aa22d8ec" title="Parse inf/nan for double precision." alt="" coords="242,117,389,157"/>
-<area shape="poly" title=" " alt="" coords="154,191,243,159,245,164,156,196"/>
-<area shape="rect" href="namespacefast__float__module.html#ac55e14914ae42c302e7606bbb1023575" title="Parse a number string into mantissa, exponent, and sign." alt="" coords="236,225,395,265"/>
-<area shape="poly" title=" " alt="" coords="189,224,223,229,222,234,188,229"/>
-<area shape="rect" href="namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="443,29,589,69"/>
-<area shape="poly" title=" " alt="" coords="361,115,456,73,458,77,363,120"/>
-<area shape="rect" href="namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="443,117,589,157"/>
-<area shape="poly" title=" " alt="" coords="389,135,429,135,429,140,389,140"/>
-<area shape="poly" title=" " alt="" coords="479,30,477,20,483,11,496,5,516,3,539,6,551,13,549,17,537,11,516,8,497,10,486,15,482,21,484,28"/>
-<area shape="poly" title=" " alt="" coords="479,118,477,108,483,99,496,93,516,91,539,94,551,101,549,105,537,99,516,96,497,98,486,103,482,109,484,116"/>
-<area shape="rect" href="namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="443,181,589,221"/>
-<area shape="poly" title=" " alt="" coords="394,225,428,218,430,223,395,231"/>
-<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="443,269,589,309"/>
-<area shape="poly" title=" " alt="" coords="395,260,430,268,428,273,394,265"/>
-<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="443,357,589,397"/>
-<area shape="poly" title=" " alt="" coords="348,263,475,347,472,352,345,268"/>
-<area shape="rect" href="namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="637,117,784,157"/>
-<area shape="poly" title=" " alt="" coords="577,179,635,159,637,164,578,184"/>
-<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="637,181,784,221"/>
-<area shape="poly" title=" " alt="" coords="589,199,623,199,623,204,589,204"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="637,269,784,309"/>
-<area shape="poly" title=" " alt="" coords="564,219,590,231,656,261,653,266,588,236,562,224"/>
-<area shape="poly" title=" " alt="" coords="674,118,672,108,678,99,691,93,711,91,734,94,746,101,743,105,732,99,711,96,692,98,681,103,677,109,679,116"/>
-<area shape="poly" title=" " alt="" coords="674,270,672,260,678,251,691,245,711,243,734,246,746,253,743,257,732,251,711,248,692,250,681,255,677,261,679,268"/>
-<area shape="poly" title=" " alt="" coords="479,270,477,260,483,251,496,245,516,243,539,246,551,253,549,257,537,251,516,248,497,250,486,255,482,261,484,268"/>
-<area shape="poly" title=" " alt="" coords="479,358,477,348,483,339,496,333,516,331,539,334,551,341,549,345,537,339,516,336,497,338,486,343,482,349,484,356"/>
+<area shape="rect" title="Parse a string range to double, subroutine form. Parse a string range to double, subroutine form...." alt="" coords="5,839,188,879"/>
+<area shape="rect" href="namespacefast__float__module.html#abfc723432befd95d402dc92811c7a65a" title="Convert adjusted mantissa to double precision." alt="" coords="658,397,805,437"/>
+<area shape="poly" title=" " alt="" coords="123,837,401,624,555,510,647,446,659,440,662,445,649,451,558,514,404,629,126,841"/>
+<area shape="rect" href="namespacefast__float__module.html#ab84ee3f6396f64b30d33a53edc845192" title="Clinger fast path for double precision." alt="" coords="236,1090,393,1130"/>
+<area shape="poly" title=" " alt="" coords="108,879,126,919,154,972,192,1027,238,1076,244,1081,241,1085,234,1080,187,1031,150,975,122,922,103,881"/>
+<area shape="rect" href="namespacefast__float__module.html#a34ebed8f392eed32171825921225c7d1" title="Compute error adjusted mantissa." alt="" coords="447,167,594,207"/>
+<area shape="poly" title=" " alt="" coords="101,838,149,697,187,602,234,509,282,426,323,363,372,306,440,239,472,213,475,217,443,243,376,310,328,367,286,428,238,511,192,604,154,699,106,840"/>
+<area shape="rect" href="namespacefast__float__module.html#a3dccfc96e927157dfe3c7d89c814cf75" title="Compute the Eisel&#45;Lemire float approximation." alt="" coords="447,253,594,293"/>
+<area shape="poly" title=" " alt="" coords="107,837,160,747,234,631,304,534,376,441,491,301,495,305,380,445,308,538,238,634,164,749,112,840"/>
+<area shape="rect" href="namespacefast__float__module.html#a4b8fb8b9741abb502f1f2abb5441e54e" title="Digit comparison fallback." alt="" coords="241,1026,388,1066"/>
+<area shape="poly" title=" " alt="" coords="123,878,281,1014,278,1019,120,882"/>
+<area shape="rect" href="namespacefast__float__module.html#aa6ba76c7b322acedfb93e014aa22d8ec" title="Parse inf/nan for double precision." alt="" coords="241,1454,388,1494"/>
+<area shape="poly" title=" " alt="" coords="108,878,304,1440,299,1442,103,880"/>
+<area shape="rect" href="namespacefast__float__module.html#a9c934c61ac0a9105f681ccabb3986043" title="Compute error&#45;scaled adjusted mantissa." alt="" coords="648,66,815,106"/>
+<area shape="poly" title=" " alt="" coords="561,165,647,122,674,109,676,114,649,127,563,169"/>
+<area shape="rect" href="namespacefast__float__module.html#af869682752534bd0deac3196f2502646" title="Compute the product approximation for Eisel&#45;Lemire." alt="" coords="658,181,805,221"/>
+<area shape="poly" title=" " alt="" coords="594,189,644,192,644,198,594,195"/>
+<area shape="rect" href="namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="1061,238,1216,278"/>
+<area shape="poly" title=" " alt="" coords="531,166,550,138,576,106,608,75,647,51,700,30,748,15,792,6,834,3,876,7,919,19,965,38,1015,65,1037,80,1056,99,1089,141,1113,186,1129,224,1124,226,1108,188,1084,144,1052,102,1033,84,1012,69,962,43,917,24,875,13,834,8,793,11,749,20,702,35,649,56,612,79,580,109,554,141,536,168"/>
+<area shape="rect" href="namespacefast__float__module.html#a5b56697a868ca3f61bdb494294b6e93c" title="Convert a base&#45;10 exponent to base&#45;2." alt="" coords="865,103,1011,143"/>
+<area shape="poly" title=" " alt="" coords="816,98,852,105,851,110,815,104"/>
+<area shape="poly" title=" " alt="" coords="900,103,898,94,904,84,918,79,938,77,962,79,974,87,972,91,960,84,938,82,919,84,907,89,903,94,905,102"/>
+<area shape="rect" href="namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="865,181,1011,221"/>
+<area shape="poly" title=" " alt="" coords="805,198,851,198,851,203,805,203"/>
+<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="865,485,1011,525"/>
+<area shape="poly" title=" " alt="" coords="748,219,817,339,830,370,838,396,847,420,865,447,894,475,890,478,861,450,842,422,833,398,825,372,812,342,743,222"/>
+<area shape="poly" title=" " alt="" coords="900,485,898,475,904,466,918,460,938,458,962,461,974,468,972,473,960,466,938,463,919,465,907,470,903,476,905,484"/>
+<area shape="poly" title=" " alt="" coords="1101,238,1099,228,1105,219,1118,213,1139,211,1162,214,1175,221,1172,226,1160,219,1139,217,1120,218,1109,223,1104,229,1107,237"/>
+<area shape="poly" title=" " alt="" coords="553,250,598,217,612,203,620,190,630,178,647,166,697,145,750,132,802,123,851,120,851,125,803,129,751,137,699,150,649,171,634,182,625,193,616,207,602,221,556,255"/>
+<area shape="poly" title=" " alt="" coords="579,250,658,223,660,228,581,255"/>
+<area shape="poly" title=" " alt="" coords="567,290,649,325,697,339,736,347,773,358,816,382,833,398,842,414,851,429,865,447,897,475,894,479,861,450,846,432,838,416,829,402,813,387,771,363,734,352,695,344,647,330,565,295"/>
+<area shape="poly" title=" " alt="" coords="594,268,1047,257,1048,263,594,273"/>
+<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="1065,501,1212,541"/>
+<area shape="poly" title=" " alt="" coords="595,276,700,288,823,306,936,329,981,343,1015,358,1051,386,1081,420,1106,456,1124,487,1119,490,1101,458,1077,424,1047,390,1012,363,979,348,935,334,822,311,700,294,594,282"/>
+<area shape="poly" title=" " alt="" coords="1101,501,1099,491,1105,482,1118,476,1139,474,1162,477,1175,484,1172,489,1160,482,1139,479,1120,481,1109,486,1104,492,1107,500"/>
+<area shape="rect" href="namespacefast__float__module.html#ae12179bf230b567a0adbe36acc25f1fe" title="Create an empty bigint." alt="" coords="447,1278,594,1318"/>
+<area shape="poly" title=" " alt="" coords="381,1064,395,1076,412,1101,419,1125,420,1172,421,1218,428,1241,443,1264,446,1267,442,1271,439,1268,423,1243,415,1219,415,1172,414,1126,407,1103,391,1080,378,1068"/>
+<area shape="rect" href="namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a" title="Negative digit comparison path." alt="" coords="441,741,600,781"/>
+<area shape="poly" title=" " alt="" coords="328,1024,495,790,499,793,332,1027"/>
+<area shape="rect" href="namespacefast__float__module.html#af7d24a49942e0dabf1cabaf827a1c07f" title="Parse mantissa digits into a bigint." alt="" coords="447,1214,594,1254"/>
+<area shape="poly" title=" " alt="" coords="375,1064,395,1076,428,1105,458,1138,502,1200,498,1203,454,1141,424,1109,392,1080,373,1068"/>
+<area shape="rect" href="namespacefast__float__module.html#ab08f4623be79e78dafe3019051379980" title="Positive digit comparison path." alt="" coords="444,1026,597,1066"/>
+<area shape="poly" title=" " alt="" coords="388,1043,430,1043,430,1049,388,1049"/>
+<area shape="rect" href="namespacefast__float__module.html#ab5e6a40c5579c822b8de772cdcf68c22" title="Scale the exponent by the number of digits in the mantissa." alt="" coords="447,1366,594,1406"/>
+<area shape="poly" title=" " alt="" coords="382,1064,395,1076,416,1109,425,1141,427,1171,424,1201,421,1231,421,1262,427,1294,444,1328,470,1356,467,1360,439,1331,422,1296,415,1263,416,1231,419,1201,421,1171,420,1141,411,1111,391,1080,378,1068"/>
+<area shape="poly" title=" " alt="" coords="543,739,572,707,598,669,610,637,615,608,614,554,613,528,617,502,627,475,646,447,649,443,653,447,650,450,631,478,622,503,619,529,619,554,620,608,615,638,602,671,576,711,547,742"/>
+<area shape="rect" href="namespacefast__float__module.html#a3d67c988e0f66ee883836c8ae3339533" title="Compare two bigints." alt="" coords="658,485,805,525"/>
+<area shape="poly" title=" " alt="" coords="541,738,570,707,598,669,612,632,617,599,624,568,632,552,646,535,651,530,654,534,650,538,637,554,629,570,622,600,617,633,602,671,574,710,545,742"/>
+<area shape="rect" href="namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="658,805,805,845"/>
+<area shape="poly" title=" " alt="" coords="588,778,653,798,651,803,586,783"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="865,1049,1011,1089"/>
+<area shape="poly" title=" " alt="" coords="545,779,592,816,649,854,674,865,696,871,736,876,775,885,795,895,817,912,829,926,836,941,843,969,848,997,854,1011,865,1025,880,1039,876,1043,861,1029,849,1014,843,998,837,970,831,943,825,929,813,916,792,900,773,890,735,882,695,876,672,870,647,859,588,821,542,783"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="865,1118,1011,1158"/>
+<area shape="poly" title=" " alt="" coords="535,779,580,845,612,881,649,912,672,923,694,928,735,929,775,932,795,940,816,956,831,974,839,992,843,1027,846,1063,852,1081,865,1099,874,1108,871,1112,861,1102,848,1083,841,1064,838,1028,834,993,827,976,813,960,793,945,773,937,734,934,693,933,670,928,647,916,608,885,575,848,531,782"/>
+<area shape="rect" href="namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="658,549,805,589"/>
+<area shape="poly" title=" " alt="" coords="538,739,598,668,619,631,629,615,646,599,654,593,657,597,650,603,633,619,624,634,602,671,542,742"/>
+<area shape="rect" href="namespacefast__float__module.html#a25e25f3ff77a20878482b54f08b5a5dd" title="Round tie&#45;even using digit comparison ordering." alt="" coords="653,741,810,781"/>
+<area shape="poly" title=" " alt="" coords="600,758,639,758,639,763,600,763"/>
+<area shape="rect" href="namespacefast__float__module.html#a2b5f87588cdb53203c8c9c9b68225a66" title="Convert a float to its extended halfway representation." alt="" coords="651,613,812,653"/>
+<area shape="poly" title=" " alt="" coords="543,738,589,701,647,662,659,656,662,660,649,667,592,705,546,743"/>
+<area shape="poly" title=" " alt="" coords="805,502,851,502,851,507,805,507"/>
+<area shape="poly" title=" " alt="" coords="693,485,690,475,697,466,710,460,731,458,755,461,769,468,766,473,754,466,731,463,712,465,700,470,696,476,698,484"/>
+<area shape="rect" href="namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="865,397,1011,437"/>
+<area shape="poly" title=" " alt="" coords="778,482,877,440,879,444,781,487"/>
+<area shape="poly" title=" " alt="" coords="900,397,898,387,904,378,918,372,938,370,962,373,974,380,972,385,960,378,938,375,919,377,907,382,903,388,905,396"/>
+<area shape="rect" href="namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="865,805,1011,845"/>
+<area shape="poly" title=" " alt="" coords="805,822,851,822,851,827,805,827"/>
+<area shape="rect" href="namespacefast__float__module.html#a08efb715246ed5f2def9b97783e43d7a" title="Push a value onto the stack vector." alt="" coords="865,869,1011,909"/>
+<area shape="poly" title=" " alt="" coords="797,842,861,862,859,867,796,847"/>
+<area shape="rect" href="namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="1065,1049,1212,1089"/>
+<area shape="poly" title=" " alt="" coords="1011,1066,1051,1066,1051,1071,1011,1071"/>
+<area shape="rect" href="namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="1065,1170,1212,1210"/>
+<area shape="poly" title=" " alt="" coords="1012,1154,1052,1165,1051,1170,1011,1159"/>
+<area shape="rect" href="namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="1264,1170,1411,1210"/>
+<area shape="poly" title=" " alt="" coords="1012,1137,1109,1142,1216,1155,1257,1164,1256,1169,1216,1161,1109,1148,1011,1142"/>
+<area shape="poly" title=" " alt="" coords="1212,1187,1250,1187,1250,1193,1212,1193"/>
+<area shape="poly" title=" " alt="" coords="796,546,859,526,861,531,797,551"/>
+<area shape="rect" href="namespacefast__float__module.html#a3a6b45e929ae58a5ebef3f7aaa6aa370" title="Round down implementation." alt="" coords="865,549,1011,589"/>
+<area shape="poly" title=" " alt="" coords="805,566,851,566,851,571,805,571"/>
+<area shape="rect" href="namespacefast__float__module.html#a0a805e389062ab308ce01b45b44304cf" title="Finish rounding: handle overflow and infinity." alt="" coords="865,677,1011,717"/>
+<area shape="poly" title=" " alt="" coords="796,586,816,598,832,615,841,631,850,647,864,663,871,667,868,671,861,667,845,650,836,634,828,618,813,603,794,591"/>
+<area shape="poly" title=" " alt="" coords="992,674,1012,662,1043,636,1071,607,1115,550,1119,554,1075,610,1046,640,1015,667,995,679"/>
+<area shape="poly" title=" " alt="" coords="799,738,813,727,829,703,836,680,836,633,837,585,844,560,861,535,864,531,868,535,865,538,849,562,842,586,842,633,841,681,833,705,817,730,802,742"/>
+<area shape="poly" title=" " alt="" coords="796,738,859,718,861,723,797,743"/>
+<area shape="rect" href="namespacefast__float__module.html#a4a1f0051d9f6eb00ca382f6fa7e68b5c" title="Round to nearest using comparison ordering." alt="" coords="863,741,1013,781"/>
+<area shape="poly" title=" " alt="" coords="810,758,849,758,849,763,810,763"/>
+<area shape="rect" href="namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="865,613,1011,653"/>
+<area shape="poly" title=" " alt="" coords="812,630,851,630,851,635,812,635"/>
+<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="865,1235,1011,1275"/>
+<area shape="poly" title=" " alt="" coords="594,1235,851,1248,851,1253,594,1240"/>
+<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="658,1375,805,1415"/>
+<area shape="poly" title=" " alt="" coords="583,1252,602,1264,618,1281,628,1297,636,1313,650,1331,690,1365,687,1369,646,1334,632,1316,623,1299,614,1284,598,1268,580,1256"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="865,1375,1011,1415"/>
+<area shape="poly" title=" " alt="" coords="583,1251,692,1290,816,1337,884,1367,882,1372,814,1342,690,1295,582,1257"/>
+<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="658,1503,805,1543"/>
+<area shape="poly" title=" " alt="" coords="588,1252,602,1264,621,1294,629,1323,629,1351,626,1379,624,1406,624,1434,632,1461,650,1490,653,1493,649,1496,646,1493,627,1463,619,1435,618,1406,621,1378,624,1351,623,1324,616,1296,598,1268,585,1256"/>
+<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="658,1186,805,1226"/>
+<area shape="poly" title=" " alt="" coords="594,1222,644,1215,645,1220,595,1227"/>
+<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="658,1439,805,1479"/>
+<area shape="poly" title=" " alt="" coords="587,1252,602,1264,617,1285,624,1306,626,1347,629,1386,636,1406,650,1425,654,1429,650,1433,646,1429,631,1408,624,1387,621,1347,619,1307,612,1288,598,1268,584,1256"/>
+<area shape="poly" title=" " alt="" coords="1011,1247,1109,1236,1216,1219,1254,1211,1255,1216,1216,1225,1109,1241,1012,1252"/>
+<area shape="rect" href="namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="1065,1285,1212,1325"/>
+<area shape="poly" title=" " alt="" coords="1012,1271,1052,1281,1051,1286,1011,1276"/>
+<area shape="poly" title=" " alt="" coords="693,1376,690,1366,697,1356,710,1351,731,1349,755,1351,769,1359,766,1363,754,1357,731,1354,712,1356,700,1361,696,1366,698,1374"/>
+<area shape="poly" title=" " alt="" coords="805,1393,851,1393,851,1398,805,1398"/>
+<area shape="poly" title=" " alt="" coords="900,1375,898,1366,904,1356,918,1351,938,1349,962,1351,974,1359,972,1363,960,1356,938,1354,919,1356,907,1361,903,1366,905,1374"/>
+<area shape="poly" title=" " alt="" coords="806,1221,852,1232,851,1237,805,1226"/>
+<area shape="poly" title=" " alt="" coords="796,1437,859,1417,861,1422,797,1442"/>
+<area shape="rect" href="namespacefast__float__module.html#a2efdc55b08697ee5b6659a673cd023a9" title="Compute bit length of a bigint." alt="" coords="658,994,805,1034"/>
+<area shape="poly" title=" " alt="" coords="597,1032,644,1024,645,1030,598,1037"/>
+<area shape="rect" href="namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="658,1058,805,1098"/>
+<area shape="poly" title=" " alt="" coords="598,1055,645,1062,644,1067,597,1060"/>
+<area shape="rect" href="namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="658,1122,805,1162"/>
+<area shape="poly" title=" " alt="" coords="560,1064,649,1107,665,1114,663,1119,647,1112,558,1068"/>
+<area shape="rect" href="namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="658,677,805,717"/>
+<area shape="poly" title=" " alt="" coords="525,1025,575,869,610,784,628,750,646,727,651,723,654,726,650,730,633,753,615,786,580,871,530,1027"/>
+<area shape="poly" title=" " alt="" coords="693,994,690,984,697,975,710,969,731,967,755,970,769,977,766,982,754,975,731,973,712,974,700,979,696,985,698,993"/>
+<area shape="rect" href="namespacefast__float__module.html#a258f8750d36535cf5b9e8497a833800f" title="Count leading zeros of a bigint." alt="" coords="865,975,1011,1015"/>
+<area shape="poly" title=" " alt="" coords="805,1005,850,1000,851,1006,805,1010"/>
+<area shape="poly" title=" " alt="" coords="965,973,991,949,1011,919,1036,855,1049,799,1052,748,1050,698,1044,594,1047,533,1059,464,1088,368,1120,289,1125,291,1093,369,1064,465,1052,534,1049,594,1055,698,1057,748,1054,800,1041,857,1016,922,995,953,969,977"/>
+<area shape="poly" title=" " alt="" coords="900,975,898,966,904,956,918,951,938,949,962,951,974,959,972,963,960,956,938,954,919,956,907,961,903,966,905,974"/>
+<area shape="poly" title=" " alt="" coords="788,1119,867,1091,869,1096,789,1124"/>
+<area shape="poly" title=" " alt="" coords="805,1138,851,1137,851,1142,805,1143"/>
+<area shape="poly" title=" " alt="" coords="798,674,813,663,825,647,832,632,836,600,841,568,848,552,861,535,865,531,868,535,865,538,853,554,846,570,842,601,837,633,830,650,817,666,801,679"/>
+<area shape="poly" title=" " alt="" coords="805,694,851,694,851,699,805,699"/>
+<area shape="poly" title=" " alt="" coords="482,1366,480,1356,486,1347,500,1341,521,1339,545,1342,558,1349,555,1354,543,1347,521,1345,501,1346,489,1351,485,1357,487,1365"/>
+<area shape="rect" href="namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="447,1454,594,1494"/>
+<area shape="poly" title=" " alt="" coords="388,1471,434,1471,434,1477,388,1477"/>
+<area shape="rect" href="namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="447,1542,594,1582"/>
+<area shape="poly" title=" " alt="" coords="364,1492,462,1534,459,1539,362,1497"/>
+<area shape="poly" title=" " alt="" coords="482,1454,480,1444,486,1435,500,1429,521,1427,545,1430,558,1437,555,1442,543,1435,521,1433,501,1434,489,1439,485,1445,487,1453"/>
+<area shape="poly" title=" " alt="" coords="482,1542,480,1532,486,1523,500,1517,521,1515,545,1518,558,1525,555,1530,543,1523,521,1521,501,1522,489,1527,485,1533,487,1541"/>
 </map>
 </div>
 
@@ -3337,6 +3544,182 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="a5568d7560f743b7ae59a61f5681641bb" name="a5568d7560f743b7ae59a61f5681641bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5568d7560f743b7ae59a61f5681641bb">&#9670;&#160;</a></span>parse_float_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pure subroutine, public fast_float_module::parse_float_array </td>
+          <td>(</td>
+          <td class="paramtype">character(*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>stream</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real(sp), dimension(:), intent(out)</td>          <td class="paramname"><span class="paramname"><em>values</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">integer, intent(out)</td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1outcome.html">outcome</a>), intent(out)</td>          <td class="paramname"><span class="paramname"><em>err</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1parse__options.html">parse_options</a>), intent(in), optional</td>          <td class="paramname"><span class="paramname"><em>o</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parse a whitespace-delimited stream of single-precision floats into an array. Hot-path routines manually inlined for performance without LTO. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacefast__float__module_a5568d7560f743b7ae59a61f5681641bb_cgraph.png" border="0" usemap="#anamespacefast__float__module_a5568d7560f743b7ae59a61f5681641bb_cgraph" alt=""/></div>
+<map name="anamespacefast__float__module_a5568d7560f743b7ae59a61f5681641bb_cgraph" id="anamespacefast__float__module_a5568d7560f743b7ae59a61f5681641bb_cgraph">
+<area shape="rect" title="Parse a whitespace&#45;delimited stream of single&#45;precision floats into an array. Hot&#45;path routines manua..." alt="" coords="5,357,152,397"/>
+<area shape="rect" href="namespacefast__float__module.html#accb46877a970e907fb6985a5f63db1b6" title="Convert adjusted mantissa to single precision." alt="" coords="205,210,352,250"/>
+<area shape="poly" title=" " alt="" coords="95,355,139,308,198,260,208,254,211,259,202,264,143,312,99,358"/>
+<area shape="rect" href="namespacefast__float__module.html#a5655e8ef3e099a235a0fd3115ae12a9e" title="Clinger fast path for single precision." alt="" coords="200,274,357,314"/>
+<area shape="poly" title=" " alt="" coords="127,354,216,317,218,322,129,359"/>
+<area shape="rect" href="namespacefast__float__module.html#a34ebed8f392eed32171825921225c7d1" title="Compute error adjusted mantissa." alt="" coords="411,169,558,209"/>
+<area shape="poly" title=" " alt="" coords="152,368,269,351,321,339,356,324,373,305,381,286,388,264,403,240,434,214,438,218,407,244,393,266,386,287,378,308,359,328,322,344,270,357,153,373"/>
+<area shape="rect" href="namespacefast__float__module.html#a3dccfc96e927157dfe3c7d89c814cf75" title="Compute the Eisel&#45;Lemire float approximation." alt="" coords="411,254,558,294"/>
+<area shape="poly" title=" " alt="" coords="152,384,199,387,251,387,305,381,356,368,384,355,410,339,453,302,457,306,413,343,387,360,358,373,306,386,251,392,199,392,152,390"/>
+<area shape="rect" href="namespacefast__float__module.html#a4b8fb8b9741abb502f1f2abb5441e54e" title="Digit comparison fallback." alt="" coords="205,606,352,646"/>
+<area shape="poly" title=" " alt="" coords="98,395,255,593,251,597,94,399"/>
+<area shape="rect" href="namespacefast__float__module.html#a982324823ffb8ed4eb402f9f8b989d72" title="Check if a character is whitespace." alt="" coords="205,694,352,734"/>
+<area shape="poly" title=" " alt="" coords="87,396,101,446,124,513,158,587,178,623,202,656,232,684,228,688,198,660,174,626,153,590,119,515,96,448,82,398"/>
+<area shape="rect" href="namespacefast__float__module.html#a9c934c61ac0a9105f681ccabb3986043" title="Compute error&#45;scaled adjusted mantissa." alt="" coords="612,67,779,107"/>
+<area shape="poly" title=" " alt="" coords="525,166,611,124,638,111,640,116,613,128,527,171"/>
+<area shape="rect" href="namespacefast__float__module.html#af869682752534bd0deac3196f2502646" title="Compute the product approximation for Eisel&#45;Lemire." alt="" coords="622,182,769,222"/>
+<area shape="poly" title=" " alt="" coords="558,191,608,194,608,199,558,196"/>
+<area shape="rect" href="namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="1025,269,1180,309"/>
+<area shape="poly" title=" " alt="" coords="495,167,514,139,540,107,572,76,611,53,712,16,757,6,799,3,841,7,884,19,929,38,979,67,1003,85,1024,107,1058,158,1081,210,1096,255,1091,256,1076,212,1053,161,1020,111,999,89,976,71,927,43,882,24,840,12,799,8,757,11,713,21,613,58,576,81,544,111,518,143,500,170"/>
+<area shape="rect" href="namespacefast__float__module.html#a5b56697a868ca3f61bdb494294b6e93c" title="Convert a base&#45;10 exponent to base&#45;2." alt="" coords="829,105,975,145"/>
+<area shape="poly" title=" " alt="" coords="780,100,816,106,815,112,779,105"/>
+<area shape="poly" title=" " alt="" coords="864,105,862,95,868,86,882,80,902,78,926,81,938,88,936,93,924,86,902,83,883,85,871,90,867,96,869,104"/>
+<area shape="rect" href="namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="829,182,975,222"/>
+<area shape="poly" title=" " alt="" coords="769,199,815,199,815,205,769,205"/>
+<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="829,523,975,563"/>
+<area shape="poly" title=" " alt="" coords="712,221,781,334,805,385,829,435,879,511,875,514,824,438,800,387,776,337,708,224"/>
+<area shape="poly" title=" " alt="" coords="864,524,862,514,868,505,882,499,902,497,926,500,938,507,936,512,924,505,902,502,883,504,871,509,867,515,869,522"/>
+<area shape="poly" title=" " alt="" coords="1065,269,1063,259,1069,250,1082,244,1103,242,1126,245,1139,252,1136,257,1124,250,1103,247,1084,249,1073,254,1068,260,1071,268"/>
+<area shape="poly" title=" " alt="" coords="517,252,562,219,576,205,584,192,594,179,611,168,661,147,714,133,766,125,815,121,815,127,767,130,715,138,663,152,613,172,598,183,589,195,580,208,566,223,520,256"/>
+<area shape="poly" title=" " alt="" coords="543,251,622,224,624,229,545,257"/>
+<area shape="poly" title=" " alt="" coords="503,293,549,345,580,373,613,397,657,417,695,424,734,430,780,448,820,475,867,512,864,517,816,479,777,452,732,435,694,429,656,422,611,402,576,377,545,349,499,296"/>
+<area shape="poly" title=" " alt="" coords="558,273,977,282,1012,283,1012,288,977,287,558,278"/>
+<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="1029,546,1176,586"/>
+<area shape="poly" title=" " alt="" coords="559,279,685,300,742,315,780,333,793,346,800,359,806,385,811,410,818,423,828,435,847,449,864,458,898,466,935,471,978,485,1024,510,1064,536,1061,540,1021,514,976,490,934,476,897,471,863,463,844,453,825,439,813,426,806,412,801,386,795,361,788,349,777,338,740,320,684,305,558,284"/>
+<area shape="poly" title=" " alt="" coords="1065,546,1063,536,1069,527,1082,521,1103,519,1126,522,1139,530,1136,534,1124,527,1103,525,1084,527,1073,531,1068,537,1071,545"/>
+<area shape="rect" href="namespacefast__float__module.html#ae12179bf230b567a0adbe36acc25f1fe" title="Create an empty bigint." alt="" coords="411,670,558,710"/>
+<area shape="poly" title=" " alt="" coords="345,644,408,664,406,669,343,649"/>
+<area shape="rect" href="namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a" title="Negative digit comparison path." alt="" coords="405,887,564,927"/>
+<area shape="poly" title=" " alt="" coords="342,644,359,656,388,695,420,755,473,874,468,876,415,757,384,698,355,660,339,648"/>
+<area shape="rect" href="namespacefast__float__module.html#af7d24a49942e0dabf1cabaf827a1c07f" title="Parse mantissa digits into a bigint." alt="" coords="411,1309,558,1349"/>
+<area shape="poly" title=" " alt="" coords="346,644,359,656,384,692,398,726,404,757,405,789,402,857,403,895,408,939,479,1295,474,1296,403,940,397,896,397,857,400,789,399,758,392,727,379,695,355,660,343,648"/>
+<area shape="rect" href="namespacefast__float__module.html#ab08f4623be79e78dafe3019051379980" title="Positive digit comparison path." alt="" coords="408,518,561,558"/>
+<area shape="poly" title=" " alt="" coords="323,604,404,568,420,561,422,566,406,573,325,608"/>
+<area shape="rect" href="namespacefast__float__module.html#ab5e6a40c5579c822b8de772cdcf68c22" title="Scale the exponent by the number of digits in the mantissa." alt="" coords="411,606,558,646"/>
+<area shape="poly" title=" " alt="" coords="352,623,398,623,398,629,352,629"/>
+<area shape="rect" href="namespacefast__float__module.html#abfc723432befd95d402dc92811c7a65a" title="Convert adjusted mantissa to double precision." alt="" coords="622,945,769,985"/>
+<area shape="poly" title=" " alt="" coords="559,925,610,939,608,944,558,930"/>
+<area shape="rect" href="namespacefast__float__module.html#a3d67c988e0f66ee883836c8ae3339533" title="Compare two bigints." alt="" coords="622,766,769,806"/>
+<area shape="poly" title=" " alt="" coords="509,885,555,851,611,816,624,809,626,814,613,820,558,855,512,889"/>
+<area shape="rect" href="namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="622,1123,769,1163"/>
+<area shape="poly" title=" " alt="" coords="496,927,512,965,538,1014,571,1065,614,1109,620,1114,617,1118,610,1113,567,1068,533,1017,507,967,491,929"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="829,877,975,917"/>
+<area shape="poly" title=" " alt="" coords="564,903,815,896,815,902,565,908"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="829,989,975,1029"/>
+<area shape="poly" title=" " alt="" coords="508,925,554,963,582,981,613,994,664,1007,716,1014,815,1015,815,1020,716,1019,663,1013,611,999,580,985,550,967,504,929"/>
+<area shape="rect" href="namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="622,614,769,654"/>
+<area shape="poly" title=" " alt="" coords="489,886,503,841,528,782,563,719,585,690,610,664,616,659,619,664,614,668,589,694,567,722,532,784,508,843,494,888"/>
+<area shape="rect" href="namespacefast__float__module.html#a25e25f3ff77a20878482b54f08b5a5dd" title="Round tie&#45;even using digit comparison ordering." alt="" coords="617,678,774,718"/>
+<area shape="poly" title=" " alt="" coords="493,886,537,810,570,766,610,728,618,723,621,727,614,732,574,770,541,813,498,888"/>
+<area shape="rect" href="namespacefast__float__module.html#a2b5f87588cdb53203c8c9c9b68225a66" title="Convert a float to its extended halfway representation." alt="" coords="615,1059,776,1099"/>
+<area shape="poly" title=" " alt="" coords="503,926,550,981,580,1011,614,1039,633,1051,630,1055,610,1043,577,1015,546,984,499,929"/>
+<area shape="poly" title=" " alt="" coords="735,764,758,748,777,728,789,708,795,688,798,651,802,613,810,594,825,574,828,570,832,574,829,577,815,596,807,615,803,651,800,690,793,710,781,732,761,752,738,768"/>
+<area shape="poly" title=" " alt="" coords="657,766,654,756,661,747,674,741,695,739,719,742,733,750,730,754,718,747,695,745,676,747,664,751,660,757,662,765"/>
+<area shape="rect" href="namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="829,803,975,843"/>
+<area shape="poly" title=" " alt="" coords="770,797,816,805,815,810,769,802"/>
+<area shape="poly" title=" " alt="" coords="864,804,862,794,868,785,882,779,902,777,926,780,938,787,936,792,924,785,902,782,883,784,871,789,867,795,869,802"/>
+<area shape="rect" href="namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="829,1181,975,1221"/>
+<area shape="poly" title=" " alt="" coords="769,1161,817,1174,815,1180,767,1166"/>
+<area shape="rect" href="namespacefast__float__module.html#a08efb715246ed5f2def9b97783e43d7a" title="Push a value onto the stack vector." alt="" coords="829,1117,975,1157"/>
+<area shape="poly" title=" " alt="" coords="769,1138,815,1137,815,1142,769,1144"/>
+<area shape="rect" href="namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="1029,877,1176,917"/>
+<area shape="poly" title=" " alt="" coords="975,894,1015,894,1015,899,975,899"/>
+<area shape="rect" href="namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="1029,1046,1176,1086"/>
+<area shape="poly" title=" " alt="" coords="973,1026,1020,1040,1019,1045,972,1031"/>
+<area shape="rect" href="namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="1228,1046,1375,1086"/>
+<area shape="poly" title=" " alt="" coords="976,1009,1073,1017,1180,1031,1220,1040,1219,1045,1180,1037,1073,1022,975,1015"/>
+<area shape="poly" title=" " alt="" coords="1176,1063,1214,1063,1214,1069,1176,1069"/>
+<area shape="poly" title=" " alt="" coords="750,611,777,600,825,573,839,567,841,572,828,578,780,604,752,616"/>
+<area shape="rect" href="namespacefast__float__module.html#a3a6b45e929ae58a5ebef3f7aaa6aa370" title="Round down implementation." alt="" coords="829,587,975,627"/>
+<area shape="poly" title=" " alt="" coords="769,622,815,616,815,621,770,627"/>
+<area shape="rect" href="namespacefast__float__module.html#a0a805e389062ab308ce01b45b44304cf" title="Finish rounding: handle overflow and infinity." alt="" coords="829,651,975,691"/>
+<area shape="poly" title=" " alt="" coords="770,645,816,653,815,658,769,650"/>
+<area shape="poly" title=" " alt="" coords="951,649,976,637,1057,591,1059,596,979,642,953,654"/>
+<area shape="poly" title=" " alt="" coords="760,676,777,664,793,642,800,620,807,597,825,574,830,569,834,573,829,577,812,600,805,622,798,645,781,668,763,680"/>
+<area shape="poly" title=" " alt="" coords="774,685,815,680,816,685,775,691"/>
+<area shape="rect" href="namespacefast__float__module.html#a4a1f0051d9f6eb00ca382f6fa7e68b5c" title="Round to nearest using comparison ordering." alt="" coords="827,715,977,755"/>
+<area shape="poly" title=" " alt="" coords="775,710,814,717,813,722,774,715"/>
+<area shape="rect" href="namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="829,1053,975,1093"/>
+<area shape="poly" title=" " alt="" coords="776,1074,815,1073,815,1078,776,1079"/>
+<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="829,1245,975,1285"/>
+<area shape="poly" title=" " alt="" coords="502,1307,548,1265,578,1245,611,1230,668,1219,727,1219,783,1226,832,1238,831,1243,782,1232,727,1224,669,1224,613,1235,581,1250,552,1270,506,1311"/>
+<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="622,1511,769,1551"/>
+<area shape="poly" title=" " alt="" coords="503,1348,550,1407,614,1473,651,1502,647,1506,610,1477,546,1410,499,1351"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="829,1423,975,1463"/>
+<area shape="poly" title=" " alt="" coords="559,1346,816,1417,815,1422,558,1351"/>
+<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="622,1309,769,1349"/>
+<area shape="poly" title=" " alt="" coords="558,1326,608,1326,608,1331,558,1331"/>
+<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="622,1245,769,1285"/>
+<area shape="poly" title=" " alt="" coords="550,1306,615,1286,617,1291,552,1311"/>
+<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="622,1423,769,1463"/>
+<area shape="poly" title=" " alt="" coords="519,1347,613,1402,638,1415,636,1420,611,1407,516,1351"/>
+<area shape="poly" title=" " alt="" coords="950,1242,976,1230,1127,1155,1250,1090,1253,1095,1129,1160,978,1235,952,1247"/>
+<area shape="rect" href="namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="1029,1245,1176,1285"/>
+<area shape="poly" title=" " alt="" coords="975,1262,1015,1262,1015,1267,975,1267"/>
+<area shape="poly" title=" " alt="" coords="657,1512,654,1502,661,1493,674,1487,695,1485,719,1488,733,1495,730,1500,718,1493,695,1490,676,1492,664,1497,660,1503,662,1510"/>
+<area shape="poly" title=" " alt="" coords="742,1509,841,1466,843,1471,745,1514"/>
+<area shape="poly" title=" " alt="" coords="864,1424,862,1414,868,1405,882,1399,902,1397,926,1400,938,1407,936,1412,924,1405,902,1402,883,1404,871,1409,867,1415,869,1422"/>
+<area shape="poly" title=" " alt="" coords="769,1262,815,1262,815,1267,769,1267"/>
+<area shape="poly" title=" " alt="" coords="769,1441,815,1441,815,1446,769,1446"/>
+<area shape="rect" href="namespacefast__float__module.html#a2efdc55b08697ee5b6659a673cd023a9" title="Compute bit length of a bigint." alt="" coords="622,486,769,526"/>
+<area shape="poly" title=" " alt="" coords="561,524,608,517,609,522,562,529"/>
+<area shape="rect" href="namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="622,347,769,387"/>
+<area shape="poly" title=" " alt="" coords="509,516,657,394,660,398,512,520"/>
+<area shape="rect" href="namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="622,830,769,870"/>
+<area shape="poly" title=" " alt="" coords="553,556,566,568,586,601,594,633,594,664,590,695,587,725,587,755,595,785,614,816,617,820,613,823,610,820,590,787,582,755,581,724,585,694,589,664,589,634,581,603,562,572,549,560"/>
+<area shape="rect" href="namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="622,550,769,590"/>
+<area shape="poly" title=" " alt="" coords="562,547,609,554,608,560,561,552"/>
+<area shape="poly" title=" " alt="" coords="657,486,654,476,661,467,674,461,695,459,719,462,733,470,730,474,718,467,695,465,676,467,664,471,660,477,662,485"/>
+<area shape="rect" href="namespacefast__float__module.html#a258f8750d36535cf5b9e8497a833800f" title="Count leading zeros of a bigint." alt="" coords="829,385,975,425"/>
+<area shape="poly" title=" " alt="" coords="736,484,847,429,849,433,738,488"/>
+<area shape="poly" title=" " alt="" coords="936,382,1054,313,1057,318,939,387"/>
+<area shape="poly" title=" " alt="" coords="864,385,862,375,868,366,882,360,902,358,926,361,938,368,936,373,924,366,902,363,883,365,871,370,867,376,869,384"/>
+<area shape="rect" href="namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700" title="Extract high 64 bits from a single limb." alt="" coords="829,297,975,337"/>
+<area shape="poly" title=" " alt="" coords="769,347,814,335,816,341,770,352"/>
+<area shape="poly" title=" " alt="" coords="975,304,1011,299,1012,304,976,309"/>
+<area shape="poly" title=" " alt="" coords="770,864,816,875,815,880,769,869"/>
+<area shape="poly" title=" " alt="" coords="724,868,865,978,862,982,721,872"/>
+<area shape="poly" title=" " alt="" coords="769,558,815,552,815,557,770,563"/>
+<area shape="poly" title=" " alt="" coords="756,588,780,600,804,618,828,637,839,643,836,648,825,642,801,623,777,604,753,593"/>
+<area shape="poly" title=" " alt="" coords="446,606,444,596,450,587,464,581,485,579,509,582,522,590,519,594,507,587,485,585,465,587,453,591,449,597,451,605"/>
+<area shape="poly" title=" " alt="" coords="241,694,239,684,245,675,258,669,279,667,302,670,315,678,312,682,300,675,279,673,260,675,248,679,244,685,246,693"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="aefae1d21e5a95ebf7a390199813224cb" name="aefae1d21e5a95ebf7a390199813224cb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aefae1d21e5a95ebf7a390199813224cb">&#9670;&#160;</a></span>parse_float_range_sub()</h2>
 
@@ -3384,42 +3767,142 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Parse a string range to float, subroutine form. </p>
+<p>Parse a string range to float, subroutine form. Hot-path routines manually inlined for performance without LTO. </p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacefast__float__module_aefae1d21e5a95ebf7a390199813224cb_cgraph.png" border="0" usemap="#anamespacefast__float__module_aefae1d21e5a95ebf7a390199813224cb_cgraph" alt=""/></div>
 <map name="anamespacefast__float__module_aefae1d21e5a95ebf7a390199813224cb_cgraph" id="anamespacefast__float__module_aefae1d21e5a95ebf7a390199813224cb_cgraph">
-<area shape="rect" title="Parse a string range to float, subroutine form." alt="" coords="5,117,173,157"/>
-<area shape="rect" href="namespacefast__float__module.html#a982324823ffb8ed4eb402f9f8b989d72" title="Check if a character is whitespace." alt="" coords="227,53,374,93"/>
-<area shape="poly" title=" " alt="" coords="155,115,220,95,222,100,157,120"/>
-<area shape="rect" href="namespacefast__float__module.html#a4dce7df665fed9ed55c773d4acaff319" title="Parse inf/nan for single precision." alt="" coords="227,117,374,157"/>
-<area shape="poly" title=" " alt="" coords="174,135,214,135,214,140,174,140"/>
-<area shape="rect" href="namespacefast__float__module.html#ac55e14914ae42c302e7606bbb1023575" title="Parse a number string into mantissa, exponent, and sign." alt="" coords="221,225,380,265"/>
-<area shape="poly" title=" " alt="" coords="131,155,250,217,247,221,128,160"/>
-<area shape="poly" title=" " alt="" coords="263,54,261,44,267,35,280,29,301,27,324,30,337,37,334,42,322,35,301,32,282,34,270,39,266,45,268,52"/>
-<area shape="rect" href="namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="428,29,575,69"/>
-<area shape="poly" title=" " alt="" coords="352,115,379,103,427,79,441,73,443,77,429,84,381,108,354,120"/>
-<area shape="rect" href="namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="428,117,575,157"/>
-<area shape="poly" title=" " alt="" coords="374,135,414,135,414,140,374,140"/>
-<area shape="poly" title=" " alt="" coords="465,30,462,20,468,11,481,5,501,3,524,6,537,13,534,17,523,11,501,8,483,10,472,15,468,21,470,28"/>
-<area shape="poly" title=" " alt="" coords="465,118,462,108,468,99,481,93,501,91,524,94,537,101,534,105,523,99,501,96,483,98,472,103,468,109,470,116"/>
-<area shape="rect" href="namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="428,181,575,221"/>
-<area shape="poly" title=" " alt="" coords="380,225,414,218,415,223,381,231"/>
-<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="428,269,575,309"/>
-<area shape="poly" title=" " alt="" coords="381,260,415,268,414,273,380,265"/>
-<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="428,357,575,397"/>
-<area shape="poly" title=" " alt="" coords="334,263,460,347,457,352,331,268"/>
-<area shape="rect" href="namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="623,117,769,157"/>
-<area shape="poly" title=" " alt="" coords="562,179,621,159,622,164,564,184"/>
-<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="623,181,769,221"/>
-<area shape="poly" title=" " alt="" coords="575,199,609,199,609,204,575,204"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="623,269,769,309"/>
-<area shape="poly" title=" " alt="" coords="549,219,576,231,641,261,639,266,574,236,547,224"/>
-<area shape="poly" title=" " alt="" coords="659,118,657,108,663,99,676,93,696,91,719,94,731,101,729,105,717,99,696,96,677,98,666,103,662,109,664,116"/>
-<area shape="poly" title=" " alt="" coords="659,270,657,260,663,251,676,245,696,243,719,246,731,253,729,257,717,251,696,248,677,250,666,255,662,261,664,268"/>
-<area shape="poly" title=" " alt="" coords="465,270,462,260,468,251,481,245,501,243,524,246,537,253,534,257,523,251,501,248,483,250,472,255,468,261,470,268"/>
-<area shape="poly" title=" " alt="" coords="465,358,462,348,468,339,481,333,501,331,524,334,537,341,534,345,523,339,501,336,483,338,472,343,468,349,470,356"/>
+<area shape="rect" title="Parse a string range to float, subroutine form. Hot&#45;path routines manually inlined for performance wi..." alt="" coords="5,652,173,692"/>
+<area shape="rect" href="namespacefast__float__module.html#accb46877a970e907fb6985a5f63db1b6" title="Convert adjusted mantissa to single precision." alt="" coords="227,480,373,520"/>
+<area shape="poly" title=" " alt="" coords="103,650,151,592,184,559,220,530,229,524,231,529,223,534,187,563,155,595,107,654"/>
+<area shape="rect" href="namespacefast__float__module.html#a5655e8ef3e099a235a0fd3115ae12a9e" title="Clinger fast path for single precision." alt="" coords="221,544,379,584"/>
+<area shape="poly" title=" " alt="" coords="127,649,220,600,245,588,247,592,223,605,130,654"/>
+<area shape="rect" href="namespacefast__float__module.html#a34ebed8f392eed32171825921225c7d1" title="Compute error adjusted mantissa." alt="" coords="433,133,579,173"/>
+<area shape="poly" title=" " alt="" coords="173,652,300,622,351,607,377,594,394,571,407,549,419,506,419,463,413,420,404,375,400,328,405,278,424,224,441,200,461,180,465,184,445,204,429,227,410,279,405,328,410,374,418,419,425,463,424,507,412,551,399,574,380,598,353,612,302,628,174,658"/>
+<area shape="rect" href="namespacefast__float__module.html#a3dccfc96e927157dfe3c7d89c814cf75" title="Compute the Eisel&#45;Lemire float approximation." alt="" coords="433,237,579,277"/>
+<area shape="poly" title=" " alt="" coords="174,682,224,684,278,679,331,665,355,653,377,638,396,593,429,495,492,290,497,292,434,496,401,594,381,642,357,658,332,670,279,684,224,689,173,688"/>
+<area shape="rect" href="namespacefast__float__module.html#a4b8fb8b9741abb502f1f2abb5441e54e" title="Digit comparison fallback." alt="" coords="227,709,373,749"/>
+<area shape="poly" title=" " alt="" coords="164,689,214,703,213,708,163,695"/>
+<area shape="rect" href="namespacefast__float__module.html#a982324823ffb8ed4eb402f9f8b989d72" title="Check if a character is whitespace." alt="" coords="227,797,373,837"/>
+<area shape="poly" title=" " alt="" coords="121,690,260,787,257,792,118,694"/>
+<area shape="rect" href="namespacefast__float__module.html#a4dce7df665fed9ed55c773d4acaff319" title="Parse inf/nan for single precision." alt="" coords="227,1345,373,1385"/>
+<area shape="poly" title=" " alt="" coords="99,691,291,1331,286,1333,94,693"/>
+<area shape="rect" href="namespacefast__float__module.html#a9c934c61ac0a9105f681ccabb3986043" title="Compute error&#45;scaled adjusted mantissa." alt="" coords="633,5,800,45"/>
+<area shape="poly" title=" " alt="" coords="528,131,574,93,632,55,645,49,647,53,635,60,577,98,531,135"/>
+<area shape="rect" href="namespacefast__float__module.html#af869682752534bd0deac3196f2502646" title="Compute the product approximation for Eisel&#45;Lemire." alt="" coords="643,208,790,248"/>
+<area shape="poly" title=" " alt="" coords="564,171,648,201,646,206,562,176"/>
+<area shape="rect" href="namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="639,93,794,133"/>
+<area shape="poly" title=" " alt="" coords="579,137,625,128,626,133,580,142"/>
+<area shape="rect" href="namespacefast__float__module.html#a5b56697a868ca3f61bdb494294b6e93c" title="Convert a base&#45;10 exponent to base&#45;2." alt="" coords="850,75,997,115"/>
+<area shape="poly" title=" " alt="" coords="778,43,851,68,849,73,776,48"/>
+<area shape="poly" title=" " alt="" coords="887,75,884,65,890,56,903,50,923,48,946,51,959,58,956,63,945,56,923,53,905,55,894,60,890,66,892,74"/>
+<area shape="rect" href="namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="850,208,997,248"/>
+<area shape="poly" title=" " alt="" coords="790,225,836,225,836,231,790,231"/>
+<area shape="rect" href="namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="850,417,997,457"/>
+<area shape="poly" title=" " alt="" coords="739,246,895,405,891,409,736,250"/>
+<area shape="poly" title=" " alt="" coords="887,418,884,408,890,399,903,393,923,391,946,394,959,401,956,405,945,399,923,396,905,398,894,403,890,409,892,416"/>
+<area shape="poly" title=" " alt="" coords="678,94,676,84,682,75,696,69,717,67,741,70,754,77,751,82,739,75,717,72,697,74,685,79,681,85,683,92"/>
+<area shape="poly" title=" " alt="" coords="544,235,632,194,679,177,716,167,799,143,863,118,865,123,801,148,717,172,680,182,634,198,546,240"/>
+<area shape="poly" title=" " alt="" coords="579,245,630,237,630,243,580,250"/>
+<area shape="poly" title=" " alt="" coords="561,275,634,301,719,327,755,339,801,359,845,382,884,407,881,412,842,387,799,364,754,344,717,332,632,307,560,280"/>
+<area shape="poly" title=" " alt="" coords="526,235,573,194,632,150,654,137,656,142,635,154,576,198,530,239"/>
+<area shape="rect" href="namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="1047,428,1193,468"/>
+<area shape="poly" title=" " alt="" coords="580,265,667,281,773,304,888,337,1000,379,1076,419,1073,423,998,384,886,342,772,310,666,286,579,270"/>
+<area shape="poly" title=" " alt="" coords="1083,428,1081,418,1087,409,1100,403,1120,401,1143,404,1155,412,1153,416,1141,409,1120,407,1101,409,1090,413,1086,419,1088,427"/>
+<area shape="rect" href="namespacefast__float__module.html#ae12179bf230b567a0adbe36acc25f1fe" title="Create an empty bigint." alt="" coords="433,741,579,781"/>
+<area shape="poly" title=" " alt="" coords="374,738,420,745,419,751,373,743"/>
+<area shape="rect" href="namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a" title="Negative digit comparison path." alt="" coords="427,869,585,909"/>
+<area shape="poly" title=" " alt="" coords="359,747,380,759,438,808,483,857,479,860,434,811,377,764,356,752"/>
+<area shape="rect" href="namespacefast__float__module.html#af7d24a49942e0dabf1cabaf827a1c07f" title="Parse mantissa digits into a bigint." alt="" coords="433,1257,579,1297"/>
+<area shape="poly" title=" " alt="" coords="367,748,381,760,403,828,438,968,500,1244,495,1245,432,969,398,830,376,763,363,752"/>
+<area shape="rect" href="namespacefast__float__module.html#ab08f4623be79e78dafe3019051379980" title="Positive digit comparison path." alt="" coords="429,525,583,565"/>
+<area shape="poly" title=" " alt="" coords="347,707,377,689,425,639,478,574,482,578,429,643,380,693,350,712"/>
+<area shape="rect" href="namespacefast__float__module.html#ab5e6a40c5579c822b8de772cdcf68c22" title="Scale the exponent by the number of digits in the mantissa." alt="" coords="433,677,579,717"/>
+<area shape="poly" title=" " alt="" coords="373,715,419,708,420,713,374,721"/>
+<area shape="rect" href="namespacefast__float__module.html#abfc723432befd95d402dc92811c7a65a" title="Convert adjusted mantissa to double precision." alt="" coords="643,869,790,909"/>
+<area shape="poly" title=" " alt="" coords="585,887,629,887,629,892,585,892"/>
+<area shape="rect" href="namespacefast__float__module.html#a3d67c988e0f66ee883836c8ae3339533" title="Compare two bigints." alt="" coords="643,741,790,781"/>
+<area shape="poly" title=" " alt="" coords="528,867,574,829,632,791,645,785,647,789,635,796,577,834,531,871"/>
+<area shape="rect" href="namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="643,1035,790,1075"/>
+<area shape="poly" title=" " alt="" coords="525,908,572,959,602,988,635,1014,655,1026,652,1031,632,1018,599,992,568,963,522,911"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="850,907,997,947"/>
+<area shape="poly" title=" " alt="" coords="533,907,578,938,605,952,634,963,680,973,716,974,799,963,857,949,858,954,801,968,716,980,679,978,633,968,603,957,575,943,530,912"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="850,824,997,864"/>
+<area shape="poly" title=" " alt="" coords="569,907,619,919,677,927,739,929,799,919,880,869,882,874,801,924,739,934,677,933,618,924,567,912"/>
+<area shape="rect" href="namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="643,589,790,629"/>
+<area shape="poly" title=" " alt="" coords="525,868,555,834,583,792,593,770,598,750,601,713,608,677,616,659,631,640,635,636,639,640,635,643,621,662,613,679,606,714,603,751,598,772,588,795,559,837,529,871"/>
+<area shape="rect" href="namespacefast__float__module.html#a25e25f3ff77a20878482b54f08b5a5dd" title="Round tie&#45;even using digit comparison ordering." alt="" coords="638,653,795,693"/>
+<area shape="poly" title=" " alt="" coords="523,868,583,792,596,767,604,746,613,725,631,703,637,699,641,703,635,707,617,728,609,747,601,769,588,795,528,871"/>
+<area shape="rect" href="namespacefast__float__module.html#a2b5f87588cdb53203c8c9c9b68225a66" title="Convert a float to its extended halfway representation." alt="" coords="636,1099,797,1139"/>
+<area shape="poly" title=" " alt="" coords="518,909,534,946,560,993,594,1042,635,1085,641,1089,638,1094,632,1089,589,1045,555,996,530,948,513,911"/>
+<area shape="poly" title=" " alt="" coords="758,739,780,723,798,704,812,678,820,655,824,611,827,565,833,540,846,512,864,487,884,465,888,468,868,490,850,515,838,542,832,566,829,611,825,656,817,681,802,707,783,727,761,743"/>
+<area shape="poly" title=" " alt="" coords="678,742,676,732,682,723,696,717,717,715,741,718,754,725,751,730,739,723,717,720,697,722,685,727,681,733,683,740"/>
+<area shape="rect" href="namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="850,741,997,781"/>
+<area shape="poly" title=" " alt="" coords="790,759,836,759,836,764,790,764"/>
+<area shape="poly" title=" " alt="" coords="887,742,884,732,890,723,903,717,923,715,946,718,959,725,956,729,945,723,923,720,905,722,894,727,890,733,892,740"/>
+<area shape="rect" href="namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="850,971,997,1011"/>
+<area shape="poly" title=" " alt="" coords="781,1032,845,1012,846,1017,783,1037"/>
+<area shape="rect" href="namespacefast__float__module.html#a08efb715246ed5f2def9b97783e43d7a" title="Push a value onto the stack vector." alt="" coords="850,1035,997,1075"/>
+<area shape="poly" title=" " alt="" coords="790,1052,836,1052,836,1057,790,1057"/>
+<area shape="rect" href="namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="1047,927,1193,967"/>
+<area shape="poly" title=" " alt="" coords="997,931,1033,935,1033,940,997,937"/>
+<area shape="rect" href="namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="1047,863,1193,903"/>
+<area shape="poly" title=" " alt="" coords="997,856,1033,863,1032,868,996,861"/>
+<area shape="rect" href="namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="1241,863,1388,903"/>
+<area shape="poly" title=" " alt="" coords="997,839,1091,839,1194,848,1236,857,1235,862,1193,853,1091,845,997,844"/>
+<area shape="poly" title=" " alt="" coords="1193,880,1227,880,1227,885,1193,885"/>
+<area shape="poly" title=" " alt="" coords="779,587,798,575,814,560,824,546,846,512,889,466,893,470,850,515,828,549,818,564,802,579,782,592"/>
+<area shape="rect" href="namespacefast__float__module.html#a3a6b45e929ae58a5ebef3f7aaa6aa370" title="Round down implementation." alt="" coords="850,525,997,565"/>
+<area shape="poly" title=" " alt="" coords="781,587,845,567,846,572,783,592"/>
+<area shape="rect" href="namespacefast__float__module.html#a0a805e389062ab308ce01b45b44304cf" title="Finish rounding: handle overflow and infinity." alt="" coords="850,589,997,629"/>
+<area shape="poly" title=" " alt="" coords="790,607,836,607,836,612,790,612"/>
+<area shape="poly" title=" " alt="" coords="977,587,997,575,1052,527,1094,478,1098,481,1055,531,1000,579,980,591"/>
+<area shape="poly" title=" " alt="" coords="783,651,798,639,811,624,818,609,825,580,830,548,846,512,865,487,886,465,889,469,869,490,850,515,835,550,830,581,823,611,815,627,802,643,786,655"/>
+<area shape="poly" title=" " alt="" coords="781,651,845,631,846,636,783,656"/>
+<area shape="rect" href="namespacefast__float__module.html#a4a1f0051d9f6eb00ca382f6fa7e68b5c" title="Round to nearest using comparison ordering." alt="" coords="848,653,999,693"/>
+<area shape="poly" title=" " alt="" coords="796,671,834,671,834,676,796,676"/>
+<area shape="rect" href="namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="850,1099,997,1139"/>
+<area shape="poly" title=" " alt="" coords="797,1116,836,1116,836,1121,797,1121"/>
+<area shape="rect" href="namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="850,1163,997,1203"/>
+<area shape="poly" title=" " alt="" coords="531,1255,576,1225,632,1199,684,1186,737,1179,836,1175,836,1180,738,1184,685,1191,634,1204,579,1229,534,1259"/>
+<area shape="rect" href="namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="643,1301,790,1341"/>
+<area shape="poly" title=" " alt="" coords="580,1290,631,1301,629,1306,579,1295"/>
+<area shape="rect" href="namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="850,1359,997,1399"/>
+<area shape="poly" title=" " alt="" coords="564,1295,587,1307,601,1319,611,1331,620,1342,634,1351,684,1368,737,1378,788,1382,836,1383,836,1388,788,1387,736,1383,683,1373,632,1356,616,1346,607,1334,598,1323,584,1312,562,1300"/>
+<area shape="rect" href="namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="643,1416,790,1456"/>
+<area shape="poly" title=" " alt="" coords="570,1295,587,1307,605,1330,612,1352,619,1374,635,1395,650,1407,647,1411,631,1399,614,1376,607,1354,600,1333,583,1311,567,1300"/>
+<area shape="rect" href="namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="643,1213,790,1253"/>
+<area shape="poly" title=" " alt="" coords="579,1259,629,1249,631,1254,580,1265"/>
+<area shape="rect" href="namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="643,1480,790,1520"/>
+<area shape="poly" title=" " alt="" coords="573,1295,587,1308,602,1328,609,1349,612,1389,614,1428,621,1447,635,1466,639,1470,635,1474,631,1470,617,1449,609,1429,606,1389,604,1350,597,1331,583,1311,569,1300"/>
+<area shape="poly" title=" " alt="" coords="975,1160,997,1148,1083,1088,1163,1023,1282,911,1286,915,1167,1027,1086,1093,1000,1153,978,1165"/>
+<area shape="poly" title=" " alt="" coords="678,1302,676,1292,682,1283,696,1277,717,1275,741,1278,754,1285,751,1290,739,1283,717,1280,697,1282,685,1287,681,1293,683,1300"/>
+<area shape="poly" title=" " alt="" coords="790,1339,838,1352,837,1357,789,1344"/>
+<area shape="poly" title=" " alt="" coords="887,1359,884,1349,890,1340,903,1334,923,1332,946,1335,959,1342,956,1347,945,1340,923,1337,905,1339,894,1344,890,1350,892,1358"/>
+<area shape="poly" title=" " alt="" coords="790,1213,836,1201,837,1206,791,1218"/>
+<area shape="poly" title=" " alt="" coords="774,1477,799,1466,845,1436,886,1405,889,1410,848,1441,801,1470,776,1482"/>
+<area shape="rect" href="namespacefast__float__module.html#a2efdc55b08697ee5b6659a673cd023a9" title="Compute bit length of a bigint." alt="" coords="643,461,790,501"/>
+<area shape="poly" title=" " alt="" coords="572,523,637,503,638,508,573,528"/>
+<area shape="rect" href="namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="643,525,790,565"/>
+<area shape="poly" title=" " alt="" coords="583,543,630,543,630,548,583,548"/>
+<area shape="rect" href="namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="643,805,790,845"/>
+<area shape="poly" title=" " alt="" coords="529,564,559,598,588,640,598,663,603,684,606,721,613,756,621,773,635,792,639,795,635,799,631,795,616,776,608,757,601,722,598,685,593,665,583,643,555,601,525,567"/>
+<area shape="rect" href="namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="643,373,790,413"/>
+<area shape="poly" title=" " alt="" coords="522,523,569,474,599,447,632,423,642,417,645,422,635,428,602,451,572,478,526,527"/>
+<area shape="poly" title=" " alt="" coords="678,462,676,452,682,443,696,437,717,435,741,438,754,445,751,450,739,443,717,440,697,442,685,447,681,453,683,460"/>
+<area shape="poly" title=" " alt="" coords="774,843,801,855,879,897,876,902,799,860,772,848"/>
+<area shape="poly" title=" " alt="" coords="791,829,836,833,836,839,790,835"/>
+<area shape="poly" title=" " alt="" coords="791,406,837,416,836,421,790,412"/>
+<area shape="poly" title=" " alt="" coords="787,411,802,423,816,443,824,463,827,501,830,538,837,557,850,576,854,579,850,583,846,579,832,559,825,539,822,501,819,464,812,446,798,427,784,416"/>
+<area shape="poly" title=" " alt="" coords="467,678,465,668,471,659,485,653,506,651,530,654,543,661,541,666,528,659,506,656,486,658,475,663,470,669,472,676"/>
+<area shape="poly" title=" " alt="" coords="261,798,259,788,265,779,279,773,300,771,324,774,337,781,335,786,322,779,300,776,280,778,269,783,264,789,266,796"/>
+<area shape="rect" href="namespacefast__float__module.html#a96f3f461976be4c25cde0924707d0a4c" title="Case&#45;insensitive comparison of 3 characters." alt="" coords="433,1433,579,1473"/>
+<area shape="poly" title=" " alt="" coords="349,1383,447,1425,445,1430,347,1388"/>
+<area shape="rect" href="namespacefast__float__module.html#a473f6dd0167ab6680c1ded0616ec7054" title="Case&#45;insensitive comparison of 5 characters." alt="" coords="433,1345,579,1385"/>
+<area shape="poly" title=" " alt="" coords="374,1363,419,1363,419,1368,374,1368"/>
+<area shape="poly" title=" " alt="" coords="467,1434,465,1424,471,1415,485,1409,506,1407,530,1410,543,1417,541,1422,528,1415,506,1412,486,1414,475,1419,470,1425,472,1432"/>
+<area shape="poly" title=" " alt="" coords="467,1346,465,1336,471,1327,485,1321,506,1319,530,1322,543,1329,541,1334,528,1327,506,1324,486,1326,475,1331,470,1337,472,1344"/>
 </map>
 </div>
 
@@ -4142,7 +4625,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="100,331,249,166,253,170,104,335"/>
 <area shape="rect" href="namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="207,269,353,309"/>
 <area shape="poly" title=" " alt="" coords="144,331,204,311,206,316,145,336"/>
-<area shape="rect" href="namespacefast__float__module.html#acad198c8aa1792793357b6e72e529ca8" title="Multiply bigint by 10^e." alt="" coords="207,397,353,437"/>
+<area shape="rect" href="namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="207,397,353,437"/>
 <area shape="poly" title=" " alt="" coords="145,371,206,391,204,396,144,376"/>
 <area shape="rect" href="namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="207,644,353,684"/>
 <area shape="poly" title=" " alt="" coords="98,372,261,631,256,634,94,375"/>
@@ -4165,9 +4648,9 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="560,331,578,319,617,279,649,232,673,185,690,145,695,148,678,187,654,235,621,282,582,323,563,335"/>
 <area shape="poly" title=" " alt="" coords="451,182,449,172,455,162,469,157,491,155,515,158,529,165,526,170,514,163,491,160,470,162,458,167,454,173,456,180"/>
 <area shape="poly" title=" " alt="" coords="451,270,449,260,455,250,469,245,491,243,515,246,529,253,526,258,514,251,491,248,470,250,458,255,454,261,456,268"/>
-<area shape="rect" href="namespacefast__float__module.html#a44ab9e5eb41173a4b6cab50e07d837f3" title="Raise bigint to a power of 2." alt="" coords="417,397,564,437"/>
+<area shape="rect" href="namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="417,397,564,437"/>
 <area shape="poly" title=" " alt="" coords="353,415,404,415,404,420,353,420"/>
-<area shape="rect" href="namespacefast__float__module.html#a0e6511c045258a13909aa42982eed342" title="Multiply bigint by 5^e." alt="" coords="417,461,564,501"/>
+<area shape="rect" href="namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="417,461,564,501"/>
 <area shape="poly" title=" " alt="" coords="347,435,412,455,411,460,346,440"/>
 <area shape="rect" href="namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="632,288,779,328"/>
 <area shape="poly" title=" " alt="" coords="551,395,579,383,662,334,665,338,581,388,553,400"/>

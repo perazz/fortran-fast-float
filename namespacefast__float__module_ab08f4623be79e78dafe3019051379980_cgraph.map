@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,331,249,166,253,170,104,335"/>
 <area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="207,269,353,309"/>
 <area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="144,331,204,311,206,316,145,336"/>
-<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#acad198c8aa1792793357b6e72e529ca8" title="Multiply bigint by 10^e." alt="" coords="207,397,353,437"/>
+<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="207,397,353,437"/>
 <area shape="poly" id="edge16_Node000001_Node000010" title=" " alt="" coords="145,371,206,391,204,396,144,376"/>
 <area shape="rect" id="Node000028" href="$namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="207,644,353,684"/>
 <area shape="poly" id="edge41_Node000001_Node000028" title=" " alt="" coords="98,372,261,631,256,634,94,375"/>
@@ -27,9 +27,9 @@
 <area shape="poly" id="edge11_Node000007_Node000004" title=" " alt="" coords="560,331,578,319,617,279,649,232,673,185,690,145,695,148,678,187,654,235,621,282,582,323,563,335"/>
 <area shape="poly" id="edge13_Node000008_Node000008" title=" " alt="" coords="451,182,449,172,455,162,469,157,491,155,515,158,529,165,526,170,514,163,491,160,470,162,458,167,454,173,456,180"/>
 <area shape="poly" id="edge15_Node000009_Node000009" title=" " alt="" coords="451,270,449,260,455,250,469,245,491,243,515,246,529,253,526,258,514,251,491,248,470,250,458,255,454,261,456,268"/>
-<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a44ab9e5eb41173a4b6cab50e07d837f3" title="Raise bigint to a power of 2." alt="" coords="417,397,564,437"/>
+<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="417,397,564,437"/>
 <area shape="poly" id="edge17_Node000010_Node000011" title=" " alt="" coords="353,415,404,415,404,420,353,420"/>
-<area shape="rect" id="Node000016" href="$namespacefast__float__module.html#a0e6511c045258a13909aa42982eed342" title="Multiply bigint by 5^e." alt="" coords="417,461,564,501"/>
+<area shape="rect" id="Node000016" href="$namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="417,461,564,501"/>
 <area shape="poly" id="edge22_Node000010_Node000016" title=" " alt="" coords="347,435,412,455,411,460,346,440"/>
 <area shape="rect" id="Node000012" href="$namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="632,288,779,328"/>
 <area shape="poly" id="edge18_Node000011_Node000012" title=" " alt="" coords="551,395,579,383,662,334,665,338,581,388,553,400"/>
