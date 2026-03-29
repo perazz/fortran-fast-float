@@ -36,6 +36,12 @@ contains
         call add_test(test_json_format(),      '[parse] JSON format')
         call add_test(test_malformed(),        '[parse] malformed input')
         call add_test(test_custom_decimal(),   '[parse] custom decimal point')
+        call add_test(test_dp_stream_cursor_semantics(), '[parse] dp stream cursor semantics')
+        call add_test(test_dp_array_invalid(), '[parse] dp array invalid handling')
+        call add_test(test_fp_array_invalid(), '[parse] fp array invalid handling')
+        call add_test(test_dp_array_hard_cases(), '[parse] dp array hard-case parity')
+        call add_test(test_dp_array_out_of_range(), '[parse] dp array out-of-range contract')
+        call add_test(test_dp_stream_hard_cases(), '[parse] dp stream hard-case parity')
 
         return
 
@@ -505,6 +511,152 @@ contains
 
         success = match_dp_opts("1,5", comma_opts, int(z'3FF8000000000000', int64), outcomes%OK)
     end function test_custom_decimal
+
+    logical function test_dp_stream_cursor_semantics() result(success)
+        character(len=:), allocatable, target :: buf
+        character(len=:), pointer :: p
+        real(real64) :: val
+        type(outcome) :: stat
+
+        buf = "1x2"
+        p => buf
+
+        call parse_double_stream(p, val, stat)
+        success = stat == outcomes%OK .and. transfer(val, 0_int64) == int(z'3FF0000000000000', int64)
+        if (.not. success) return
+
+        success = len(p) == 2 .and. p == "x2"
+        if (.not. success) return
+
+        call parse_double_stream(p, val, stat)
+        success = stat == outcomes%INVALID_INPUT .and. len(p) == 2 .and. p == "x2"
+    end function test_dp_stream_cursor_semantics
+
+    logical function test_dp_array_invalid() result(success)
+        character(len=:), allocatable :: stream
+        real(real64) :: values(3)
+        integer :: n
+        type(outcome) :: err
+
+        stream = "1.0 abc 2.0"
+        values = -huge(1.0_real64)
+        call parse_double_array(stream, values, n, err)
+
+        success = err == outcomes%INVALID_INPUT .and. n == 1 .and. &
+                  transfer(values(1), 0_int64) == int(z'3FF0000000000000', int64)
+    end function test_dp_array_invalid
+
+    logical function test_fp_array_invalid() result(success)
+        character(len=:), allocatable :: stream
+        real(real32) :: values(3)
+        integer :: n
+        type(outcome) :: err
+
+        stream = "1.0 abc 2.0"
+        values = -huge(1.0_real32)
+        call parse_float_array(stream, values, n, err)
+
+        success = err == outcomes%INVALID_INPUT .and. n == 1 .and. &
+                  transfer(values(1), 0_int32) == int(z'3F800000', int32)
+    end function test_fp_array_invalid
+
+    logical function test_dp_array_hard_cases() result(success)
+        character(len=:), allocatable :: s1, s2, s3, stream
+        real(real64) :: values(3), expected(3)
+        type(parse_result) :: res
+        type(outcome) :: err
+        integer :: n
+
+        s1 = "9007199254740993.0"
+        s2 = "8.98846567431158053656668072130502949627624141313081589739713427561540454" // &
+             "154866937524136980060240969e307"
+        s3 = "1.23456789012345678901234567890123456789012345678901234567890123456789e-300"
+        stream = s1 // new_line('a') // s2 // new_line('a') // s3
+
+        expected(1) = parse_double(s1, res)
+        success = res%outcome == outcomes%OK
+        if (.not. success) return
+        expected(2) = parse_double(s2, res)
+        success = res%outcome == outcomes%OK
+        if (.not. success) return
+        expected(3) = parse_double(s3, res)
+        success = res%outcome == outcomes%OK
+        if (.not. success) return
+
+        call parse_double_array(stream, values, n, err)
+        success = err == outcomes%OK .and. n == 3
+        if (.not. success) return
+
+        success = transfer(values(1), 0_int64) == transfer(expected(1), 0_int64) .and. &
+                  transfer(values(2), 0_int64) == transfer(expected(2), 0_int64) .and. &
+                  transfer(values(3), 0_int64) == transfer(expected(3), 0_int64)
+    end function test_dp_array_hard_cases
+
+    logical function test_dp_array_out_of_range() result(success)
+        character(len=:), allocatable :: s1, s2, s3, stream
+        real(real64) :: values(3), expected(2), dummy
+        type(parse_result) :: res
+        type(outcome) :: err
+        integer :: n
+
+        s1 = "9007199254740993.0"
+        s2 = "8.98846567431158053656668072130502949627624141313081589739713427561540454" // &
+             "154866937524136980060240969e307"
+        s3 = "2.47032822920623272088284396434110686182529901307162382212792841250337753" // &
+             "635104375932649918180817996e-324"
+        stream = s1 // new_line('a') // s2 // new_line('a') // s3
+
+        expected(1) = parse_double(s1, res)
+        success = res%outcome == outcomes%OK
+        if (.not. success) return
+        expected(2) = parse_double(s2, res)
+        success = res%outcome == outcomes%OK
+        if (.not. success) return
+
+        dummy = parse_double(s3, res)
+        success = res%outcome == outcomes%OUT_OF_RANGE
+        if (.not. success) return
+
+        values = -huge(1.0_real64)
+        call parse_double_array(stream, values, n, err)
+        success = err == outcomes%OUT_OF_RANGE .and. n == 2 .and. &
+                  transfer(values(1), 0_int64) == transfer(expected(1), 0_int64) .and. &
+                  transfer(values(2), 0_int64) == transfer(expected(2), 0_int64)
+    end function test_dp_array_out_of_range
+
+    logical function test_dp_stream_hard_cases() result(success)
+        character(len=:), allocatable, target :: stream
+        character(len=:), pointer :: p
+        character(len=:), allocatable :: s1, s2
+        real(real64) :: val, expected
+        type(parse_result) :: res
+        type(outcome) :: stat
+
+        s1 = "9007199254740993.0"
+        s2 = "8.98846567431158053656668072130502949627624141313081589739713427561540454" // &
+             "154866937524136980060240969e307"
+        stream = s1 // new_line('a') // s2 // new_line('a')
+        p => stream
+
+        expected = parse_double(s1, res)
+        success = res%outcome == outcomes%OK
+        if (.not. success) return
+        call parse_double_stream(p, val, stat)
+        success = stat == outcomes%OK .and. transfer(val, 0_int64) == transfer(expected, 0_int64)
+        if (.not. success) return
+
+        success = len(p) == len(s2) + 2 .and. p == new_line('a') // s2 // new_line('a')
+        if (.not. success) return
+
+        expected = parse_double(s2, res)
+        success = res%outcome == outcomes%OK
+        if (.not. success) return
+        call parse_double_stream(p, val, stat)
+        success = stat == outcomes%OK .and. transfer(val, 0_int64) == transfer(expected, 0_int64)
+        if (.not. success) return
+
+        success = len(p) == 1 .and. p == new_line('a')
+    end function test_dp_stream_hard_cases
 
 end module test_fast_float_parsing
 

@@ -827,6 +827,7 @@ contains
         if (int_digits + frac_digits > 19) return
         a%frac_start = p
         call loop_parse_eight(p, last, str, mantissa)
+        call loop_parse_four(p, last, str, mantissa)
         do while (p <= last)
             ic = iachar(str(p:p)) - 48
             if (ic < 0 .or. ic > 9) return
@@ -955,6 +956,20 @@ contains
         end if
     end function read8_to_u64
 
+    !> Reinterpret 4 characters as a single i4 (little-endian).
+    pure elemental integer(i4) function read4_to_u32(str)
+        character(len=4), intent(in) :: str
+        integer :: j
+        if (LITTLE_ENDIAN) then
+            read4_to_u32 = transfer(str, 0_i4)
+        else
+            read4_to_u32 = iachar(str(1:1), kind=i4)
+            do j = 2, 4
+                read4_to_u32 = ior(read4_to_u32, ishft(int(iachar(str(j:j)), i4), 8*(j-1)))
+            end do
+        end if
+    end function read4_to_u32
+
     !> Check if 8 packed bytes are all ASCII digits.
     pure elemental logical function is_eight_digits(val)
         integer(i8), intent(in) :: val
@@ -977,6 +992,27 @@ contains
         res = int(iand(v, int(z'FFFFFFFF', i8)), i4)
     end function parse_eight_digits
 
+    !> Check if 4 packed bytes are all ASCII digits.
+    pure elemental logical function is_four_digits(val)
+        integer(i4), intent(in) :: val
+        integer(i8) :: z, v1, v2
+        z = iand(int(val, i8), int(z'00000000FFFFFFFF', i8))
+        v1 = z + int(z'46464646', i8)
+        v2 = z - int(z'30303030', i8)
+        is_four_digits = iand(ior(v1, v2), int(z'80808080', i8)) == 0
+    end function is_four_digits
+
+    !> Parse 4 ASCII digit bytes into an integer.
+    pure elemental integer function parse_four_digits(val) result(res)
+        integer(i4), intent(in) :: val
+        integer(i8) :: v
+        v = iand(int(val, i8), int(z'00000000FFFFFFFF', i8))
+        v = v - int(z'30303030', i8)
+        v = v*10_i8 + ishft(v, -8)
+        res = int(iand(ishft(iand(v, int(z'0000000000FF00FF', i8)) * int(z'0000000000640001', i8), -16), &
+                       int(z'000000000000FFFF', i8)), kind(res))
+    end function parse_four_digits
+
     !> Parse groups of 8 digits in a loop.
     pure elemental subroutine loop_parse_eight(pos, last, str, i)
         integer, intent(in) :: last
@@ -991,6 +1027,21 @@ contains
             pos = pos + 8
         end do
     end subroutine loop_parse_eight
+
+    !> Parse groups of 4 digits in a loop.
+    pure elemental subroutine loop_parse_four(pos, last, str, i)
+        integer, intent(in) :: last
+        integer, intent(inout) :: pos
+        character(len=*), intent(in) :: str
+        integer(i8), intent(inout) :: i
+        integer(i4) :: val
+        do while (last - pos + 1 >= 4)
+            val = read4_to_u32(str(pos:))
+            if (.not. is_four_digits(val)) exit
+            i = i * 10000_i8 + int(parse_four_digits(val), i8)
+            pos = pos + 4
+        end do
+    end subroutine loop_parse_four
 
     !> Case-insensitive comparison of 3 characters.
     pure logical function strcmpi3(str, e3)
@@ -1097,6 +1148,7 @@ contains
             p = p + 1
             bf = p
             call loop_parse_eight(p, last, str, i)
+            call loop_parse_four(p, last, str, i)
             do while (p <= last)
                 ic = iachar(str(p:p))
                 if (.not. is_digit(ic)) exit
@@ -2215,6 +2267,12 @@ contains
                     ct = ct + 8
                     dg = dg + 8
                 end do
+                do while (pe - p + 1 >= 4 .and. stp - ct >= 4 .and. md - dg >= 4)
+                    v = v*10000_i8 + int(parse_four_digits(read4_to_u32(str(p:))), i8)
+                    p = p + 4
+                    ct = ct + 4
+                    dg = dg + 4
+                end do
                 do while (ct < stp .and. p <= pe .and. dg < md)
                     v = v*10 + int(iachar(str(p:p)) - 48, i8)
                     p = p + 1
@@ -2246,6 +2304,12 @@ contains
                     p = p + 8
                     ct = ct + 8
                     dg = dg + 8
+                end do
+                do while (pe - p + 1 >= 4 .and. stp - ct >= 4 .and. md - dg >= 4)
+                    v = v*10000_i8 + int(parse_four_digits(read4_to_u32(str(p:))), i8)
+                    p = p + 4
+                    ct = ct + 4
+                    dg = dg + 4
                 end do
                 do while (ct < stp .and. p <= pe .and. dg < md)
                     v = v*10 + int(iachar(str(p:p)) - 48, i8)
@@ -2615,6 +2679,7 @@ contains
                 pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
                 pns_p = pns_p + 8
             end do
+            call loop_parse_four(pns_p, pns_last, str, pns_i)
             do while (pns_p <= pns_last)
                 pns_ic = iachar(str(pns_p:pns_p))
                 if (pns_ic < 48 .or. pns_ic > 57) exit
@@ -3012,6 +3077,7 @@ contains
                 pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
                 pns_p = pns_p + 8
             end do
+            call loop_parse_four(pns_p, slen, str, pns_i)
             do while (pns_p <= slen)
                 pns_ic = iachar(str(pns_p:pns_p))
                 if (pns_ic < 48 .or. pns_ic > 57) exit
@@ -3280,8 +3346,12 @@ contains
         type(parse_options), intent(in), optional :: o
         integer :: nread
         call parse_double_fast(str, val, nread, stat, o)
-        nread = min(nread, len(str))
-        str => str(nread+1:)
+        if (stat == OUTCOMES%INVALID_INPUT) return
+        if (nread <= len(str)) then
+            str => str(nread:)
+        else
+            str => str(len(str)+1:len(str))
+        end if
     end subroutine parse_double_stream
 
     !> Parse a string range to float, subroutine form.
@@ -3419,6 +3489,7 @@ contains
                 pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
                 pns_p = pns_p + 8
             end do
+            call loop_parse_four(pns_p, pns_last, str, pns_i)
             do while (pns_p <= pns_last)
                 pns_ic = iachar(str(pns_p:pns_p))
                 if (pns_ic < 48 .or. pns_ic > 57) exit
@@ -3736,6 +3807,7 @@ contains
         sd = p
         i = 0
         if (base == 10) call loop_parse_eight(p, la, str, i)
+        if (base == 10) call loop_parse_four(p, la, str, i)
         do while (p <= la)
             d = char_to_digit(str(p:p))
             if (d >= base) exit
@@ -3954,6 +4026,8 @@ contains
 
             pns_eip = pns_p
             pns_dc = int(pns_eip - pns_sd, i8)
+            p%int_start = pns_sd
+            p%int_len = pns_eip - pns_sd
 
             if (fmt_bj) then
                 if (pns_dc == 0) then
@@ -3968,6 +4042,8 @@ contains
 
             pns_exp = 0_i8
             pns_fl = 0
+            p%frac_start = 0
+            p%frac_len = 0
             pns_hdp = .false.
             if (pns_p <= slen) pns_hdp = (stream(pns_p:pns_p) == fmt_dp)
 
@@ -3986,6 +4062,7 @@ contains
                     pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
                     pns_p = pns_p + 8
                 end do
+                call loop_parse_four(pns_p, slen, stream, pns_i)
                 do while (pns_p <= slen)
                     pns_ic = iachar(stream(pns_p:pns_p))
                     if (pns_ic < 48 .or. pns_ic > 57) exit
@@ -3994,6 +4071,8 @@ contains
                 end do
                 pns_exp = int(pns_bf - pns_p, i8)
                 pns_fl = pns_p - pns_bf
+                p%frac_start = pns_bf
+                p%frac_len = pns_fl
                 pns_dc = pns_dc - pns_exp
             end if
 
@@ -4102,7 +4181,6 @@ contains
             end block parse_number
 
             if (.not. p%valid) then
-                if (p%last_idx <= pos) exit
                 err = OUTCOMES%INVALID_INPUT
                 return
             end if
@@ -4390,6 +4468,7 @@ contains
                     pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
                     pns_p = pns_p + 8
                 end do
+                call loop_parse_four(pns_p, pns_last, stream, pns_i)
                 do while (pns_p <= pns_last)
                     pns_ic = iachar(stream(pns_p:pns_p))
                     if (pns_ic < 48 .or. pns_ic > 57) exit
@@ -4504,7 +4583,6 @@ contains
             end block parse_number
 
             if (.not. p%valid) then
-                if (p%last_idx <= pos) exit
                 err = OUTCOMES%INVALID_INPUT
                 return
             end if
