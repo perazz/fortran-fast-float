@@ -9,5 +9,18 @@ var searchData=
   ['double_5fmax_5fexponent_6',['double_max_exponent',['../namespacefast__float__module.html#a6a5ca124fefc8ab4f51e3006cae84005',1,'fast_float_module']]],
   ['double_5fmax_5fmantissa_7',['double_max_mantissa',['../namespacefast__float__module.html#ae6243fec1a252ba7ecb347576f4179ed',1,'fast_float_module']]],
   ['double_5fpow10_8',['double_pow10',['../namespacefast__float__module.html#a2d003effeab5c2ed2c360a3a7a2a2fa3',1,'fast_float_module']]],
-  ['double_5fsign_5findex_9',['double_sign_index',['../namespacefast__float__module.html#ac396d67d00e58d94b5bb1fa949b83d11',1,'fast_float_module']]]
+  ['double_5fsign_5findex_9',['double_sign_index',['../namespacefast__float__module.html#ac396d67d00e58d94b5bb1fa949b83d11',1,'fast_float_module']]],
+  ['dp_5f2hb_10',['dp_2hb',['../namespacefast__float__module.html#a3ca07e821229d1b9936cd5cf718cdaf4',1,'fast_float_module']]],
+  ['dp_5fcpm_11',['dp_cpm',['../namespacefast__float__module.html#a758bd59e43ec7f538d709c80445b5a37',1,'fast_float_module']]],
+  ['dp_5fhb_12',['dp_hb',['../namespacefast__float__module.html#af6f8129d60da8b942f3a94a933e73df8',1,'fast_float_module']]],
+  ['dp_5fip_13',['dp_ip',['../namespacefast__float__module.html#a282c11b29060def35328feecc952b68c',1,'fast_float_module']]],
+  ['dp_5flp10_14',['dp_lp10',['../namespacefast__float__module.html#a7c84d89eeaede49acd0f199f8c10287b',1,'fast_float_module']]],
+  ['dp_5fmb_15',['dp_mb',['../namespacefast__float__module.html#a6d2ee0232bef4c6b67b616c6b3036e78',1,'fast_float_module']]],
+  ['dp_5fme_16',['dp_me',['../namespacefast__float__module.html#a3dfb7d7cb53ee8720cee60c36751e6ec',1,'fast_float_module']]],
+  ['dp_5fmfp_5fhi_17',['dp_mfp_hi',['../namespacefast__float__module.html#a4004b5f44ca249402179946807801107',1,'fast_float_module']]],
+  ['dp_5fmfp_5flo_18',['dp_mfp_lo',['../namespacefast__float__module.html#a4cbcf6830fdc7a37a2d5e7be1ffcd99d',1,'fast_float_module']]],
+  ['dp_5fmmax_19',['dp_mmax',['../namespacefast__float__module.html#a06c5eccc66b35dc0258e5fbbbf6fb433',1,'fast_float_module']]],
+  ['dp_5fmrt_5fhi_20',['dp_mrt_hi',['../namespacefast__float__module.html#a437e7e54e7d6093d66a084086f6a6afc',1,'fast_float_module']]],
+  ['dp_5fmrt_5flo_21',['dp_mrt_lo',['../namespacefast__float__module.html#a26615481f5b9854905d721be79bc2c89',1,'fast_float_module']]],
+  ['dp_5fsp10_22',['dp_sp10',['../namespacefast__float__module.html#abc15cde367074a34d2b96509f5c9ba35',1,'fast_float_module']]]
 ];

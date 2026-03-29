@@ -4,6 +4,19 @@ var searchData=
   ['sign_5findex_1',['sign_index',['../structfast__float__module_1_1float__format.html#ab346fa8092cebc2ecca89e6acaa25018',1,'fast_float_module::float_format']]],
   ['small_5fpower_5fof_5ffive_2',['small_power_of_five',['../namespacefast__float__module.html#a7da53a9afe0d9399f489f4539155be00',1,'fast_float_module']]],
   ['smallest_5fpow10_3',['smallest_pow10',['../structfast__float__module_1_1float__format.html#a9abd413642a581129e808a31838f5271',1,'fast_float_module::float_format']]],
-  ['stackvec_5fcapacity_4',['stackvec_capacity',['../namespacefast__float__module.html#aa42dc65e2414bc63a31d18b58cb21766',1,'fast_float_module']]],
-  ['state_5',['state',['../structfast__float__module_1_1outcome.html#a28515f6ab9989bd757c950b684986b5e',1,'fast_float_module::outcome']]]
+  ['sp_5f2hb_4',['sp_2hb',['../namespacefast__float__module.html#ab270e860f761cfd8178d1b862a9fd1d0',1,'fast_float_module']]],
+  ['sp_5fcpm_5',['sp_cpm',['../namespacefast__float__module.html#ad6bc703a55e586aef0bd8159069c8e99',1,'fast_float_module']]],
+  ['sp_5fhb_6',['sp_hb',['../namespacefast__float__module.html#a7b155160208646be905084e141fbf6f9',1,'fast_float_module']]],
+  ['sp_5fip_7',['sp_ip',['../namespacefast__float__module.html#a0366e2fd3d5ed994e26bab85ef50ab44',1,'fast_float_module']]],
+  ['sp_5flp10_8',['sp_lp10',['../namespacefast__float__module.html#ac17dea31fe75c1a53d06d601268c6d9a',1,'fast_float_module']]],
+  ['sp_5fmb_9',['sp_mb',['../namespacefast__float__module.html#a860b8a32b9b9a88ba117831c198266f1',1,'fast_float_module']]],
+  ['sp_5fme_10',['sp_me',['../namespacefast__float__module.html#a1da522277508984ef63a17f5faae7176',1,'fast_float_module']]],
+  ['sp_5fmfp_5fhi_11',['sp_mfp_hi',['../namespacefast__float__module.html#aa3a9b2f638f855cb1c842b1914b9689c',1,'fast_float_module']]],
+  ['sp_5fmfp_5flo_12',['sp_mfp_lo',['../namespacefast__float__module.html#a336d56406fa9f9a8b44a3081a0951f09',1,'fast_float_module']]],
+  ['sp_5fmmax_13',['sp_mmax',['../namespacefast__float__module.html#a56289c28e8236b554e7cffc385e2a78d',1,'fast_float_module']]],
+  ['sp_5fmrt_5fhi_14',['sp_mrt_hi',['../namespacefast__float__module.html#a23dc97b0c324b5ff281d9f9e0d2feebc',1,'fast_float_module']]],
+  ['sp_5fmrt_5flo_15',['sp_mrt_lo',['../namespacefast__float__module.html#af85e454e430fdb85504eca32bbfc0ed9',1,'fast_float_module']]],
+  ['sp_5fsp10_16',['sp_sp10',['../namespacefast__float__module.html#a227c18c11b6152ed9f37f210fd1d9e60',1,'fast_float_module']]],
+  ['stackvec_5fcapacity_17',['stackvec_capacity',['../namespacefast__float__module.html#aa42dc65e2414bc63a31d18b58cb21766',1,'fast_float_module']]],
+  ['state_18',['state',['../structfast__float__module_1_1outcome.html#a28515f6ab9989bd757c950b684986b5e',1,'fast_float_module::outcome']]]
 ];
