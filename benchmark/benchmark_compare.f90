@@ -3,7 +3,8 @@ program benchmark_compare
     use iso_fortran_env, only: int64, output_unit, real64
     use fast_float_module, only: outcomes, outcome, parse_double, DEFAULT_PARSING, &
                                   operator(==), operator(/=)
-    use fast_float_module, only: parse_double_range_sub, parse_result, parse_double_array
+    use fast_float_module, only: parse_double_range_sub, parse_result, parse_double_array, &
+                                  parse_double_fast, parse_double_stream
     use ffc_c_bridge, only: ffc_parse_double_c, benchmark_ffc_lines_c
     use str2real_m, only: str2real
     use stdlib_str2num, only: to_num
@@ -252,19 +253,24 @@ contains
         integer, intent(in) :: nlines, volume, repeat_count
 
         ! Benchmark case indices
-        integer, parameter :: B_RSUB = 1, B_LINE = 2, B_STDLIB = 3
-        integer, parameter :: B_S2R = 4, B_READ = 5
-        integer, parameter :: B_CLOOP = 6, NCASES = 6
+        integer, parameter :: B_RSUB = 1, B_LINE = 2, B_FAST = 3
+        integer, parameter :: B_STRM = 4, B_STDLIB = 5
+        integer, parameter :: B_S2R = 6, B_READ = 7
+        integer, parameter :: B_CLOOP = 8, NCASES = 8
 
         character(len=40), parameter :: labels(NCASES) = [ character(len=40) :: &
             "fortran (fast_float array)", &
             "fortran (fast_float line)", &
+            "fortran (fast_float fast)", &
+            "fortran (fast_float stream)", &
             "fortran (stdlib to_num)", "fortran (str2real)", &
             "fortran (read *)", &
             "ffc via fortran interop" ]
         character(len=24), parameter :: cksum_labels(NCASES) = [ character(len=24) :: &
             "fast_float arr bits   = ", &
             "fast_float line bits  = ", &
+            "fast_float fast bits  = ", &
+            "fast_float strm bits  = ", &
             "stdlib checksum bits  = ", "str2real checksum bits= ", &
             "read * checksum bits  = ", &
             "ffc interop bits      = " ]
@@ -275,15 +281,16 @@ contains
         real(real64) :: elapsed_ns, volume_mb, x_f
         real(real64) :: x_stdlib, x_str2real, x_read
         real(c_double) :: x_c
-        integer :: i, k, r, ios_read, nparse, cursor
+        integer :: i, k, r, ios_read, nparse, cursor, consumed
         integer(c_int32_t) :: c_outcome
         integer(int64) :: count_end, count_rate, count_start
         type(parse_result) :: f_result
-        type(outcome) :: arr_err
+        type(outcome) :: arr_err, fast_stat
+        character(len=:), pointer :: stream_ptr
         ! Pre-computed integer start/end arrays (avoid c_size_t conversion in hot loop)
         integer, allocatable :: istart(:), iend(:)
         real(real64), allocatable :: values(:)
-        character(:), allocatable :: packed_text_ws
+        character(:), allocatable, target :: packed_text_ws
 
         volume_mb = real(volume, real64) / (1024.0_real64 * 1024.0_real64)
         min_ns = huge(1.0_real64)
@@ -316,6 +323,16 @@ contains
         do i = 1, nlines
             x_f = parse_double(packed_text(istart(i):iend(i)), f_result)
             xor_checksum(B_LINE) = ieor(xor_checksum(B_LINE), transfer(x_f, 0_int64))
+        end do
+        do i = 1, nlines
+            call parse_double_fast(packed_text(istart(i):iend(i)), x_f, consumed, fast_stat)
+            xor_checksum(B_FAST) = ieor(xor_checksum(B_FAST), transfer(x_f, 0_int64))
+        end do
+        stream_ptr => packed_text_ws(1:len(packed_text_ws))
+        do while (len(stream_ptr) > 0)
+            call parse_double_stream(stream_ptr, x_f, fast_stat)
+            if (fast_stat /= outcomes%OK) exit
+            xor_checksum(B_STRM) = ieor(xor_checksum(B_STRM), transfer(x_f, 0_int64))
         end do
         do i = 1, nlines
             x_stdlib = 0.0_real64
@@ -353,6 +370,32 @@ contains
             end do
             call system_clock(count=count_end)
             call tally(B_LINE, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
+        end do
+
+        do r = 1, repeat_count
+            answer = 0.0_real64
+            call system_clock(count=count_start)
+            do i = 1, nlines
+                call parse_double_fast(packed_text(istart(i):iend(i)), x_f, consumed, fast_stat)
+                if (x_f > answer) answer = x_f
+            end do
+            call system_clock(count=count_end)
+            call tally(B_FAST, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
+        end do
+
+        do r = 1, repeat_count
+            call system_clock(count=count_start)
+            answer = 0.0_real64
+            stream_ptr => packed_text_ws(1:len(packed_text_ws))
+            do while (len(stream_ptr) > 0)
+                call parse_double_stream(stream_ptr, x_f, fast_stat)
+                if (fast_stat /= outcomes%OK) exit
+                if (x_f > answer) answer = x_f
+            end do
+            call system_clock(count=count_end)
+            call tally(B_STRM, answer, count_start, count_end, count_rate, &
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
