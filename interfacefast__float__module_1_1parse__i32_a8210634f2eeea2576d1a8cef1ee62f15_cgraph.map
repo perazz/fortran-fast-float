@@ -1,26 +1,36 @@
 <map id="fast_float_module::parse_i32::parse_i32_pure" name="fast_float_module::parse_i32::parse_i32_pure">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,137,197,177"/>
-<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a805b7010bf5e214929747f2e169364d7" title="Parse a string to a 32&#45;bit integer (subroutine form)." alt="" coords="245,137,392,177"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,155,232,155,232,160,197,160"/>
-<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="440,137,587,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="392,155,426,155,426,160,392,160"/>
-<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e" title="Map a character to its digit value using the lookup table." alt="" coords="635,29,781,69"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="543,135,633,79,645,73,648,78,636,84,545,139"/>
-<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="635,93,781,133"/>
-<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="586,138,620,130,622,136,587,143"/>
-<area shape="rect" id="Node000009" href="$namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="635,181,781,221"/>
-<area shape="poly" id="edge11_Node000003_Node000009" title=" " alt="" coords="587,171,622,179,620,184,586,176"/>
-<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="635,269,781,309"/>
-<area shape="poly" id="edge13_Node000003_Node000010" title=" " alt="" coords="545,175,667,259,664,264,542,180"/>
-<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="671,30,669,20,675,11,688,5,708,3,731,6,743,13,741,17,729,11,708,8,689,10,678,15,674,21,676,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,269,197,309"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a805b7010bf5e214929747f2e169364d7" title="Parse a string to a 32&#45;bit integer (subroutine form)." alt="" coords="245,269,392,309"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,287,232,287,232,292,197,292"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="440,269,587,309"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="392,287,426,287,426,292,392,292"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e" title="Map a character to its digit value using the lookup table." alt="" coords="635,117,781,157"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="529,267,573,219,602,192,633,167,642,162,645,166,636,172,605,196,577,222,533,271"/>
+<area shape="rect" id="Node000005" href="$namespacefast__float__module.html#a66b36874b482cf577a5844429e1f2767" title="Parse groups of 8 digits in a loop." alt="" coords="635,181,781,221"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="558,267,650,225,652,229,560,272"/>
+<area shape="rect" id="Node000009" href="$namespacefast__float__module.html#ab71f2ff331a07c0a6af8a3371b3b55c6" title="Parse groups of 4 digits in a loop." alt="" coords="635,269,781,309"/>
+<area shape="poly" id="edge11_Node000003_Node000009" title=" " alt="" coords="587,287,621,287,621,292,587,292"/>
+<area shape="rect" id="Node000013" href="$namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="635,357,781,397"/>
+<area shape="poly" id="edge17_Node000003_Node000013" title=" " alt="" coords="560,307,652,349,650,354,558,312"/>
+<area shape="rect" id="Node000014" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="635,445,781,485"/>
+<area shape="poly" id="edge19_Node000003_Node000014" title=" " alt="" coords="535,308,581,354,636,407,670,435,667,439,633,411,577,358,532,311"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="671,118,669,108,675,99,688,93,708,91,731,94,743,101,741,105,729,99,708,96,689,98,678,103,674,109,676,116"/>
 <area shape="rect" id="Node000006" href="$namespacefast__float__module.html#ab5251b2e39d7a2dfa5dd9c13a3426934" title="Check if 8 packed bytes are all ASCII digits." alt="" coords="829,29,976,69"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="769,91,827,71,829,76,770,96"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="763,179,779,167,796,146,803,124,810,102,827,80,833,75,836,79,831,83,815,105,808,126,800,148,783,171,766,183"/>
 <area shape="rect" id="Node000007" href="$namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="829,93,976,133"/>
-<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="781,111,815,111,815,116,781,116"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="754,179,780,167,828,143,842,137,844,141,830,148,782,172,756,184"/>
 <area shape="rect" id="Node000008" href="$namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="829,181,976,221"/>
-<area shape="poly" id="edge9_Node000005_Node000008" title=" " alt="" coords="756,131,782,143,848,173,845,178,780,148,754,136"/>
+<area shape="poly" id="edge9_Node000005_Node000008" title=" " alt="" coords="781,199,815,199,815,204,781,204"/>
 <area shape="poly" id="edge7_Node000006_Node000006" title=" " alt="" coords="866,30,864,20,870,11,883,5,903,3,926,6,938,13,935,17,924,11,903,8,884,10,873,15,869,21,871,28"/>
 <area shape="poly" id="edge10_Node000008_Node000008" title=" " alt="" coords="866,182,864,172,870,163,883,157,903,155,926,158,938,165,935,169,924,163,903,160,884,162,873,167,869,173,871,180"/>
-<area shape="poly" id="edge12_Node000009_Node000009" title=" " alt="" coords="671,182,669,172,675,163,688,157,708,155,731,158,743,165,741,169,729,163,708,160,689,162,678,167,674,173,676,180"/>
-<area shape="poly" id="edge14_Node000010_Node000010" title=" " alt="" coords="671,270,669,260,675,251,688,245,708,243,731,246,743,253,741,257,729,251,708,248,689,250,678,255,674,261,676,268"/>
+<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#ac563de2c021d4f2eab9d526cdb0db7ae" title="Check if 4 packed bytes are all ASCII digits." alt="" coords="829,269,976,309"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="781,287,815,287,815,292,781,292"/>
+<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a3795324d2ff002e48367dcaf363c28ef" title="Parse 4 ASCII digit bytes into an integer." alt="" coords="829,333,976,373"/>
+<area shape="poly" id="edge14_Node000009_Node000011" title=" " alt="" coords="770,307,829,326,827,331,769,312"/>
+<area shape="rect" id="Node000012" href="$namespacefast__float__module.html#a66f4fb9f95d4ce03b42315207c005a67" title="Reinterpret 4 characters as a single i4 (little&#45;endian)." alt="" coords="829,421,976,461"/>
+<area shape="poly" id="edge15_Node000009_Node000012" title=" " alt="" coords="764,307,783,319,799,335,809,351,817,366,831,383,863,411,859,415,827,387,813,369,804,353,795,339,780,323,762,312"/>
+<area shape="poly" id="edge13_Node000010_Node000010" title=" " alt="" coords="866,270,864,260,870,251,883,245,903,243,926,246,938,253,935,257,924,251,903,248,884,250,873,255,869,261,871,268"/>
+<area shape="poly" id="edge16_Node000012_Node000012" title=" " alt="" coords="866,422,864,412,870,403,883,397,903,395,926,398,938,405,935,409,924,403,903,400,884,402,873,407,869,413,871,420"/>
+<area shape="poly" id="edge18_Node000013_Node000013" title=" " alt="" coords="671,358,669,348,675,339,688,333,708,331,731,334,743,341,741,345,729,339,708,336,689,338,678,343,674,349,676,356"/>
+<area shape="poly" id="edge20_Node000014_Node000014" title=" " alt="" coords="671,446,669,436,675,427,688,421,708,419,731,422,743,429,741,433,729,427,708,424,689,426,678,431,674,437,676,444"/>
 </map>

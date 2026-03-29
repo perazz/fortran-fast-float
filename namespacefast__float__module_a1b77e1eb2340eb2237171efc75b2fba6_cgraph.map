@@ -1,135 +1,135 @@
 <map id="fast_float_module::parse_double_array" name="fast_float_module::parse_double_array">
-<area shape="rect" id="Node000001" title="Parse a whitespace&#45;delimited stream of double&#45;precision floats into an array. Hot&#45;path routines manua..." alt="" coords="5,239,156,279"/>
-<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a34ebed8f392eed32171825921225c7d1" title="Compute error adjusted mantissa." alt="" coords="405,121,551,161"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,236,395,163,396,168,150,241"/>
-<area shape="rect" id="Node000009" href="$namespacefast__float__module.html#a3dccfc96e927157dfe3c7d89c814cf75" title="Compute the Eisel&#45;Lemire float approximation." alt="" coords="405,239,551,279"/>
-<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="156,256,390,256,390,261,156,261"/>
-<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a4b8fb8b9741abb502f1f2abb5441e54e" title="Digit comparison fallback." alt="" coords="204,912,351,952"/>
-<area shape="poly" id="edge18_Node000001_Node000011" title=" " alt="" coords="90,278,269,898,264,900,85,280"/>
-<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a9c934c61ac0a9105f681ccabb3986043" title="Compute error&#45;scaled adjusted mantissa." alt="" coords="605,67,772,107"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="551,120,597,108,599,113,552,125"/>
+<area shape="rect" id="Node000001" title="Parse a whitespace&#45;delimited stream of double&#45;precision floats into an array. Hot&#45;path routines manua..." alt="" coords="5,654,156,694"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a34ebed8f392eed32171825921225c7d1" title="Compute error adjusted mantissa." alt="" coords="405,167,551,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,652,134,563,166,507,202,452,250,387,291,338,336,293,397,238,431,213,434,217,400,243,340,297,295,341,254,390,206,455,170,510,138,566,94,655"/>
+<area shape="rect" id="Node000009" href="$namespacefast__float__module.html#a3dccfc96e927157dfe3c7d89c814cf75" title="Compute the Eisel&#45;Lemire float approximation." alt="" coords="405,253,551,293"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="100,652,445,301,449,305,104,655"/>
+<area shape="rect" id="Node000011" href="$namespacefast__float__module.html#a4b8fb8b9741abb502f1f2abb5441e54e" title="Digit comparison fallback." alt="" coords="204,842,351,882"/>
+<area shape="poly" id="edge18_Node000001_Node000011" title=" " alt="" coords="105,692,247,830,243,834,101,696"/>
+<area shape="rect" id="Node000062" href="$namespacefast__float__module.html#ab71f2ff331a07c0a6af8a3371b3b55c6" title="Parse groups of 4 digits in a loop." alt="" coords="405,1611,551,1651"/>
+<area shape="poly" id="edge79_Node000001_Node000062" title=" " alt="" coords="92,694,208,1003,301,1234,401,1471,462,1598,457,1600,396,1474,296,1236,204,1005,87,695"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a9c934c61ac0a9105f681ccabb3986043" title="Compute error&#45;scaled adjusted mantissa." alt="" coords="605,66,772,106"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="518,165,604,122,631,109,633,114,606,127,521,169"/>
 <area shape="rect" id="Node000005" href="$namespacefast__float__module.html#af869682752534bd0deac3196f2502646" title="Compute the product approximation for Eisel&#45;Lemire." alt="" coords="615,181,762,221"/>
-<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="550,159,605,175,604,180,548,164"/>
-<area shape="rect" id="Node000008" href="$namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="1019,313,1173,353"/>
-<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="498,119,544,83,573,65,604,52,708,20,753,9,795,4,837,4,879,13,924,31,972,59,1001,83,1025,112,1045,144,1060,178,1082,244,1093,299,1088,300,1077,246,1055,180,1040,146,1021,115,997,87,969,64,921,36,878,18,836,10,796,9,754,15,710,25,606,57,576,70,547,87,502,123"/>
-<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a5b56697a868ca3f61bdb494294b6e93c" title="Convert a base&#45;10 exponent to base&#45;2." alt="" coords="822,97,969,137"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="773,97,809,102,808,107,772,102"/>
-<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="858,98,855,88,861,79,875,73,895,71,919,74,932,81,929,86,917,79,895,76,876,78,865,83,861,89,863,96"/>
-<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="822,175,969,215"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="762,196,808,195,808,200,763,202"/>
-<area shape="rect" id="Node000007" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="822,756,969,796"/>
-<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="706,220,741,279,775,355,787,402,794,443,796,514,799,584,807,623,822,668,844,709,869,744,865,747,839,712,818,670,802,625,794,584,790,514,788,443,782,403,769,357,736,281,701,223"/>
-<area shape="poly" id="edge8_Node000007_Node000007" title=" " alt="" coords="858,756,855,746,861,737,875,731,895,729,919,732,932,740,929,744,917,737,895,735,876,737,865,741,861,747,863,755"/>
-<area shape="poly" id="edge10_Node000008_Node000008" title=" " alt="" coords="1059,314,1057,304,1062,295,1076,289,1096,287,1119,290,1132,297,1129,302,1118,295,1096,292,1077,294,1066,299,1062,305,1064,312"/>
-<area shape="poly" id="edge12_Node000009_Node000004" title=" " alt="" coords="500,237,546,200,604,167,655,149,708,136,808,120,809,126,710,141,657,154,606,172,549,205,503,241"/>
-<area shape="poly" id="edge13_Node000009_Node000005" title=" " alt="" coords="551,236,601,222,603,228,552,241"/>
-<area shape="poly" id="edge17_Node000009_Node000007" title=" " alt="" coords="481,279,484,356,490,408,499,467,515,527,537,587,568,643,607,691,633,704,683,720,809,754,808,759,682,726,631,709,604,696,563,646,532,589,510,529,494,468,484,409,479,356,476,279"/>
-<area shape="poly" id="edge14_Node000009_Node000008" title=" " alt="" coords="552,250,637,247,743,247,858,256,971,275,1012,288,1049,305,1047,309,1010,293,970,280,857,261,743,253,638,252,552,256"/>
-<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="1023,779,1169,819"/>
-<area shape="poly" id="edge15_Node000009_Node000010" title=" " alt="" coords="484,279,494,337,516,417,532,460,552,503,577,544,607,580,651,618,693,642,734,657,775,667,865,682,916,695,972,718,1017,742,1058,769,1055,773,1014,747,970,723,914,700,864,687,774,672,732,663,691,647,648,622,603,583,573,547,548,506,527,462,511,419,489,338,479,280"/>
-<area shape="poly" id="edge16_Node000010_Node000010" title=" " alt="" coords="1059,779,1057,769,1062,760,1076,754,1096,752,1119,755,1132,762,1129,767,1118,760,1096,757,1077,759,1066,764,1062,770,1064,778"/>
-<area shape="rect" id="Node000012" href="$namespacefast__float__module.html#ae12179bf230b567a0adbe36acc25f1fe" title="Create an empty bigint." alt="" coords="405,944,551,984"/>
-<area shape="poly" id="edge19_Node000011_Node000012" title=" " alt="" coords="351,941,391,948,391,953,350,946"/>
-<area shape="rect" id="Node000013" href="$namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a" title="Negative digit comparison path." alt="" coords="399,1036,557,1076"/>
-<area shape="poly" id="edge20_Node000011_Node000013" title=" " alt="" coords="312,950,434,1027,432,1031,310,955"/>
-<area shape="rect" id="Node000041" href="$namespacefast__float__module.html#af7d24a49942e0dabf1cabaf827a1c07f" title="Parse mantissa digits into a bigint." alt="" coords="405,1521,551,1561"/>
-<area shape="poly" id="edge47_Node000011_Node000041" title=" " alt="" coords="288,952,468,1507,463,1509,283,953"/>
-<area shape="rect" id="Node000048" href="$namespacefast__float__module.html#ab08f4623be79e78dafe3019051379980" title="Positive digit comparison path." alt="" coords="401,763,555,803"/>
-<area shape="poly" id="edge61_Node000011_Node000048" title=" " alt="" coords="304,910,437,809,440,813,307,914"/>
-<area shape="rect" id="Node000059" href="$namespacefast__float__module.html#ab5e6a40c5579c822b8de772cdcf68c22" title="Scale the exponent by the number of digits in the mantissa." alt="" coords="405,880,551,920"/>
-<area shape="poly" id="edge82_Node000011_Node000059" title=" " alt="" coords="350,918,391,911,391,917,351,923"/>
-<area shape="rect" id="Node000014" href="$namespacefast__float__module.html#abfc723432befd95d402dc92811c7a65a" title="Convert adjusted mantissa to double precision." alt="" coords="615,1157,762,1197"/>
-<area shape="poly" id="edge21_Node000013_Node000014" title=" " alt="" coords="505,1074,551,1108,607,1143,619,1149,617,1154,604,1148,548,1113,502,1078"/>
-<area shape="rect" id="Node000015" href="$namespacefast__float__module.html#a3d67c988e0f66ee883836c8ae3339533" title="Compare two bigints." alt="" coords="615,979,762,1019"/>
-<area shape="poly" id="edge22_Node000013_Node000015" title=" " alt="" coords="551,1033,601,1020,603,1025,553,1039"/>
-<area shape="rect" id="Node000017" href="$namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="615,1336,762,1376"/>
-<area shape="poly" id="edge27_Node000013_Node000017" title=" " alt="" coords="486,1076,499,1125,522,1191,558,1261,581,1293,607,1322,612,1327,609,1331,603,1326,577,1297,553,1264,517,1193,494,1126,481,1077"/>
-<area shape="rect" id="Node000020" href="$namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="822,1100,969,1140"/>
-<area shape="poly" id="edge30_Node000013_Node000020" title=" " alt="" coords="558,1056,660,1063,773,1079,827,1093,826,1098,771,1084,660,1068,557,1061"/>
-<area shape="rect" id="Node000025" href="$namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="822,1201,969,1241"/>
-<area shape="poly" id="edge32_Node000013_Node000025" title=" " alt="" coords="491,1075,508,1106,534,1143,567,1179,607,1207,656,1225,708,1234,760,1236,808,1233,808,1238,760,1241,707,1239,654,1230,604,1212,563,1183,530,1146,504,1109,486,1077"/>
-<area shape="rect" id="Node000034" href="$namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="615,827,762,867"/>
-<area shape="poly" id="edge36_Node000013_Node000034" title=" " alt="" coords="511,1034,535,1016,555,995,571,964,576,935,583,907,591,892,603,877,608,873,612,877,607,881,595,895,588,908,582,936,576,965,560,998,538,1020,515,1038"/>
-<area shape="rect" id="Node000037" href="$namespacefast__float__module.html#a25e25f3ff77a20878482b54f08b5a5dd" title="Round tie&#45;even using digit comparison ordering." alt="" coords="610,891,767,931"/>
-<area shape="poly" id="edge41_Node000013_Node000037" title=" " alt="" coords="506,1034,555,994,578,966,588,954,604,941,613,935,616,939,607,945,592,958,582,970,559,998,510,1038"/>
-<area shape="rect" id="Node000039" href="$namespacefast__float__module.html#a2b5f87588cdb53203c8c9c9b68225a66" title="Convert a float to its extended halfway representation." alt="" coords="608,1272,769,1312"/>
-<area shape="poly" id="edge45_Node000013_Node000039" title=" " alt="" coords="490,1076,507,1112,533,1159,567,1208,607,1251,623,1263,620,1267,604,1255,562,1211,529,1162,503,1115,485,1078"/>
-<area shape="poly" id="edge26_Node000015_Node000007" title=" " alt="" coords="728,976,751,961,770,941,781,923,787,906,792,874,797,841,805,824,818,806,822,802,826,806,822,810,809,826,802,842,797,874,792,908,786,926,774,944,754,965,732,981"/>
-<area shape="poly" id="edge23_Node000015_Node000015" title=" " alt="" coords="650,979,648,969,654,960,668,954,689,952,713,955,726,962,723,967,711,960,689,957,669,959,657,964,653,970,655,978"/>
-<area shape="rect" id="Node000016" href="$namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="822,1036,969,1076"/>
-<area shape="poly" id="edge24_Node000015_Node000016" title=" " alt="" coords="762,1016,810,1030,809,1035,761,1021"/>
-<area shape="poly" id="edge25_Node000016_Node000016" title=" " alt="" coords="858,1036,855,1026,861,1017,875,1011,895,1009,919,1012,932,1020,929,1024,917,1017,895,1015,876,1017,865,1021,861,1027,863,1035"/>
-<area shape="rect" id="Node000018" href="$namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="822,1393,969,1433"/>
-<area shape="poly" id="edge28_Node000017_Node000018" title=" " alt="" coords="762,1374,810,1387,809,1392,761,1379"/>
-<area shape="rect" id="Node000019" href="$namespacefast__float__module.html#a08efb715246ed5f2def9b97783e43d7a" title="Push a value onto the stack vector." alt="" coords="822,1329,969,1369"/>
-<area shape="poly" id="edge29_Node000017_Node000019" title=" " alt="" coords="762,1351,808,1350,808,1355,763,1356"/>
-<area shape="rect" id="Node000021" href="$namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="1023,1100,1169,1140"/>
-<area shape="poly" id="edge31_Node000020_Node000021" title=" " alt="" coords="969,1117,1009,1117,1009,1123,969,1123"/>
-<area shape="rect" id="Node000026" href="$namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="1023,1201,1169,1241"/>
-<area shape="poly" id="edge33_Node000025_Node000026" title=" " alt="" coords="969,1219,1009,1219,1009,1224,969,1224"/>
-<area shape="rect" id="Node000032" href="$namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="1221,1259,1368,1299"/>
-<area shape="poly" id="edge35_Node000025_Node000032" title=" " alt="" coords="966,1239,1019,1251,1117,1264,1208,1272,1208,1277,1116,1269,1018,1256,965,1244"/>
-<area shape="poly" id="edge34_Node000026_Node000032" title=" " alt="" coords="1167,1239,1212,1252,1211,1257,1165,1244"/>
-<area shape="poly" id="edge40_Node000034_Node000007" title=" " alt="" coords="747,824,822,798,824,803,749,829"/>
-<area shape="rect" id="Node000035" href="$namespacefast__float__module.html#a3a6b45e929ae58a5ebef3f7aaa6aa370" title="Round down implementation." alt="" coords="822,820,969,860"/>
-<area shape="poly" id="edge37_Node000034_Node000035" title=" " alt="" coords="762,842,808,840,808,846,763,847"/>
-<area shape="rect" id="Node000036" href="$namespacefast__float__module.html#a0a805e389062ab308ce01b45b44304cf" title="Finish rounding: handle overflow and infinity." alt="" coords="822,884,969,924"/>
-<area shape="poly" id="edge38_Node000034_Node000036" title=" " alt="" coords="762,864,810,878,809,883,761,869"/>
-<area shape="poly" id="edge39_Node000036_Node000010" title=" " alt="" coords="944,882,969,870,1050,824,1053,828,972,874,947,886"/>
-<area shape="poly" id="edge44_Node000037_Node000007" title=" " alt="" coords="752,888,770,877,786,860,794,842,802,825,818,806,825,801,828,805,822,810,807,827,799,845,790,863,774,881,755,893"/>
-<area shape="poly" id="edge42_Node000037_Node000036" title=" " alt="" coords="768,906,808,904,809,910,768,911"/>
-<area shape="rect" id="Node000038" href="$namespacefast__float__module.html#a4a1f0051d9f6eb00ca382f6fa7e68b5c" title="Round to nearest using comparison ordering." alt="" coords="820,948,971,988"/>
-<area shape="poly" id="edge43_Node000037_Node000038" title=" " alt="" coords="762,928,810,942,809,947,761,933"/>
-<area shape="rect" id="Node000040" href="$namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="822,1265,969,1305"/>
-<area shape="poly" id="edge46_Node000039_Node000040" title=" " alt="" coords="769,1287,808,1286,808,1291,770,1292"/>
-<area shape="rect" id="Node000042" href="$namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="822,1457,969,1497"/>
-<area shape="poly" id="edge48_Node000041_Node000042" title=" " alt="" coords="496,1519,542,1478,572,1458,605,1443,662,1431,720,1431,776,1439,826,1451,825,1456,775,1444,720,1437,662,1437,606,1448,574,1463,545,1482,499,1523"/>
-<area shape="rect" id="Node000043" href="$namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="615,1724,762,1764"/>
-<area shape="poly" id="edge51_Node000041_Node000043" title=" " alt="" coords="496,1560,543,1619,607,1686,644,1714,641,1719,604,1690,539,1623,492,1564"/>
-<area shape="rect" id="Node000044" href="$namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="822,1636,969,1676"/>
-<area shape="poly" id="edge56_Node000041_Node000044" title=" " alt="" coords="552,1559,809,1630,808,1635,551,1564"/>
-<area shape="rect" id="Node000045" href="$namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="615,1521,762,1561"/>
-<area shape="poly" id="edge55_Node000041_Node000045" title=" " alt="" coords="551,1539,602,1539,602,1544,551,1544"/>
-<area shape="rect" id="Node000046" href="$namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="615,1457,762,1497"/>
-<area shape="poly" id="edge57_Node000041_Node000046" title=" " alt="" coords="544,1519,609,1499,610,1504,545,1524"/>
-<area shape="rect" id="Node000047" href="$namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="615,1636,762,1676"/>
-<area shape="poly" id="edge59_Node000041_Node000047" title=" " alt="" coords="512,1559,607,1615,632,1628,629,1633,604,1620,510,1564"/>
-<area shape="poly" id="edge50_Node000042_Node000032" title=" " alt="" coords="943,1455,970,1443,1120,1368,1243,1303,1246,1308,1122,1373,972,1448,945,1460"/>
-<area shape="rect" id="Node000029" href="$namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="1023,1457,1169,1497"/>
-<area shape="poly" id="edge49_Node000042_Node000029" title=" " alt="" coords="969,1475,1009,1475,1009,1480,969,1480"/>
-<area shape="poly" id="edge52_Node000043_Node000043" title=" " alt="" coords="650,1724,648,1714,654,1705,668,1699,689,1697,713,1700,726,1708,723,1712,711,1705,689,1703,669,1705,657,1709,653,1715,655,1723"/>
-<area shape="poly" id="edge53_Node000043_Node000044" title=" " alt="" coords="736,1721,834,1679,836,1684,738,1726"/>
-<area shape="poly" id="edge54_Node000044_Node000044" title=" " alt="" coords="858,1636,855,1626,861,1617,875,1611,895,1609,919,1612,932,1620,929,1624,917,1617,895,1615,876,1617,865,1621,861,1627,863,1635"/>
-<area shape="poly" id="edge58_Node000046_Node000042" title=" " alt="" coords="762,1475,808,1475,808,1480,762,1480"/>
-<area shape="poly" id="edge60_Node000047_Node000044" title=" " alt="" coords="762,1653,808,1653,808,1659,762,1659"/>
-<area shape="rect" id="Node000049" href="$namespacefast__float__module.html#a2efdc55b08697ee5b6659a673cd023a9" title="Compute bit length of a bigint." alt="" coords="615,392,762,432"/>
-<area shape="poly" id="edge62_Node000048_Node000049" title=" " alt="" coords="485,762,530,655,564,585,603,516,659,441,663,444,608,519,569,587,535,657,490,764"/>
-<area shape="rect" id="Node000051" href="$namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="615,529,762,569"/>
-<area shape="poly" id="edge67_Node000048_Node000051" title=" " alt="" coords="495,761,658,578,662,581,499,764"/>
-<area shape="rect" id="Node000056" href="$namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="615,1093,762,1133"/>
-<area shape="poly" id="edge76_Node000048_Node000056" title=" " alt="" coords="516,801,539,819,560,843,574,869,581,893,586,936,589,980,596,1003,608,1029,628,1058,653,1083,649,1086,624,1062,603,1032,591,1005,584,981,580,937,576,894,569,871,555,846,536,823,513,805"/>
-<area shape="rect" id="Node000057" href="$namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="615,763,762,803"/>
-<area shape="poly" id="edge79_Node000048_Node000057" title=" " alt="" coords="555,780,602,780,602,785,555,785"/>
-<area shape="poly" id="edge63_Node000049_Node000049" title=" " alt="" coords="650,392,648,382,654,373,668,367,689,365,713,368,726,376,723,380,711,373,689,371,669,373,657,377,653,383,655,391"/>
-<area shape="rect" id="Node000050" href="$namespacefast__float__module.html#a258f8750d36535cf5b9e8497a833800f" title="Count leading zeros of a bigint." alt="" coords="822,313,969,353"/>
-<area shape="poly" id="edge64_Node000049_Node000050" title=" " alt="" coords="741,390,829,356,830,361,743,395"/>
-<area shape="poly" id="edge66_Node000050_Node000008" title=" " alt="" coords="969,331,1005,331,1005,336,969,336"/>
-<area shape="poly" id="edge65_Node000050_Node000050" title=" " alt="" coords="858,314,855,304,861,295,875,289,895,287,919,290,932,297,929,302,917,295,895,292,876,294,865,299,861,305,863,312"/>
-<area shape="rect" id="Node000052" href="$namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700" title="Extract high 64 bits from a single limb." alt="" coords="822,441,969,481"/>
-<area shape="poly" id="edge68_Node000051_Node000052" title=" " alt="" coords="736,527,834,484,836,489,738,532"/>
-<area shape="rect" id="Node000053" href="$namespacefast__float__module.html#a70e0d2a9188d831137ab521f9c1a1639" title="Extract high 64 bits from two limbs." alt="" coords="822,377,969,417"/>
-<area shape="poly" id="edge70_Node000051_Node000053" title=" " alt="" coords="706,527,754,479,818,427,828,421,831,426,822,432,758,483,710,531"/>
-<area shape="rect" id="Node000054" href="$namespacefast__float__module.html#a536da3d7a72ca4d6b052d813648fde0b" title="Check if any non&#45;zero elements exist after index i." alt="" coords="822,529,969,569"/>
-<area shape="poly" id="edge72_Node000051_Node000054" title=" " alt="" coords="762,547,808,547,808,552,762,552"/>
-<area shape="rect" id="Node000055" href="$namespacefast__float__module.html#ab1f7a43febc992caa75416e62b4beefd" title="Get element at reverse index from the stack vector." alt="" coords="822,617,969,657"/>
-<area shape="poly" id="edge74_Node000051_Node000055" title=" " alt="" coords="738,567,836,609,834,614,736,572"/>
-<area shape="poly" id="edge69_Node000052_Node000008" title=" " alt="" coords="946,439,969,427,1018,394,1060,360,1063,365,1021,398,972,432,949,444"/>
-<area shape="poly" id="edge71_Node000053_Node000008" title=" " alt="" coords="958,375,1019,355,1021,360,960,380"/>
-<area shape="poly" id="edge73_Node000054_Node000054" title=" " alt="" coords="858,530,855,520,861,511,875,505,895,503,919,506,932,513,929,518,917,511,895,508,876,510,865,515,861,521,863,528"/>
-<area shape="poly" id="edge75_Node000055_Node000055" title=" " alt="" coords="858,618,855,608,861,599,875,593,895,591,919,594,932,601,929,606,917,599,895,596,876,598,865,603,861,609,863,616"/>
-<area shape="poly" id="edge77_Node000056_Node000020" title=" " alt="" coords="763,1113,808,1115,808,1120,762,1118"/>
-<area shape="poly" id="edge78_Node000056_Node000025" title=" " alt="" coords="747,1131,773,1143,855,1191,852,1196,771,1148,745,1136"/>
-<area shape="poly" id="edge81_Node000057_Node000007" title=" " alt="" coords="762,778,808,776,808,782,763,783"/>
-<area shape="poly" id="edge80_Node000057_Node000036" title=" " alt="" coords="753,801,774,813,789,827,798,842,807,856,822,870,829,875,826,879,818,874,803,859,794,845,785,831,770,817,750,805"/>
-<area shape="poly" id="edge83_Node000059_Node000059" title=" " alt="" coords="440,880,438,870,444,861,458,855,478,853,502,856,514,864,512,868,500,861,478,859,459,861,447,865,443,871,445,879"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="552,189,602,192,601,198,551,195"/>
+<area shape="rect" id="Node000008" href="$namespacefast__float__module.html#a0c79eb8b53431689a6c509ac804adccf" title="Count leading zero bits in a 64&#45;bit integer." alt="" coords="1019,238,1173,278"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="489,166,507,138,533,106,566,75,604,51,657,30,705,15,749,6,791,3,833,7,876,19,922,38,972,65,994,80,1014,99,1046,141,1070,186,1086,224,1081,226,1065,188,1042,144,1010,102,991,84,969,69,920,43,875,24,832,13,791,8,750,11,706,20,659,35,607,56,569,79,537,109,511,141,493,168"/>
+<area shape="rect" id="Node000004" href="$namespacefast__float__module.html#a5b56697a868ca3f61bdb494294b6e93c" title="Convert a base&#45;10 exponent to base&#45;2." alt="" coords="822,103,969,143"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="773,98,809,105,808,110,772,104"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="858,103,855,94,861,84,875,79,895,77,919,79,932,87,929,91,917,84,895,82,876,84,865,89,861,94,863,102"/>
+<area shape="rect" id="Node000006" href="$namespacefast__float__module.html#adac4be112bfe35e1fcb81a085a96c983" title="Multiply two unsigned 64&#45;bit integers, returning a 128&#45;bit result." alt="" coords="822,181,969,221"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="762,198,808,198,808,203,762,203"/>
+<area shape="rect" id="Node000007" href="$namespacefast__float__module.html#ab3d2ff1091ab63f957e579c14addc497" title="Compare two unsigned 64&#45;bit integers (a &lt; b)." alt="" coords="822,650,969,690"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="708,219,742,269,774,333,787,375,792,412,791,478,790,509,794,541,803,575,822,612,848,640,844,644,818,615,798,577,788,542,785,509,785,478,786,412,782,376,770,335,738,272,704,222"/>
+<area shape="poly" id="edge8_Node000007_Node000007" title=" " alt="" coords="858,650,855,640,861,631,875,625,895,623,919,626,932,633,929,638,917,631,895,629,876,630,865,635,861,641,863,649"/>
+<area shape="poly" id="edge10_Node000008_Node000008" title=" " alt="" coords="1059,238,1057,228,1062,219,1076,213,1096,211,1119,214,1132,221,1129,226,1118,219,1096,217,1077,218,1066,223,1062,229,1064,237"/>
+<area shape="poly" id="edge12_Node000009_Node000004" title=" " alt="" coords="510,250,556,217,569,203,578,190,588,178,604,166,654,145,707,132,760,123,808,120,808,125,760,129,708,137,656,150,607,171,591,182,582,193,573,207,559,221,514,255"/>
+<area shape="poly" id="edge13_Node000009_Node000005" title=" " alt="" coords="536,250,616,223,617,228,538,255"/>
+<area shape="poly" id="edge17_Node000009_Node000007" title=" " alt="" coords="497,291,542,343,573,371,607,396,630,407,652,412,693,415,733,420,753,430,774,447,790,467,799,488,803,528,804,569,810,590,822,612,849,640,845,644,818,615,805,592,799,570,797,528,793,489,785,470,770,450,751,434,732,426,693,420,651,417,628,412,604,400,570,376,539,347,493,295"/>
+<area shape="poly" id="edge14_Node000009_Node000008" title=" " alt="" coords="552,268,1005,257,1005,263,552,273"/>
+<area shape="rect" id="Node000010" href="$namespacefast__float__module.html#a35bb68c964ab20d06ad90d638b59533d" title="Compare two unsigned 64&#45;bit integers (a &gt;= b)." alt="" coords="1023,551,1169,591"/>
+<area shape="poly" id="edge15_Node000009_Node000010" title=" " alt="" coords="552,275,797,298,909,314,949,323,972,332,997,353,1019,377,1053,433,1076,490,1090,537,1085,539,1071,492,1048,436,1015,381,994,356,969,336,947,328,909,319,796,303,552,281"/>
+<area shape="poly" id="edge16_Node000010_Node000010" title=" " alt="" coords="1059,551,1057,542,1062,532,1076,527,1096,525,1119,527,1132,535,1129,539,1118,532,1096,530,1077,532,1066,537,1062,542,1064,550"/>
+<area shape="rect" id="Node000012" href="$namespacefast__float__module.html#ae12179bf230b567a0adbe36acc25f1fe" title="Create an empty bigint." alt="" coords="405,1421,551,1461"/>
+<area shape="poly" id="edge19_Node000011_Node000012" title=" " alt="" coords="286,882,353,1183,361,1249,361,1304,363,1329,369,1353,381,1379,401,1407,404,1410,400,1414,397,1410,376,1382,364,1355,358,1330,356,1304,355,1250,348,1184,281,883"/>
+<area shape="rect" id="Node000013" href="$namespacefast__float__module.html#acc82d4772f909b9eef4f59363e3e133a" title="Negative digit comparison path." alt="" coords="399,741,557,781"/>
+<area shape="poly" id="edge20_Node000011_Node000013" title=" " alt="" coords="317,839,424,784,427,789,319,844"/>
+<area shape="rect" id="Node000041" href="$namespacefast__float__module.html#af7d24a49942e0dabf1cabaf827a1c07f" title="Parse mantissa digits into a bigint." alt="" coords="405,1357,551,1397"/>
+<area shape="poly" id="edge47_Node000011_Node000041" title=" " alt="" coords="289,881,466,1343,461,1344,284,883"/>
+<area shape="rect" id="Node000050" href="$namespacefast__float__module.html#ab08f4623be79e78dafe3019051379980" title="Positive digit comparison path." alt="" coords="401,943,555,983"/>
+<area shape="poly" id="edge64_Node000011_Node000050" title=" " alt="" coords="319,880,427,935,424,939,317,884"/>
+<area shape="rect" id="Node000061" href="$namespacefast__float__module.html#ab5e6a40c5579c822b8de772cdcf68c22" title="Scale the exponent by the number of digits in the mantissa." alt="" coords="405,677,551,717"/>
+<area shape="poly" id="edge77_Node000011_Node000061" title=" " alt="" coords="290,840,334,785,364,754,397,726,406,721,409,725,400,731,367,758,338,788,294,843"/>
+<area shape="rect" id="Node000014" href="$namespacefast__float__module.html#abfc723432befd95d402dc92811c7a65a" title="Convert adjusted mantissa to double precision." alt="" coords="615,461,762,501"/>
+<area shape="poly" id="edge21_Node000013_Node000014" title=" " alt="" coords="542,738,555,727,573,700,580,673,581,647,578,621,576,594,577,567,585,539,603,511,606,507,610,511,607,514,590,541,582,568,581,594,584,620,586,647,585,674,577,702,559,730,546,742"/>
+<area shape="rect" id="Node000015" href="$namespacefast__float__module.html#a3d67c988e0f66ee883836c8ae3339533" title="Compare two bigints." alt="" coords="615,613,762,653"/>
+<area shape="poly" id="edge22_Node000013_Node000015" title=" " alt="" coords="537,738,556,726,571,711,579,695,588,679,604,663,611,657,614,661,607,667,592,682,584,698,575,714,559,731,540,743"/>
+<area shape="rect" id="Node000017" href="$namespacefast__float__module.html#a2453dc687ba088d39f6fb73ac54df0c4" title="Create a bigint from a single value." alt="" coords="615,346,762,386"/>
+<area shape="poly" id="edge27_Node000013_Node000017" title=" " alt="" coords="543,738,555,727,577,692,587,659,589,626,587,594,583,561,582,526,587,488,603,447,623,418,648,393,652,397,628,421,608,450,592,489,587,526,588,560,592,593,595,626,593,659,582,694,559,730,546,742"/>
+<area shape="rect" id="Node000020" href="$namespacefast__float__module.html#a0f40eee02d5c92d84babd7fa209680e4" title="Raise bigint to a power of 2." alt="" coords="822,1003,969,1043"/>
+<area shape="poly" id="edge30_Node000013_Node000020" title=" " alt="" coords="503,779,549,817,607,854,631,864,652,870,692,875,731,882,751,890,774,905,791,926,799,946,806,966,822,987,831,994,828,998,818,990,802,969,794,948,787,928,770,909,749,895,729,887,691,880,651,875,629,869,604,859,545,821,499,783"/>
+<area shape="rect" id="Node000025" href="$namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c" title="Multiply bigint by 5^e." alt="" coords="822,1102,969,1142"/>
+<area shape="poly" id="edge32_Node000013_Node000025" title=" " alt="" coords="490,780,543,895,577,955,607,993,628,1008,648,1017,685,1024,725,1029,773,1043,817,1067,857,1092,854,1096,814,1071,771,1048,724,1034,684,1030,646,1022,625,1012,604,997,572,958,539,897,485,782"/>
+<area shape="rect" id="Node000034" href="$namespacefast__float__module.html#a47ff23ef5577cc6fc1308d6a94fe247f" title="Round down a subnormal adjusted mantissa." alt="" coords="615,805,762,845"/>
+<area shape="poly" id="edge36_Node000013_Node000034" title=" " alt="" coords="545,778,610,798,609,803,544,783"/>
+<area shape="rect" id="Node000037" href="$namespacefast__float__module.html#a25e25f3ff77a20878482b54f08b5a5dd" title="Round tie&#45;even using digit comparison ordering." alt="" coords="610,677,767,717"/>
+<area shape="poly" id="edge41_Node000013_Node000037" title=" " alt="" coords="544,738,609,718,610,723,545,743"/>
+<area shape="rect" id="Node000039" href="$namespacefast__float__module.html#a2b5f87588cdb53203c8c9c9b68225a66" title="Convert a float to its extended halfway representation." alt="" coords="608,525,769,565"/>
+<area shape="poly" id="edge45_Node000013_Node000039" title=" " alt="" coords="541,738,555,727,569,708,576,690,579,652,582,614,589,595,603,575,607,571,611,575,607,578,594,597,587,615,584,653,581,691,574,710,559,730,545,742"/>
+<area shape="poly" id="edge26_Node000015_Node000007" title=" " alt="" coords="763,643,809,652,808,657,762,648"/>
+<area shape="poly" id="edge23_Node000015_Node000015" title=" " alt="" coords="650,613,648,603,654,594,668,588,689,586,713,589,726,596,723,601,711,594,689,591,669,593,657,598,653,604,655,612"/>
+<area shape="rect" id="Node000016" href="$namespacefast__float__module.html#a944ecb13b505dc695566387268667632" title="Compare two unsigned 64&#45;bit integers (a &gt; b)." alt="" coords="822,562,969,602"/>
+<area shape="poly" id="edge24_Node000015_Node000016" title=" " alt="" coords="762,612,808,601,809,606,763,617"/>
+<area shape="poly" id="edge25_Node000016_Node000016" title=" " alt="" coords="858,562,855,552,861,543,875,537,895,535,919,538,932,545,929,550,917,543,895,541,876,542,865,547,861,553,863,561"/>
+<area shape="rect" id="Node000018" href="$namespacefast__float__module.html#a945a9588cb2bb0601c610a7720afaac1" title="Normalize the stack vector by removing trailing zeros." alt="" coords="822,346,969,386"/>
+<area shape="poly" id="edge28_Node000017_Node000018" title=" " alt="" coords="762,363,808,363,808,369,762,369"/>
+<area shape="rect" id="Node000019" href="$namespacefast__float__module.html#a08efb715246ed5f2def9b97783e43d7a" title="Push a value onto the stack vector." alt="" coords="822,410,969,450"/>
+<area shape="poly" id="edge29_Node000017_Node000019" title=" " alt="" coords="755,383,818,403,817,408,753,389"/>
+<area shape="rect" id="Node000021" href="$namespacefast__float__module.html#ac29febd139e388e5a914d247e3a232b5" title="Shift bigint left by n bits." alt="" coords="1023,1003,1169,1043"/>
+<area shape="poly" id="edge31_Node000020_Node000021" title=" " alt="" coords="969,1021,1009,1021,1009,1026,969,1026"/>
+<area shape="rect" id="Node000026" href="$namespacefast__float__module.html#abc627fbc13d9c4e3e5cbb6ef4be26dc0" title="Large multiplication dispatch (scalar or long multiply)." alt="" coords="1023,1082,1169,1122"/>
+<area shape="poly" id="edge33_Node000025_Node000026" title=" " alt="" coords="968,1112,1009,1108,1009,1113,969,1117"/>
+<area shape="rect" id="Node000032" href="$namespacefast__float__module.html#a0b58af05325eec7ef6a88b49f85f0630" title="Multiply all limbs of a bigint by a scalar." alt="" coords="1221,1139,1368,1179"/>
+<area shape="poly" id="edge35_Node000025_Node000032" title=" " alt="" coords="969,1126,1019,1131,1208,1149,1207,1154,1018,1137,969,1132"/>
+<area shape="poly" id="edge34_Node000026_Node000032" title=" " alt="" coords="1167,1119,1212,1133,1211,1138,1165,1124"/>
+<area shape="poly" id="edge40_Node000034_Node000007" title=" " alt="" coords="753,802,770,791,787,769,794,747,801,724,818,700,824,695,827,699,822,704,806,726,799,748,792,771,774,794,756,807"/>
+<area shape="rect" id="Node000035" href="$namespacefast__float__module.html#a3a6b45e929ae58a5ebef3f7aaa6aa370" title="Round down implementation." alt="" coords="822,842,969,882"/>
+<area shape="poly" id="edge37_Node000034_Node000035" title=" " alt="" coords="763,835,809,844,808,849,762,840"/>
+<area shape="rect" id="Node000036" href="$namespacefast__float__module.html#a0a805e389062ab308ce01b45b44304cf" title="Finish rounding: handle overflow and infinity." alt="" coords="822,778,969,818"/>
+<area shape="poly" id="edge38_Node000034_Node000036" title=" " alt="" coords="762,812,808,806,809,812,763,818"/>
+<area shape="poly" id="edge39_Node000036_Node000010" title=" " alt="" coords="952,775,969,764,1006,726,1036,683,1079,603,1083,606,1041,685,1010,729,972,768,955,780"/>
+<area shape="poly" id="edge44_Node000037_Node000007" title=" " alt="" coords="767,684,808,678,809,684,768,689"/>
+<area shape="poly" id="edge42_Node000037_Node000036" title=" " alt="" coords="749,714,773,726,798,745,821,764,832,770,830,774,819,768,794,749,771,731,747,719"/>
+<area shape="rect" id="Node000038" href="$namespacefast__float__module.html#a4a1f0051d9f6eb00ca382f6fa7e68b5c" title="Round to nearest using comparison ordering." alt="" coords="820,714,971,754"/>
+<area shape="poly" id="edge43_Node000037_Node000038" title=" " alt="" coords="768,708,807,715,806,721,767,713"/>
+<area shape="rect" id="Node000040" href="$namespacefast__float__module.html#a7b0376a18fa7769ea3e2336ac4e60118" title="Convert a float to its extended representation." alt="" coords="822,474,969,514"/>
+<area shape="poly" id="edge46_Node000039_Node000040" title=" " alt="" coords="769,522,808,513,809,518,770,527"/>
+<area shape="rect" id="Node000042" href="$namespacefast__float__module.html#a1db88dc18443b1549048848293d4714f" title="Add native: multiply and add to a bigint." alt="" coords="822,1221,969,1261"/>
+<area shape="poly" id="edge48_Node000041_Node000042" title=" " alt="" coords="486,1355,504,1324,529,1286,563,1250,604,1222,658,1206,714,1201,769,1205,818,1215,817,1220,768,1211,714,1206,659,1211,606,1227,567,1254,534,1290,508,1326,491,1358"/>
+<area shape="rect" id="Node000043" href="$namespacefast__float__module.html#a3f48e3ecda2e48d30e35736ac1d4396b" title="Check if a substring contains any non&#45;zero digits." alt="" coords="615,1325,762,1365"/>
+<area shape="poly" id="edge51_Node000041_Node000043" title=" " alt="" coords="551,1363,602,1355,602,1360,552,1368"/>
+<area shape="rect" id="Node000044" href="$namespacefast__float__module.html#a0e89687239dfcc9e5a221be0a5dc7b61" title="Reinterpret 8 characters as a single i8 (little&#45;endian)." alt="" coords="822,1389,969,1429"/>
+<area shape="poly" id="edge59_Node000041_Node000044" title=" " alt="" coords="534,1394,559,1406,582,1424,592,1432,606,1438,661,1448,718,1448,772,1441,821,1430,822,1435,773,1446,718,1453,661,1453,605,1443,589,1436,579,1428,556,1411,531,1399"/>
+<area shape="rect" id="Node000045" href="$namespacefast__float__module.html#aba01f9db3a5d740ec15c6c52d2ce0149" title="Parse 8 ASCII digit bytes into an integer." alt="" coords="615,1503,762,1543"/>
+<area shape="poly" id="edge55_Node000041_Node000045" title=" " alt="" coords="541,1394,559,1407,576,1426,584,1445,592,1464,607,1483,623,1494,620,1499,603,1486,587,1466,579,1447,571,1429,556,1411,538,1399"/>
+<area shape="rect" id="Node000046" href="$namespacefast__float__module.html#a3795324d2ff002e48367dcaf363c28ef" title="Parse 4 ASCII digit bytes into an integer." alt="" coords="615,1567,762,1607"/>
+<area shape="poly" id="edge56_Node000041_Node000046" title=" " alt="" coords="544,1394,559,1407,573,1426,581,1445,584,1482,587,1518,594,1535,607,1553,611,1557,607,1561,603,1557,589,1538,582,1519,579,1482,575,1446,569,1429,555,1410,541,1399"/>
+<area shape="rect" id="Node000047" href="$namespacefast__float__module.html#a66f4fb9f95d4ce03b42315207c005a67" title="Reinterpret 4 characters as a single i4 (little&#45;endian)." alt="" coords="615,1655,762,1695"/>
+<area shape="poly" id="edge57_Node000041_Node000047" title=" " alt="" coords="546,1395,559,1407,577,1434,586,1461,588,1486,587,1512,586,1563,593,1589,607,1618,636,1646,632,1649,603,1621,588,1591,581,1563,582,1512,583,1487,581,1462,573,1437,555,1410,542,1399"/>
+<area shape="rect" id="Node000048" href="$namespacefast__float__module.html#aef95c70434b6fe537bec512cf5b0c1c1" title="Round up a bigint by adding one digit." alt="" coords="615,1237,762,1277"/>
+<area shape="poly" id="edge60_Node000041_Node000048" title=" " alt="" coords="503,1354,549,1321,604,1286,617,1280,619,1285,607,1291,552,1325,506,1359"/>
+<area shape="rect" id="Node000049" href="$namespacefast__float__module.html#a134579beab04e58230aa2217956e5b6f" title="Skip leading zero characters." alt="" coords="615,1389,762,1429"/>
+<area shape="poly" id="edge62_Node000041_Node000049" title=" " alt="" coords="552,1385,602,1393,602,1398,551,1390"/>
+<area shape="poly" id="edge50_Node000042_Node000032" title=" " alt="" coords="968,1223,1207,1174,1208,1179,969,1228"/>
+<area shape="rect" id="Node000029" href="$namespacefast__float__module.html#adb2115acd560fdcbafcb3cd348da924a" title="Add a small value to a bigint starting at a given position." alt="" coords="1023,1247,1169,1287"/>
+<area shape="poly" id="edge49_Node000042_Node000029" title=" " alt="" coords="969,1248,1009,1253,1009,1258,968,1253"/>
+<area shape="poly" id="edge52_Node000043_Node000043" title=" " alt="" coords="650,1325,648,1315,654,1306,668,1300,689,1298,713,1301,726,1308,723,1313,711,1306,689,1303,669,1305,657,1310,653,1316,655,1324"/>
+<area shape="poly" id="edge53_Node000043_Node000044" title=" " alt="" coords="755,1362,818,1382,817,1387,753,1367"/>
+<area shape="poly" id="edge54_Node000044_Node000044" title=" " alt="" coords="858,1389,855,1379,861,1370,875,1364,895,1362,919,1365,932,1372,929,1377,917,1370,895,1367,876,1369,865,1374,861,1380,863,1388"/>
+<area shape="poly" id="edge58_Node000047_Node000047" title=" " alt="" coords="650,1656,648,1646,654,1636,668,1631,689,1629,713,1631,726,1639,723,1643,711,1637,689,1634,669,1636,657,1641,653,1646,655,1654"/>
+<area shape="poly" id="edge61_Node000048_Node000042" title=" " alt="" coords="762,1248,808,1245,808,1250,763,1254"/>
+<area shape="poly" id="edge63_Node000049_Node000044" title=" " alt="" coords="762,1406,808,1406,808,1411,762,1411"/>
+<area shape="rect" id="Node000051" href="$namespacefast__float__module.html#a2efdc55b08697ee5b6659a673cd023a9" title="Compute bit length of a bigint." alt="" coords="615,943,762,983"/>
+<area shape="poly" id="edge65_Node000050_Node000051" title=" " alt="" coords="555,961,602,961,602,966,555,966"/>
+<area shape="rect" id="Node000053" href="$namespacefast__float__module.html#a639dcac8e01b5bf08c3e2d30908729bf" title="Extract the high 64 bits of a bigint." alt="" coords="615,1058,762,1098"/>
+<area shape="poly" id="edge70_Node000050_Node000053" title=" " alt="" coords="512,981,607,1037,632,1050,629,1054,604,1042,510,986"/>
+<area shape="rect" id="Node000058" href="$namespacefast__float__module.html#ae41bdc257f1c71001c73607601777e5e" title="Multiply bigint by 10^e." alt="" coords="615,1122,762,1162"/>
+<area shape="poly" id="edge71_Node000050_Node000058" title=" " alt="" coords="494,982,540,1043,571,1078,607,1108,615,1113,613,1118,604,1112,568,1081,535,1047,490,985"/>
+<area shape="rect" id="Node000059" href="$namespacefast__float__module.html#aaa2fd854da7a9baf5887c6f53b7a8106" title="Round tie&#45;even for subnormals." alt="" coords="615,741,762,781"/>
+<area shape="poly" id="edge74_Node000050_Node000059" title=" " alt="" coords="487,942,531,869,565,827,604,790,611,785,614,789,607,795,568,831,536,872,492,944"/>
+<area shape="poly" id="edge66_Node000051_Node000051" title=" " alt="" coords="650,944,648,934,654,924,668,919,689,917,713,919,726,927,723,931,711,925,689,922,669,924,657,929,653,934,655,942"/>
+<area shape="rect" id="Node000052" href="$namespacefast__float__module.html#a258f8750d36535cf5b9e8497a833800f" title="Count leading zeros of a bigint." alt="" coords="822,937,969,977"/>
+<area shape="poly" id="edge67_Node000051_Node000052" title=" " alt="" coords="762,958,808,957,808,962,763,964"/>
+<area shape="poly" id="edge69_Node000052_Node000008" title=" " alt="" coords="928,934,951,916,968,893,992,841,1005,795,1010,752,1009,711,1005,623,1007,573,1016,515,1048,390,1080,291,1085,292,1054,392,1021,516,1013,573,1011,623,1015,711,1015,752,1010,796,997,843,973,895,954,920,932,939"/>
+<area shape="poly" id="edge68_Node000052_Node000052" title=" " alt="" coords="858,937,855,927,861,918,875,912,895,910,919,913,932,920,929,925,917,918,895,915,876,917,865,922,861,928,863,936"/>
+<area shape="poly" id="edge72_Node000058_Node000020" title=" " alt="" coords="746,1119,771,1108,817,1079,857,1050,860,1054,820,1084,773,1112,748,1124"/>
+<area shape="poly" id="edge73_Node000058_Node000025" title=" " alt="" coords="762,1132,808,1128,809,1133,763,1137"/>
+<area shape="poly" id="edge76_Node000059_Node000007" title=" " alt="" coords="744,738,771,726,819,700,832,693,834,698,821,704,773,731,746,743"/>
+<area shape="poly" id="edge75_Node000059_Node000036" title=" " alt="" coords="763,771,809,780,808,785,762,776"/>
+<area shape="poly" id="edge78_Node000061_Node000061" title=" " alt="" coords="440,677,438,667,444,658,458,652,478,650,502,653,514,660,512,665,500,658,478,655,459,657,447,662,443,668,445,676"/>
+<area shape="poly" id="edge82_Node000062_Node000046" title=" " alt="" coords="551,1613,601,1603,603,1608,552,1619"/>
+<area shape="poly" id="edge83_Node000062_Node000047" title=" " alt="" coords="552,1644,603,1655,601,1660,551,1649"/>
+<area shape="rect" id="Node000063" href="$namespacefast__float__module.html#ac563de2c021d4f2eab9d526cdb0db7ae" title="Check if 4 packed bytes are all ASCII digits." alt="" coords="615,1743,762,1783"/>
+<area shape="poly" id="edge80_Node000062_Node000063" title=" " alt="" coords="512,1649,646,1734,643,1738,509,1654"/>
+<area shape="poly" id="edge81_Node000063_Node000063" title=" " alt="" coords="650,1744,648,1734,654,1724,668,1719,689,1717,713,1719,726,1727,723,1731,711,1725,689,1722,669,1724,657,1729,653,1734,655,1742"/>
 </map>
