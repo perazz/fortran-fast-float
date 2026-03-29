@@ -314,26 +314,36 @@ contains
             cursor = cursor + k + 1
         end do
 
-        ! Compute XOR checksums in a single untimed pass
+        ! ---- XOR checksums (single untimed pass per implementation) ----
         xor_checksum = 0_int64
+
+        ! B_RSUB: parse_double_array — whitespace-separated stream, single call
         call parse_double_array(packed_text_ws, values, nparse, arr_err)
         do i = 1, nparse
             xor_checksum(B_RSUB) = ieor(xor_checksum(B_RSUB), transfer(values(i), 0_int64))
         end do
+
+        ! B_LINE: parse_double_range_sub — per-line via elemental sub (str, first, last)
         do i = 1, nlines
             x_f = parse_double(packed_text(istart(i):iend(i)), f_result)
             xor_checksum(B_LINE) = ieor(xor_checksum(B_LINE), transfer(x_f, 0_int64))
         end do
+
+        ! B_FAST: parse_double_fast — per-line, position-1 interface (str(pos:))
         do i = 1, nlines
             call parse_double_fast(packed_text(istart(i):iend(i)), x_f, consumed, fast_stat)
             xor_checksum(B_FAST) = ieor(xor_checksum(B_FAST), transfer(x_f, 0_int64))
         end do
+
+        ! B_STRM: parse_double_stream — pointer-advancing stream (like stdlib)
         stream_ptr => packed_text_ws(1:len(packed_text_ws))
         do while (len(stream_ptr) > 0)
             call parse_double_stream(stream_ptr, x_f, fast_stat)
             if (fast_stat /= outcomes%OK) exit
             xor_checksum(B_STRM) = ieor(xor_checksum(B_STRM), transfer(x_f, 0_int64))
         end do
+
+        ! B_STDLIB / B_S2R / B_READ / B_CLOOP: third-party & reference implementations
         do i = 1, nlines
             x_stdlib = 0.0_real64
             x_stdlib = to_num(lines(i)%text, x_stdlib)
@@ -351,7 +361,10 @@ contains
                 xor_checksum(B_CLOOP) = ieor(xor_checksum(B_CLOOP), transfer(real(x_c, real64), 0_int64))
         end do
 
+        ! ---- Timed benchmark loops ----
         call system_clock(count_rate=count_rate)
+
+        ! B_RSUB: parse_double_array — single call parses whitespace-separated stream
         do r = 1, repeat_count
             call system_clock(count=count_start)
             call parse_double_array(packed_text_ws, values, nparse, arr_err)
@@ -361,6 +374,7 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        ! B_LINE: parse_double_range_sub — per-line elemental (str, first, last)
         do r = 1, repeat_count
             answer = 0.0_real64
             call system_clock(count=count_start)
@@ -373,6 +387,7 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        ! B_FAST: parse_double_fast — per-line, position-1 pure sub
         do r = 1, repeat_count
             answer = 0.0_real64
             call system_clock(count=count_start)
@@ -385,6 +400,7 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        ! B_STRM: parse_double_stream — pointer-advancing stream interface
         do r = 1, repeat_count
             call system_clock(count=count_start)
             answer = 0.0_real64
@@ -399,6 +415,7 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        ! B_STDLIB: stdlib to_num — per-line
         do r = 1, repeat_count
             answer = 0.0_real64
             call system_clock(count=count_start)
@@ -412,6 +429,7 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        ! B_S2R: str2real — per-line
         do r = 1, repeat_count
             answer = 0.0_real64
             call system_clock(count=count_start)
@@ -424,6 +442,7 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        ! B_READ: Fortran intrinsic read — per-line baseline
         do r = 1, repeat_count
             answer = 0.0_real64
             call system_clock(count=count_start)
@@ -437,6 +456,7 @@ contains
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 
+        ! B_CLOOP: C ffc.h via Fortran interop — reference implementation
         do r = 1, repeat_count
             call system_clock(count=count_start)
             call benchmark_ffc_lines_c(packed_data, offsets, lengths, nlines, x_c, c_outcome)
