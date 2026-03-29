@@ -155,6 +155,38 @@ module fast_float_module
         largest_pow10 = 38, &
         max_digits = 114)
 
+    ! Double-precision hot-path constants (replaces cf_f%field runtime access)
+    integer, parameter :: DP_MB = DOUBLE_MANTISSA_BITS              ! 52
+    integer, parameter :: DP_ME = 1 - DOUBLE_MAX_EXPONENT           ! -1023
+    integer, parameter :: DP_IP = 2*DOUBLE_MAX_EXPONENT - 1         ! 2047
+    integer, parameter :: DP_MFP_LO = -22, DP_MFP_HI = 22
+    integer, parameter :: DP_MRT_LO = -4,  DP_MRT_HI = 23
+    integer, parameter :: DP_SP10 = -342, DP_LP10 = 308
+    integer(i8), parameter :: DP_MMAX = ishft(2_i8, DP_MB)         ! 2^53
+    integer(i8), parameter :: DP_HB   = ishft(1_i8, DP_MB)         ! 2^52
+    integer(i8), parameter :: DP_2HB  = ishft(2_i8, DP_MB)         ! 2^53
+    integer(i8), parameter :: DP_CPM  = ishft(not(0_i8), -(DP_MB+3))
+
+    ! Single-precision hot-path constants
+    integer, parameter :: SP_MB = FLOAT_MANTISSA_BITS               ! 23
+    integer, parameter :: SP_ME = 1 - FLOAT_MAX_EXPONENT            ! -127
+    integer, parameter :: SP_IP = 2*FLOAT_MAX_EXPONENT - 1          ! 255
+    integer, parameter :: SP_MFP_LO = -10, SP_MFP_HI = 10
+    integer, parameter :: SP_MRT_LO = -17, SP_MRT_HI = 10
+    integer, parameter :: SP_SP10 = -64, SP_LP10 = 38
+    integer(i8), parameter :: SP_MMAX = ishft(2_i8, SP_MB)         ! 2^24
+    integer(i8), parameter :: SP_HB   = ishft(1_i8, SP_MB)         ! 2^23
+    integer(i8), parameter :: SP_2HB  = ishft(2_i8, SP_MB)         ! 2^24
+    integer(i8), parameter :: SP_CPM  = ishft(not(0_i8), -(SP_MB+3))
+
+    ! Shared inlining constants for loop_parse_eight
+    integer(i8), parameter :: LPE_M  = int(z'000000FF000000FF', i8)
+    integer(i8), parameter :: LPE_M1 = int(z'000F424000000064', i8)
+    integer(i8), parameter :: LPE_M2 = int(z'0000271000000001', i8)
+    integer(i8), parameter :: LPE_HI = int(z'8080808080808080', i8)
+    integer(i8), parameter :: LPE_46 = int(z'4646464646464646', i8)
+    integer(i8), parameter :: LPE_FF = int(z'00000000FFFFFFFF', i8)
+
     type :: parsed_number
         integer(i8) :: exponent
         integer(i8) :: mantissa
@@ -2469,13 +2501,21 @@ contains
         logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
         ! compute_float inline variables
         integer(i8) :: cf_q, cf_wi, cf_w
-        type(float_format) :: cf_f
         integer(i4) :: cf_lz
         type(u128) :: cf_pr
         integer :: cf_ub, cf_sa
-        integer(i8) :: cp_pm, cp_bp
         integer :: cp_idx
         type(u128) :: cp_sp
+        ! loop_parse_eight inline variables
+        integer(i8) :: lpe_val, lpe_v, lpe_v1, lpe_v2
+        ! am_to_double inline variable
+        integer(i8) :: atd_w
+        ! mul_u64 inline variables
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+        integer(c_int128_t) :: z128a, z128b, z128r
+#else
+        integer(i8) :: mu_a0, mu_a1, mu_b0, mu_b1, mu_w0, mu_t, mu_w1, mu_w2
+#endif
 
         if (iand(o%format, FMT_SKIP_WS) /= 0) then
             do while (first <= last)
@@ -2490,10 +2530,202 @@ contains
             return
         end if
 
-        ! --- Inlined parse_number_string ---
+        ! === Inlined parse_number_string ===
         pns_first = first; pns_last = last; pns_opts = o
         pns_bj = iand(o%format, FMT_JSON) /= 0
-#include "parse_number_string_body.inc"
+
+        pns_p = pns_first
+        p%valid = .false.
+        if (pns_p > pns_last) then
+            p%last_idx = pns_p
+            goto 900
+        end if
+
+        p%negative = (str(pns_p:pns_p) == '-')
+        pns_alp = iand(pns_opts%format, FMT_ALLOW_PLUS) /= 0
+
+        if (str(pns_p:pns_p) == '-' .or. &
+            (pns_alp .and. .not. pns_bj .and. str(pns_p:pns_p) == '+')) then
+            pns_p = pns_p + 1
+            if (pns_p > pns_last) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+            if (pns_bj) then
+                pns_ic = iachar(str(pns_p:pns_p))
+                if (pns_ic < 48 .or. pns_ic > 57) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            else
+                pns_ic = iachar(str(pns_p:pns_p))
+                if ((pns_ic < 48 .or. pns_ic > 57) .and. &
+                    str(pns_p:pns_p) /= pns_opts%decimal_point) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            end if
+        end if
+
+        pns_sd = pns_p
+        pns_i = 0_i8
+        do while (pns_p <= pns_last)
+            pns_ic = iachar(str(pns_p:pns_p))
+            if (pns_ic < 48 .or. pns_ic > 57) exit
+            pns_i = 10*pns_i + int(pns_ic - 48, i8)
+            pns_p = pns_p + 1
+        end do
+
+        pns_eip = pns_p
+        pns_dc = int(pns_eip - pns_sd, i8)
+        p%int_start = pns_sd
+        p%int_len = int(pns_dc)
+
+        if (pns_bj) then
+            if (pns_dc == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+            if (str(pns_sd:pns_sd) == '0' .and. pns_dc > 1) then
+                p%last_idx = pns_sd
+                goto 900
+            end if
+        end if
+
+        pns_exp = 0_i8
+        p%frac_start = 0
+        p%frac_len = 0
+        pns_hdp = .false.
+        if (pns_p <= pns_last) pns_hdp = (str(pns_p:pns_p) == pns_opts%decimal_point)
+
+        if (pns_hdp) then
+            pns_p = pns_p + 1
+            pns_bf = pns_p
+            ! --- Inlined loop_parse_eight ---
+            do while (pns_last - pns_p + 1 >= 8)
+                lpe_val = transfer(str(pns_p:pns_p+7), 0_i8)
+                lpe_v1 = lpe_val + LPE_46
+                lpe_v2 = lpe_val - ZERO8_U64
+                if (iand(ior(lpe_v1, lpe_v2), LPE_HI) /= 0) exit
+                lpe_v = lpe_val - ZERO8_U64
+                lpe_v = lpe_v*10 + ishft(lpe_v, -8)
+                lpe_v = ishft(iand(lpe_v, LPE_M)*LPE_M1 + iand(ishft(lpe_v,-16), LPE_M)*LPE_M2, -32)
+                pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
+                pns_p = pns_p + 8
+            end do
+            do while (pns_p <= pns_last)
+                pns_ic = iachar(str(pns_p:pns_p))
+                if (pns_ic < 48 .or. pns_ic > 57) exit
+                pns_i = pns_i*10 + int(pns_ic-48, i8)
+                pns_p = pns_p + 1
+            end do
+            pns_exp = int(pns_bf - pns_p, i8)
+            p%frac_start = pns_bf
+            p%frac_len = pns_p - pns_bf
+            pns_dc = pns_dc - pns_exp
+        end if
+
+        if (pns_bj) then
+            if (pns_hdp .and. pns_exp == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+        else
+            if (pns_dc == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+        end if
+
+        pns_en = 0_i8
+        pns_hse = .false.
+        if (pns_p <= pns_last) then
+            pns_hse = (iand(pns_opts%format, FMT_SCIENTIFIC) /= 0 .and. &
+                       (str(pns_p:pns_p) == 'e' .or. str(pns_p:pns_p) == 'E')) .or. &
+                      (iand(pns_opts%format, FMT_FORTRAN) /= 0 .and. &
+                       (str(pns_p:pns_p) == '+' .or. str(pns_p:pns_p) == '-' .or. &
+                        str(pns_p:pns_p) == 'd' .or. str(pns_p:pns_p) == 'D'))
+        end if
+        if (pns_hse) then
+            pns_le = pns_p
+            if (str(pns_p:pns_p) == 'e' .or. str(pns_p:pns_p) == 'E' .or. &
+                str(pns_p:pns_p) == 'd' .or. str(pns_p:pns_p) == 'D') pns_p = pns_p + 1
+            pns_ne = .false.
+            if (pns_p <= pns_last) then
+                if (str(pns_p:pns_p) == '-') then
+                    pns_ne = .true.
+                    pns_p = pns_p + 1
+                else if (str(pns_p:pns_p) == '+') then
+                    pns_p = pns_p + 1
+                end if
+            end if
+            pns_hed = .false.
+            if (pns_p <= pns_last) then
+                pns_ic = iachar(str(pns_p:pns_p))
+                pns_hed = (pns_ic >= 48 .and. pns_ic <= 57)
+            end if
+            if (.not. pns_hed) then
+                if (iand(pns_opts%format, FMT_FIXED) == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+                pns_p = pns_le
+            else
+                do while (pns_p <= pns_last)
+                    pns_ic = iachar(str(pns_p:pns_p))
+                    if (pns_ic < 48 .or. pns_ic > 57) exit
+                    if (pns_en < 268435456_i8) pns_en = 10*pns_en + int(pns_ic-48, i8)
+                    pns_p = pns_p + 1
+                end do
+                if (pns_ne) pns_en = -pns_en
+                pns_exp = pns_exp + pns_en
+            end if
+        else
+            if (iand(pns_opts%format, FMT_SCIENTIFIC) /= 0 .and. &
+                iand(pns_opts%format, FMT_FIXED) == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+        end if
+
+        p%last_idx = pns_p
+        p%valid = .true.
+        p%too_many_digits = .false.
+
+        if (pns_dc > 19) then
+            pns_sp_ = pns_sd
+            do while (pns_sp_ <= pns_last)
+                if (str(pns_sp_:pns_sp_) /= '0' .and. &
+                    str(pns_sp_:pns_sp_) /= pns_opts%decimal_point) exit
+                if (str(pns_sp_:pns_sp_) == '0') pns_dc = pns_dc - 1
+                pns_sp_ = pns_sp_ + 1
+            end do
+            if (pns_dc > 19) then
+                p%too_many_digits = .true.
+                pns_i = 0
+                pns_p = p%int_start
+                pns_ie = pns_p + p%int_len
+                do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_ie)
+                    pns_i = pns_i*10 + int( iachar(str(pns_p:pns_p)) - 48, i8)
+                    pns_p = pns_p + 1
+                end do
+                if (ieor(pns_i, SB64) >= ieor(1000000000000000000_i8, SB64)) then
+                    pns_exp = int(pns_eip - pns_p, i8) + pns_en
+                else
+                    pns_p = p%frac_start
+                    pns_fe = pns_p + p%frac_len
+                    do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_fe)
+                        pns_i = pns_i*10 + int( iachar(str(pns_p:pns_p)) - 48, i8)
+                        pns_p = pns_p + 1
+                    end do
+                    pns_exp = int(p%frac_start - pns_p, i8) + pns_en
+                end if
+            end if
+        end if
+        p%exponent = pns_exp
+        p%mantissa = pns_i
+900     continue
+        ! === End inlined parse_number_string ===
 
         if (.not. p%valid) then
             if (iand(o%format, FMT_NO_INFNAN) /= 0) then
@@ -2510,20 +2742,116 @@ contains
         res%outcome = OUTCOMES%OK
         res%pos     = p%last_idx
 
+        ! --- Inlined clinger_fast_path_64 ---
         if (.not. p%too_many_digits) then
-            call clinger_fast_path_64(p%mantissa, p%exponent, p%negative, fc_out, DOUBLE_FMT, fc_cfok)
+            fc_cfok = p%exponent >= int(DP_MFP_LO, i8) .and. p%exponent <= int(DP_MFP_HI, i8) .and. &
+                      p%mantissa >= 0 .and. p%mantissa <= DP_MMAX
             if (fc_cfok) then
+                if (p%exponent < 0) then
+                    fc_out = real(p%mantissa / DOUBLE_POW10(-p%exponent), dp)
+                else
+                    fc_out = real(p%mantissa * DOUBLE_POW10(p%exponent), dp)
+                end if
+                if (p%negative) fc_out = -fc_out
                 out = fc_out
                 return
             end if
         end if
 
-        ! --- Inlined compute_float (primary call) ---
-        cf_q = p%exponent; cf_wi = p%mantissa; cf_f = DOUBLE_FMT
-#include "compute_float_body.inc"
+        ! === Inlined compute_float (double precision) ===
+        cf_q = p%exponent; cf_wi = p%mantissa
+        cf_w = cf_wi
+        if (cf_w == 0 .or. cf_q < int(DP_SP10, i8)) then
+            cf_am = adjusted_mantissa(0, 0)
+        else if (cf_q > int(DP_LP10, i8)) then
+            cf_am = adjusted_mantissa(0, int(DP_IP, i4))
+        else
+            cf_lz = leadz(cf_w)
+            cf_w = ishft(cf_w, cf_lz)
+
+            cp_idx = 2*int(cf_q + 342_i8) + 1
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+            z128a = transfer([cf_w, 0_i8], z128a)
+            z128b = transfer([POWER5_TABLE(cp_idx), 0_i8], z128b)
+            z128r = z128a * z128b
+            cf_pr = transfer(z128r, cf_pr)
+#else
+            mu_a0 = iand(cf_w, M32); mu_a1 = iand(ishft(cf_w, -32), M32)
+            mu_b0 = iand(POWER5_TABLE(cp_idx), M32)
+            mu_b1 = iand(ishft(POWER5_TABLE(cp_idx), -32), M32)
+            mu_w0 = mu_a0 * mu_b0
+            mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+            mu_w1 = iand(mu_t, M32)
+            mu_w2 = iand(ishft(mu_t, -32), M32)
+            mu_w1 = mu_w1 + mu_a0 * mu_b1
+            cf_pr%lo = cf_w * POWER5_TABLE(cp_idx)
+            cf_pr%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+            if (iand(cf_pr%hi, DP_CPM) == DP_CPM) then
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+                z128b = transfer([POWER5_TABLE(cp_idx + 1), 0_i8], z128b)
+                z128r = z128a * z128b
+                cp_sp = transfer(z128r, cp_sp)
+#else
+                mu_b0 = iand(POWER5_TABLE(cp_idx+1), M32)
+                mu_b1 = iand(ishft(POWER5_TABLE(cp_idx+1), -32), M32)
+                mu_w0 = mu_a0 * mu_b0
+                mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+                mu_w1 = iand(mu_t, M32)
+                mu_w2 = iand(ishft(mu_t, -32), M32)
+                mu_w1 = mu_w1 + mu_a0 * mu_b1
+                cp_sp%lo = cf_w * POWER5_TABLE(cp_idx+1)
+                cp_sp%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+                cf_pr%lo = cf_pr%lo + cp_sp%hi
+                if (ieor(cf_pr%lo, SB64) < ieor(cp_sp%hi, SB64)) cf_pr%hi = cf_pr%hi + 1
+            end if
+
+            cf_ub = int(ishft(cf_pr%hi, -63))
+            cf_sa = cf_ub + 9
+            cf_am%mantissa = ishft(cf_pr%hi, -cf_sa)
+            cf_am%power2 = int(ishft(217706_i8 * int(cf_q, i8), -16), i4) + 1086_i4 &
+                         + int(cf_ub, i4) - cf_lz
+
+            if (cf_am%power2 <= 0) then
+                if (-cf_am%power2 + 1 >= 64) then
+                    cf_am = adjusted_mantissa(0_i8, 0_i4)
+                else
+                    cf_am%mantissa = ishft(cf_am%mantissa, cf_am%power2 - 1_i4)
+                    cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                    cf_am%mantissa = ishft(cf_am%mantissa, -1)
+                    if (cf_am%mantissa < DP_HB) then
+                        cf_am%power2 = 0
+                    else
+                        cf_am%power2 = 1
+                    end if
+                end if
+            else
+                if (iand(cf_pr%lo, not(1_i8)) == 0 .and. &
+                    cf_q >= int(DP_MRT_LO, i8) .and. &
+                    cf_q <= int(DP_MRT_HI, i8) .and. &
+                    iand(cf_am%mantissa, 3_i8) == 1 .and. &
+                    ishft(cf_am%mantissa, cf_sa) == cf_pr%hi) &
+                        cf_am%mantissa = iand(cf_am%mantissa, not(1_i8))
+
+                cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                cf_am%mantissa = ishft(cf_am%mantissa, -1)
+
+                if (cf_am%mantissa >= DP_2HB) then
+                    cf_am%mantissa = DP_HB
+                    cf_am%power2 = cf_am%power2 + 1
+                end if
+
+                cf_am%mantissa = iand(cf_am%mantissa, not(DP_HB))
+                if (cf_am%power2 >= int(DP_IP, i4)) then
+                    cf_am%power2 = int(DP_IP, i4)
+                    cf_am%mantissa = 0
+                end if
+            end if
+        end if
+        ! === End inlined compute_float ===
 
         if (p%too_many_digits .and. cf_am%power2 >= 0) then
-            ! Cold path: second compute_float call — use module-level version
             call compute_float(p%exponent, p%mantissa + 1, DOUBLE_FMT, fc_ap)
             fc_eq = cf_am%mantissa == fc_ap%mantissa .and. cf_am%power2 == fc_ap%power2
             if (.not. fc_eq) call compute_error(p%exponent, p%mantissa, DOUBLE_FMT, cf_am)
@@ -2533,10 +2861,13 @@ contains
             call digit_comp(str, p, fc_ap, DOUBLE_FMT, cf_am)
         end if
 
-        out = am_to_double(p%negative, cf_am)
+        ! --- Inlined am_to_double ---
+        atd_w = ior(cf_am%mantissa, ishft(int(cf_am%power2, i8), DP_MB))
+        if (p%negative) atd_w = ior(atd_w, SB64)
+        out = transfer(atd_w, 0.0_dp)
 
         if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
-             cf_am%power2 == int(DOUBLE_FMT%inf_power, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
+             cf_am%power2 == int(DP_IP, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
     end subroutine parse_double_range_sub
 
     !> Parse a string range to float, subroutine form.
@@ -2561,18 +2892,27 @@ contains
         logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
         ! compute_float inline variables
         integer(i8) :: cf_q, cf_wi, cf_w
-        type(float_format) :: cf_f
         integer(i4) :: cf_lz
         type(u128) :: cf_pr
-        integer :: cf_ub, cf_sa
-        integer(i8) :: cp_pm, cp_bp
+        integer :: cf_ub, cf_sa, ic
         integer :: cp_idx
         type(u128) :: cp_sp
+        ! loop_parse_eight inline variables
+        integer(i8) :: lpe_val, lpe_v, lpe_v1, lpe_v2
+        ! am_to_float inline variable
+        integer(i4) :: atf_w
+        ! mul_u64 inline variables
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+        integer(c_int128_t) :: z128a, z128b, z128r
+#else
+        integer(i8) :: mu_a0, mu_a1, mu_b0, mu_b1, mu_w0, mu_t, mu_w1, mu_w2
+#endif
 
         ps = first
         if (iand(o%format, FMT_SKIP_WS) /= 0) then
             do while (ps <= last)
-                if (.not. is_space(str(ps:ps))) exit
+                ic = iachar(str(ps:ps))
+                if (.not. ((ic >= 9 .and. ic <= 13) .or. ic == 32)) exit
                 ps = ps + 1
             end do
         end if
@@ -2582,10 +2922,200 @@ contains
             return
         end if
 
-        ! --- Inlined parse_number_string ---
+        ! === Inlined parse_number_string ===
         pns_first = ps; pns_last = last; pns_opts = o
         pns_bj = iand(o%format, FMT_JSON) /= 0
-#include "parse_number_string_body.inc"
+
+        pns_p = pns_first
+        p%valid = .false.
+        if (pns_p > pns_last) then
+            p%last_idx = pns_p
+            goto 900
+        end if
+
+        p%negative = (str(pns_p:pns_p) == '-')
+        pns_alp = iand(pns_opts%format, FMT_ALLOW_PLUS) /= 0
+
+        if (str(pns_p:pns_p) == '-' .or. &
+            (pns_alp .and. .not. pns_bj .and. str(pns_p:pns_p) == '+')) then
+            pns_p = pns_p + 1
+            if (pns_p > pns_last) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+            if (pns_bj) then
+                pns_ic = iachar(str(pns_p:pns_p))
+                if (pns_ic < 48 .or. pns_ic > 57) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            else
+                pns_ic = iachar(str(pns_p:pns_p))
+                if ((pns_ic < 48 .or. pns_ic > 57) .and. &
+                    str(pns_p:pns_p) /= pns_opts%decimal_point) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            end if
+        end if
+
+        pns_sd = pns_p
+        pns_i = 0_i8
+        do while (pns_p <= pns_last)
+            pns_ic = iachar(str(pns_p:pns_p))
+            if (pns_ic < 48 .or. pns_ic > 57) exit
+            pns_i = 10*pns_i + int(pns_ic - 48, i8)
+            pns_p = pns_p + 1
+        end do
+
+        pns_eip = pns_p
+        pns_dc = int(pns_eip - pns_sd, i8)
+        p%int_start = pns_sd
+        p%int_len = int(pns_dc)
+
+        if (pns_bj) then
+            if (pns_dc == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+            if (str(pns_sd:pns_sd) == '0' .and. pns_dc > 1) then
+                p%last_idx = pns_sd
+                goto 900
+            end if
+        end if
+
+        pns_exp = 0_i8
+        p%frac_start = 0
+        p%frac_len = 0
+        pns_hdp = .false.
+        if (pns_p <= pns_last) pns_hdp = (str(pns_p:pns_p) == pns_opts%decimal_point)
+
+        if (pns_hdp) then
+            pns_p = pns_p + 1
+            pns_bf = pns_p
+            do while (pns_last - pns_p + 1 >= 8)
+                lpe_val = transfer(str(pns_p:pns_p+7), 0_i8)
+                lpe_v1 = lpe_val + LPE_46
+                lpe_v2 = lpe_val - ZERO8_U64
+                if (iand(ior(lpe_v1, lpe_v2), LPE_HI) /= 0) exit
+                lpe_v = lpe_val - ZERO8_U64
+                lpe_v = lpe_v*10 + ishft(lpe_v, -8)
+                lpe_v = ishft(iand(lpe_v, LPE_M)*LPE_M1 + iand(ishft(lpe_v,-16), LPE_M)*LPE_M2, -32)
+                pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
+                pns_p = pns_p + 8
+            end do
+            do while (pns_p <= pns_last)
+                pns_ic = iachar(str(pns_p:pns_p))
+                if (pns_ic < 48 .or. pns_ic > 57) exit
+                pns_i = pns_i*10 + int(pns_ic-48, i8)
+                pns_p = pns_p + 1
+            end do
+            pns_exp = int(pns_bf - pns_p, i8)
+            p%frac_start = pns_bf
+            p%frac_len = pns_p - pns_bf
+            pns_dc = pns_dc - pns_exp
+        end if
+
+        if (pns_bj) then
+            if (pns_hdp .and. pns_exp == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+        else
+            if (pns_dc == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+        end if
+
+        pns_en = 0_i8
+        pns_hse = .false.
+        if (pns_p <= pns_last) then
+            pns_hse = (iand(pns_opts%format, FMT_SCIENTIFIC) /= 0 .and. &
+                       (str(pns_p:pns_p) == 'e' .or. str(pns_p:pns_p) == 'E')) .or. &
+                      (iand(pns_opts%format, FMT_FORTRAN) /= 0 .and. &
+                       (str(pns_p:pns_p) == '+' .or. str(pns_p:pns_p) == '-' .or. &
+                        str(pns_p:pns_p) == 'd' .or. str(pns_p:pns_p) == 'D'))
+        end if
+        if (pns_hse) then
+            pns_le = pns_p
+            if (str(pns_p:pns_p) == 'e' .or. str(pns_p:pns_p) == 'E' .or. &
+                str(pns_p:pns_p) == 'd' .or. str(pns_p:pns_p) == 'D') pns_p = pns_p + 1
+            pns_ne = .false.
+            if (pns_p <= pns_last) then
+                if (str(pns_p:pns_p) == '-') then
+                    pns_ne = .true.
+                    pns_p = pns_p + 1
+                else if (str(pns_p:pns_p) == '+') then
+                    pns_p = pns_p + 1
+                end if
+            end if
+            pns_hed = .false.
+            if (pns_p <= pns_last) then
+                pns_ic = iachar(str(pns_p:pns_p))
+                pns_hed = (pns_ic >= 48 .and. pns_ic <= 57)
+            end if
+            if (.not. pns_hed) then
+                if (iand(pns_opts%format, FMT_FIXED) == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+                pns_p = pns_le
+            else
+                do while (pns_p <= pns_last)
+                    pns_ic = iachar(str(pns_p:pns_p))
+                    if (pns_ic < 48 .or. pns_ic > 57) exit
+                    if (pns_en < 268435456_i8) pns_en = 10*pns_en + int(pns_ic-48, i8)
+                    pns_p = pns_p + 1
+                end do
+                if (pns_ne) pns_en = -pns_en
+                pns_exp = pns_exp + pns_en
+            end if
+        else
+            if (iand(pns_opts%format, FMT_SCIENTIFIC) /= 0 .and. &
+                iand(pns_opts%format, FMT_FIXED) == 0) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+        end if
+
+        p%last_idx = pns_p
+        p%valid = .true.
+        p%too_many_digits = .false.
+
+        if (pns_dc > 19) then
+            pns_sp_ = pns_sd
+            do while (pns_sp_ <= pns_last)
+                if (str(pns_sp_:pns_sp_) /= '0' .and. &
+                    str(pns_sp_:pns_sp_) /= pns_opts%decimal_point) exit
+                if (str(pns_sp_:pns_sp_) == '0') pns_dc = pns_dc - 1
+                pns_sp_ = pns_sp_ + 1
+            end do
+            if (pns_dc > 19) then
+                p%too_many_digits = .true.
+                pns_i = 0
+                pns_p = p%int_start
+                pns_ie = pns_p + p%int_len
+                do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_ie)
+                    pns_i = pns_i*10 + int( iachar(str(pns_p:pns_p)) - 48, i8)
+                    pns_p = pns_p + 1
+                end do
+                if (ieor(pns_i, SB64) >= ieor(1000000000000000000_i8, SB64)) then
+                    pns_exp = int(pns_eip - pns_p, i8) + pns_en
+                else
+                    pns_p = p%frac_start
+                    pns_fe = pns_p + p%frac_len
+                    do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_fe)
+                        pns_i = pns_i*10 + int( iachar(str(pns_p:pns_p)) - 48, i8)
+                        pns_p = pns_p + 1
+                    end do
+                    pns_exp = int(p%frac_start - pns_p, i8) + pns_en
+                end if
+            end if
+        end if
+        p%exponent = pns_exp
+        p%mantissa = pns_i
+900     continue
 
         if (.not. p%valid) then
             if (iand(o%format, FMT_NO_INFNAN) /= 0) then
@@ -2602,17 +3132,113 @@ contains
         res%outcome = OUTCOMES%OK
         res%pos     = p%last_idx
 
+        ! --- Inlined clinger_fast_path_32 ---
         if (.not. p%too_many_digits) then
-            call clinger_fast_path_32(p%mantissa, p%exponent, p%negative, fc_outf, FLOAT_FMT, fc_cfok)
+            fc_cfok = p%exponent >= int(SP_MFP_LO, i8) .and. p%exponent <= int(SP_MFP_HI, i8) .and. &
+                      p%mantissa >= 0 .and. p%mantissa <= SP_MMAX
             if (fc_cfok) then
+                if (p%exponent < 0) then
+                    fc_outf = real(p%mantissa, sp) / FLOAT_POW10(-p%exponent)
+                else
+                    fc_outf = real(p%mantissa, sp) * FLOAT_POW10(p%exponent)
+                end if
+                if (p%negative) fc_outf = -fc_outf
                 out = fc_outf
                 return
             end if
         end if
 
-        ! --- Inlined compute_float (primary) ---
-        cf_q = p%exponent; cf_wi = p%mantissa; cf_f = FLOAT_FMT
-#include "compute_float_body.inc"
+        ! === Inlined compute_float (single precision) ===
+        cf_q = p%exponent; cf_wi = p%mantissa
+        cf_w = cf_wi
+        if (cf_w == 0 .or. cf_q < int(SP_SP10, i8)) then
+            cf_am = adjusted_mantissa(0, 0)
+        else if (cf_q > int(SP_LP10, i8)) then
+            cf_am = adjusted_mantissa(0, int(SP_IP, i4))
+        else
+            cf_lz = leadz(cf_w)
+            cf_w = ishft(cf_w, cf_lz)
+
+            cp_idx = 2*int(cf_q + 342_i8) + 1
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+            z128a = transfer([cf_w, 0_i8], z128a)
+            z128b = transfer([POWER5_TABLE(cp_idx), 0_i8], z128b)
+            z128r = z128a * z128b
+            cf_pr = transfer(z128r, cf_pr)
+#else
+            mu_a0 = iand(cf_w, M32); mu_a1 = iand(ishft(cf_w, -32), M32)
+            mu_b0 = iand(POWER5_TABLE(cp_idx), M32)
+            mu_b1 = iand(ishft(POWER5_TABLE(cp_idx), -32), M32)
+            mu_w0 = mu_a0 * mu_b0
+            mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+            mu_w1 = iand(mu_t, M32)
+            mu_w2 = iand(ishft(mu_t, -32), M32)
+            mu_w1 = mu_w1 + mu_a0 * mu_b1
+            cf_pr%lo = cf_w * POWER5_TABLE(cp_idx)
+            cf_pr%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+            if (iand(cf_pr%hi, SP_CPM) == SP_CPM) then
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+                z128b = transfer([POWER5_TABLE(cp_idx + 1), 0_i8], z128b)
+                z128r = z128a * z128b
+                cp_sp = transfer(z128r, cp_sp)
+#else
+                mu_b0 = iand(POWER5_TABLE(cp_idx+1), M32)
+                mu_b1 = iand(ishft(POWER5_TABLE(cp_idx+1), -32), M32)
+                mu_w0 = mu_a0 * mu_b0
+                mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+                mu_w1 = iand(mu_t, M32)
+                mu_w2 = iand(ishft(mu_t, -32), M32)
+                mu_w1 = mu_w1 + mu_a0 * mu_b1
+                cp_sp%lo = cf_w * POWER5_TABLE(cp_idx+1)
+                cp_sp%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+                cf_pr%lo = cf_pr%lo + cp_sp%hi
+                if (ieor(cf_pr%lo, SB64) < ieor(cp_sp%hi, SB64)) cf_pr%hi = cf_pr%hi + 1
+            end if
+
+            cf_ub = int(ishft(cf_pr%hi, -63))
+            cf_sa = cf_ub + 38
+            cf_am%mantissa = ishft(cf_pr%hi, -cf_sa)
+            cf_am%power2 = int(ishft(217706_i8 * int(cf_q, i8), -16), i4) + 190_i4 &
+                         + int(cf_ub, i4) - cf_lz
+
+            if (cf_am%power2 <= 0) then
+                if (-cf_am%power2 + 1 >= 64) then
+                    cf_am = adjusted_mantissa(0_i8, 0_i4)
+                else
+                    cf_am%mantissa = ishft(cf_am%mantissa, cf_am%power2 - 1_i4)
+                    cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                    cf_am%mantissa = ishft(cf_am%mantissa, -1)
+                    if (cf_am%mantissa < SP_HB) then
+                        cf_am%power2 = 0
+                    else
+                        cf_am%power2 = 1
+                    end if
+                end if
+            else
+                if (iand(cf_pr%lo, not(1_i8)) == 0 .and. &
+                    cf_q >= int(SP_MRT_LO, i8) .and. &
+                    cf_q <= int(SP_MRT_HI, i8) .and. &
+                    iand(cf_am%mantissa, 3_i8) == 1 .and. &
+                    ishft(cf_am%mantissa, cf_sa) == cf_pr%hi) &
+                        cf_am%mantissa = iand(cf_am%mantissa, not(1_i8))
+
+                cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                cf_am%mantissa = ishft(cf_am%mantissa, -1)
+
+                if (cf_am%mantissa >= SP_2HB) then
+                    cf_am%mantissa = SP_HB
+                    cf_am%power2 = cf_am%power2 + 1
+                end if
+
+                cf_am%mantissa = iand(cf_am%mantissa, not(SP_HB))
+                if (cf_am%power2 >= int(SP_IP, i4)) then
+                    cf_am%power2 = int(SP_IP, i4)
+                    cf_am%mantissa = 0
+                end if
+            end if
+        end if
 
         if (p%too_many_digits .and. cf_am%power2 >= 0) then
             call compute_float(p%exponent, p%mantissa + 1, FLOAT_FMT, fc_ap)
@@ -2624,10 +3250,14 @@ contains
             call digit_comp(str, p, fc_ap, FLOAT_FMT, cf_am)
         end if
 
-        out = am_to_float(p%negative, cf_am)
+        ! --- Inlined am_to_float ---
+        atf_w = int(cf_am%mantissa, i4)
+        atf_w = ior(atf_w, ishft(cf_am%power2, SP_MB))
+        if (p%negative) atf_w = ior(atf_w, ishft(1_i4, 31))
+        out = transfer(atf_w, 0.0_sp)
 
         if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
-            cf_am%power2 == int(FLOAT_FMT%inf_power, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
+            cf_am%power2 == int(SP_IP, i4)) res%outcome = OUTCOMES%OUT_OF_RANGE
     end subroutine parse_float_range_sub
 
     ! --- parse_float: pure elemental (no parse_result) ---
@@ -2811,25 +3441,42 @@ contains
         integer :: pos, slen, ic
         real(dp) :: fc_out
         ! parse_number_string inline variables
-        integer :: pns_first, pns_last
-        logical :: pns_bj
-        type(parse_options) :: pns_opts
+        integer :: pns_first
         integer(i8) :: pns_i, pns_dc, pns_exp, pns_en
-        integer :: pns_p, pns_sd, pns_eip, pns_bf, pns_le, pns_ic, pns_ie, pns_fe, pns_sp_
-        logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
+        integer :: pns_p, pns_sd, pns_eip, pns_bf, pns_le, pns_ic, pns_ie, pns_fe, pns_sp_, pns_fl
+        logical :: pns_hdp, pns_ne, pns_hse, pns_hed
+        ! Loop-invariant format flags (hoisted)
+        logical :: fmt_bj, fmt_alp, fmt_sci, fmt_fort, fmt_fix
+        character :: fmt_dp
         ! compute_float inline variables
         integer(i8) :: cf_q, cf_wi, cf_w
-        type(float_format) :: cf_f
         integer(i4) :: cf_lz
         type(u128) :: cf_pr
         integer :: cf_ub, cf_sa
-        integer(i8) :: cp_pm, cp_bp
         integer :: cp_idx
         type(u128) :: cp_sp
+        ! loop_parse_eight inline variables
+        integer(i8) :: lpe_val, lpe_v, lpe_v1, lpe_v2
+        ! am_to_double inline variable
+        integer(i8) :: atd_w
+        ! mul_u64 inline variables
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+        integer(c_int128_t) :: z128a, z128b, z128r
+#else
+        integer(i8) :: mu_a0, mu_a1, mu_b0, mu_b1, mu_w0, mu_t, mu_w1, mu_w2
+#endif
 
         opts = DEFAULT_PARSING
         if (present(o)) opts = o
         opts%format = ior(opts%format, FMT_SKIP_WS)
+
+        ! Pre-compute loop-invariant format flags
+        fmt_bj   = iand(opts%format, FMT_JSON) /= 0
+        fmt_alp  = iand(opts%format, FMT_ALLOW_PLUS) /= 0
+        fmt_sci  = iand(opts%format, FMT_SCIENTIFIC) /= 0
+        fmt_fort = iand(opts%format, FMT_FORTRAN) /= 0
+        fmt_fix  = iand(opts%format, FMT_FIXED) /= 0
+        fmt_dp   = opts%decimal_point
 
         slen = len(stream)
         n = 0
@@ -2845,12 +3492,199 @@ contains
             end do
             if (pos > slen) exit
 
-            ! --- Inlined parse_number_string ---
-            pns_first = pos; pns_last = slen; pns_opts = opts
-            pns_bj = iand(opts%format, FMT_JSON) /= 0
-#define str stream
-#include "parse_number_string_body.inc"
-#undef str
+            ! === Inlined parse_number_string ===
+            pns_first = pos
+
+            pns_p = pns_first
+            p%valid = .false.
+            if (pns_p > slen) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+
+            p%negative = (stream(pns_p:pns_p) == '-')
+
+            if (stream(pns_p:pns_p) == '-' .or. &
+                (fmt_alp .and. .not. fmt_bj .and. stream(pns_p:pns_p) == '+')) then
+                pns_p = pns_p + 1
+                if (pns_p > slen) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+                if (fmt_bj) then
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    if (pns_ic < 48 .or. pns_ic > 57) then
+                        p%last_idx = pns_p
+                        goto 900
+                    end if
+                else
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    if ((pns_ic < 48 .or. pns_ic > 57) .and. &
+                        stream(pns_p:pns_p) /= fmt_dp) then
+                        p%last_idx = pns_p
+                        goto 900
+                    end if
+                end if
+            end if
+
+            pns_sd = pns_p
+            pns_i = 0_i8
+            do while (pns_p <= slen)
+                pns_ic = iachar(stream(pns_p:pns_p))
+                if (pns_ic < 48 .or. pns_ic > 57) exit
+                pns_i = 10*pns_i + int(pns_ic - 48, i8)
+                pns_p = pns_p + 1
+            end do
+
+            pns_eip = pns_p
+            pns_dc = int(pns_eip - pns_sd, i8)
+
+            if (fmt_bj) then
+                if (pns_dc == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+                if (stream(pns_sd:pns_sd) == '0' .and. pns_dc > 1) then
+                    p%last_idx = pns_sd
+                    goto 900
+                end if
+            end if
+
+            pns_exp = 0_i8
+            pns_fl = 0
+            pns_hdp = .false.
+            if (pns_p <= slen) pns_hdp = (stream(pns_p:pns_p) == fmt_dp)
+
+            if (pns_hdp) then
+                pns_p = pns_p + 1
+                pns_bf = pns_p
+                ! --- Inlined loop_parse_eight ---
+                do while (slen - pns_p + 1 >= 8)
+                    lpe_val = transfer(stream(pns_p:pns_p+7), 0_i8)
+                    lpe_v1 = lpe_val + LPE_46
+                    lpe_v2 = lpe_val - ZERO8_U64
+                    if (iand(ior(lpe_v1, lpe_v2), LPE_HI) /= 0) exit
+                    lpe_v = lpe_val - ZERO8_U64
+                    lpe_v = lpe_v*10 + ishft(lpe_v, -8)
+                    lpe_v = ishft(iand(lpe_v, LPE_M)*LPE_M1 + iand(ishft(lpe_v,-16), LPE_M)*LPE_M2, -32)
+                    pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
+                    pns_p = pns_p + 8
+                end do
+                do while (pns_p <= slen)
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    if (pns_ic < 48 .or. pns_ic > 57) exit
+                    pns_i = pns_i*10 + int(pns_ic-48, i8)
+                    pns_p = pns_p + 1
+                end do
+                pns_exp = int(pns_bf - pns_p, i8)
+                pns_fl = pns_p - pns_bf
+                pns_dc = pns_dc - pns_exp
+            end if
+
+            if (fmt_bj) then
+                if (pns_hdp .and. pns_exp == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            else
+                if (pns_dc == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            end if
+
+            pns_en = 0_i8
+            pns_hse = .false.
+            if (pns_p <= slen) then
+                pns_hse = (fmt_sci .and. &
+                           (stream(pns_p:pns_p) == 'e' .or. stream(pns_p:pns_p) == 'E')) .or. &
+                          (fmt_fort .and. &
+                           (stream(pns_p:pns_p) == '+' .or. stream(pns_p:pns_p) == '-' .or. &
+                            stream(pns_p:pns_p) == 'd' .or. stream(pns_p:pns_p) == 'D'))
+            end if
+            if (pns_hse) then
+                pns_le = pns_p
+                if (stream(pns_p:pns_p) == 'e' .or. stream(pns_p:pns_p) == 'E' .or. &
+                    stream(pns_p:pns_p) == 'd' .or. stream(pns_p:pns_p) == 'D') pns_p = pns_p + 1
+                pns_ne = .false.
+                if (pns_p <= slen) then
+                    if (stream(pns_p:pns_p) == '-') then
+                        pns_ne = .true.
+                        pns_p = pns_p + 1
+                    else if (stream(pns_p:pns_p) == '+') then
+                        pns_p = pns_p + 1
+                    end if
+                end if
+                pns_hed = .false.
+                if (pns_p <= slen) then
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    pns_hed = (pns_ic >= 48 .and. pns_ic <= 57)
+                end if
+                if (.not. pns_hed) then
+                    if (.not. fmt_fix) then
+                        p%last_idx = pns_p
+                        goto 900
+                    end if
+                    pns_p = pns_le
+                else
+                    do while (pns_p <= slen)
+                        pns_ic = iachar(stream(pns_p:pns_p))
+                        if (pns_ic < 48 .or. pns_ic > 57) exit
+                        if (pns_en < 268435456_i8) pns_en = 10*pns_en + int(pns_ic-48, i8)
+                        pns_p = pns_p + 1
+                    end do
+                    if (pns_ne) pns_en = -pns_en
+                    pns_exp = pns_exp + pns_en
+                end if
+            else
+                if (fmt_sci .and. .not. fmt_fix) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            end if
+
+            p%last_idx = pns_p
+            p%valid = .true.
+            p%too_many_digits = .false.
+
+            if (pns_dc > 19) then
+                pns_sp_ = pns_sd
+                do while (pns_sp_ <= slen)
+                    if (stream(pns_sp_:pns_sp_) /= '0' .and. &
+                        stream(pns_sp_:pns_sp_) /= fmt_dp) exit
+                    if (stream(pns_sp_:pns_sp_) == '0') pns_dc = pns_dc - 1
+                    pns_sp_ = pns_sp_ + 1
+                end do
+                if (pns_dc > 19) then
+                    p%too_many_digits = .true.
+                    p%int_start = pns_sd
+                    p%int_len = pns_eip - pns_sd
+                    p%frac_start = pns_bf
+                    p%frac_len = pns_fl
+                    pns_i = 0
+                    pns_p = p%int_start
+                    pns_ie = pns_p + p%int_len
+                    do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_ie)
+                        pns_i = pns_i*10 + int( iachar(stream(pns_p:pns_p)) - 48, i8)
+                        pns_p = pns_p + 1
+                    end do
+                    if (ieor(pns_i, SB64) >= ieor(1000000000000000000_i8, SB64)) then
+                        pns_exp = int(pns_eip - pns_p, i8) + pns_en
+                    else
+                        pns_p = p%frac_start
+                        pns_fe = pns_p + p%frac_len
+                        do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_fe)
+                            pns_i = pns_i*10 + int( iachar(stream(pns_p:pns_p)) - 48, i8)
+                            pns_p = pns_p + 1
+                        end do
+                        pns_exp = int(p%frac_start - pns_p, i8) + pns_en
+                    end if
+                end if
+            end if
+            p%exponent = pns_exp
+            p%mantissa = pns_i
+900         continue
+            ! === End inlined parse_number_string ===
 
             if (.not. p%valid) then
                 if (p%last_idx <= pos) exit
@@ -2863,9 +3697,17 @@ contains
             res%outcome = OUTCOMES%OK
             res%pos     = p%last_idx
 
+            ! --- Inlined clinger_fast_path_64 ---
             if (.not. p%too_many_digits) then
-                call clinger_fast_path_64(p%mantissa, p%exponent, p%negative, fc_out, DOUBLE_FMT, fc_cfok)
+                fc_cfok = p%exponent >= int(DP_MFP_LO, i8) .and. p%exponent <= int(DP_MFP_HI, i8) .and. &
+                          p%mantissa >= 0 .and. p%mantissa <= DP_MMAX
                 if (fc_cfok) then
+                    if (p%exponent < 0) then
+                        fc_out = real(p%mantissa / DOUBLE_POW10(-p%exponent), dp)
+                    else
+                        fc_out = real(p%mantissa * DOUBLE_POW10(p%exponent), dp)
+                    end if
+                    if (p%negative) fc_out = -fc_out
                     values(n + 1) = fc_out
                     n = n + 1
                     pos = res%pos
@@ -2873,9 +3715,100 @@ contains
                 end if
             end if
 
-            ! --- Inlined compute_float ---
-            cf_q = p%exponent; cf_wi = p%mantissa; cf_f = DOUBLE_FMT
-#include "compute_float_body.inc"
+            ! === Inlined compute_float (double precision) ===
+            cf_q = p%exponent; cf_wi = p%mantissa
+            cf_w = cf_wi
+            if (cf_w == 0 .or. cf_q < int(DP_SP10, i8)) then
+                cf_am = adjusted_mantissa(0, 0)
+            else if (cf_q > int(DP_LP10, i8)) then
+                cf_am = adjusted_mantissa(0, int(DP_IP, i4))
+            else
+                cf_lz = leadz(cf_w)
+                cf_w = ishft(cf_w, cf_lz)
+
+                cp_idx = 2*int(cf_q + 342_i8) + 1
+                ! Inline mul_u64 #1
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+                z128a = transfer([cf_w, 0_i8], z128a)
+                z128b = transfer([POWER5_TABLE(cp_idx), 0_i8], z128b)
+                z128r = z128a * z128b
+                cf_pr = transfer(z128r, cf_pr)
+#else
+                mu_a0 = iand(cf_w, M32); mu_a1 = iand(ishft(cf_w, -32), M32)
+                mu_b0 = iand(POWER5_TABLE(cp_idx), M32)
+                mu_b1 = iand(ishft(POWER5_TABLE(cp_idx), -32), M32)
+                mu_w0 = mu_a0 * mu_b0
+                mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+                mu_w1 = iand(mu_t, M32)
+                mu_w2 = iand(ishft(mu_t, -32), M32)
+                mu_w1 = mu_w1 + mu_a0 * mu_b1
+                cf_pr%lo = cf_w * POWER5_TABLE(cp_idx)
+                cf_pr%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+                if (iand(cf_pr%hi, DP_CPM) == DP_CPM) then
+                    ! Inline mul_u64 #2
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+                    z128b = transfer([POWER5_TABLE(cp_idx + 1), 0_i8], z128b)
+                    z128r = z128a * z128b
+                    cp_sp = transfer(z128r, cp_sp)
+#else
+                    mu_b0 = iand(POWER5_TABLE(cp_idx+1), M32)
+                    mu_b1 = iand(ishft(POWER5_TABLE(cp_idx+1), -32), M32)
+                    mu_w0 = mu_a0 * mu_b0
+                    mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+                    mu_w1 = iand(mu_t, M32)
+                    mu_w2 = iand(ishft(mu_t, -32), M32)
+                    mu_w1 = mu_w1 + mu_a0 * mu_b1
+                    cp_sp%lo = cf_w * POWER5_TABLE(cp_idx+1)
+                    cp_sp%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+                    cf_pr%lo = cf_pr%lo + cp_sp%hi
+                    if (ieor(cf_pr%lo, SB64) < ieor(cp_sp%hi, SB64)) cf_pr%hi = cf_pr%hi + 1
+                end if
+
+                cf_ub = int(ishft(cf_pr%hi, -63))
+                cf_sa = cf_ub + 9
+                cf_am%mantissa = ishft(cf_pr%hi, -cf_sa)
+                cf_am%power2 = int(ishft(217706_i8 * int(cf_q, i8), -16), i4) + 1086_i4 &
+                             + int(cf_ub, i4) - cf_lz
+
+                if (cf_am%power2 <= 0) then
+                    if (-cf_am%power2 + 1 >= 64) then
+                        cf_am = adjusted_mantissa(0_i8, 0_i4)
+                    else
+                        cf_am%mantissa = ishft(cf_am%mantissa, cf_am%power2 - 1_i4)
+                        cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                        cf_am%mantissa = ishft(cf_am%mantissa, -1)
+                        if (cf_am%mantissa < DP_HB) then
+                            cf_am%power2 = 0
+                        else
+                            cf_am%power2 = 1
+                        end if
+                    end if
+                else
+                    if (iand(cf_pr%lo, not(1_i8)) == 0 .and. &
+                        cf_q >= int(DP_MRT_LO, i8) .and. &
+                        cf_q <= int(DP_MRT_HI, i8) .and. &
+                        iand(cf_am%mantissa, 3_i8) == 1 .and. &
+                        ishft(cf_am%mantissa, cf_sa) == cf_pr%hi) &
+                            cf_am%mantissa = iand(cf_am%mantissa, not(1_i8))
+
+                    cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                    cf_am%mantissa = ishft(cf_am%mantissa, -1)
+
+                    if (cf_am%mantissa >= DP_2HB) then
+                        cf_am%mantissa = DP_HB
+                        cf_am%power2 = cf_am%power2 + 1
+                    end if
+
+                    cf_am%mantissa = iand(cf_am%mantissa, not(DP_HB))
+                    if (cf_am%power2 >= int(DP_IP, i4)) then
+                        cf_am%power2 = int(DP_IP, i4)
+                        cf_am%mantissa = 0
+                    end if
+                end if
+            end if
+            ! === End inlined compute_float ===
 
             if (p%too_many_digits .and. cf_am%power2 >= 0) then
                 call compute_float(p%exponent, p%mantissa + 1, DOUBLE_FMT, fc_ap)
@@ -2887,10 +3820,13 @@ contains
                 call digit_comp(stream, p, fc_ap, DOUBLE_FMT, cf_am)
             end if
 
-            values(n + 1) = am_to_double(p%negative, cf_am)
+            ! --- Inlined am_to_double ---
+            atd_w = ior(cf_am%mantissa, ishft(int(cf_am%power2, i8), DP_MB))
+            if (p%negative) atd_w = ior(atd_w, SB64)
+            values(n + 1) = transfer(atd_w, 0.0_dp)
 
             if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
-                 cf_am%power2 == int(DOUBLE_FMT%inf_power, i4)) then
+                 cf_am%power2 == int(DP_IP, i4)) then
                 err = OUTCOMES%OUT_OF_RANGE
                 return
             end if
@@ -2923,13 +3859,21 @@ contains
         logical :: pns_alp, pns_hdp, pns_ne, pns_hse, pns_hed
         ! compute_float inline variables
         integer(i8) :: cf_q, cf_wi, cf_w
-        type(float_format) :: cf_f
         integer(i4) :: cf_lz
         type(u128) :: cf_pr
         integer :: cf_ub, cf_sa
-        integer(i8) :: cp_pm, cp_bp
         integer :: cp_idx
         type(u128) :: cp_sp
+        ! loop_parse_eight inline variables
+        integer(i8) :: lpe_val, lpe_v, lpe_v1, lpe_v2
+        ! am_to_float inline variable
+        integer(i4) :: atf_w
+        ! mul_u64 inline variables
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+        integer(c_int128_t) :: z128a, z128b, z128r
+#else
+        integer(i8) :: mu_a0, mu_a1, mu_b0, mu_b1, mu_w0, mu_t, mu_w1, mu_w2
+#endif
 
         opts = DEFAULT_PARSING
         if (present(o)) opts = o
@@ -2942,17 +3886,206 @@ contains
 
         do while (pos <= slen .and. n < size(values))
             do while (pos <= slen)
-                if (.not. is_space(stream(pos:pos))) exit
+                ic = iachar(stream(pos:pos))
+                if (.not. ((ic >= 9 .and. ic <= 13) .or. ic == 32)) exit
                 pos = pos + 1
             end do
             if (pos > slen) exit
 
-            ! --- Inlined parse_number_string ---
+            ! === Inlined parse_number_string ===
             pns_first = pos; pns_last = slen; pns_opts = opts
             pns_bj = iand(opts%format, FMT_JSON) /= 0
-#define str stream
-#include "parse_number_string_body.inc"
-#undef str
+
+            pns_p = pns_first
+            p%valid = .false.
+            if (pns_p > pns_last) then
+                p%last_idx = pns_p
+                goto 900
+            end if
+
+            p%negative = (stream(pns_p:pns_p) == '-')
+            pns_alp = iand(pns_opts%format, FMT_ALLOW_PLUS) /= 0
+
+            if (stream(pns_p:pns_p) == '-' .or. &
+                (pns_alp .and. .not. pns_bj .and. stream(pns_p:pns_p) == '+')) then
+                pns_p = pns_p + 1
+                if (pns_p > pns_last) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+                if (pns_bj) then
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    if (pns_ic < 48 .or. pns_ic > 57) then
+                        p%last_idx = pns_p
+                        goto 900
+                    end if
+                else
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    if ((pns_ic < 48 .or. pns_ic > 57) .and. &
+                        stream(pns_p:pns_p) /= pns_opts%decimal_point) then
+                        p%last_idx = pns_p
+                        goto 900
+                    end if
+                end if
+            end if
+
+            pns_sd = pns_p
+            pns_i = 0_i8
+            do while (pns_p <= pns_last)
+                pns_ic = iachar(stream(pns_p:pns_p))
+                if (pns_ic < 48 .or. pns_ic > 57) exit
+                pns_i = 10*pns_i + int(pns_ic - 48, i8)
+                pns_p = pns_p + 1
+            end do
+
+            pns_eip = pns_p
+            pns_dc = int(pns_eip - pns_sd, i8)
+            p%int_start = pns_sd
+            p%int_len = int(pns_dc)
+
+            if (pns_bj) then
+                if (pns_dc == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+                if (stream(pns_sd:pns_sd) == '0' .and. pns_dc > 1) then
+                    p%last_idx = pns_sd
+                    goto 900
+                end if
+            end if
+
+            pns_exp = 0_i8
+            p%frac_start = 0
+            p%frac_len = 0
+            pns_hdp = .false.
+            if (pns_p <= pns_last) pns_hdp = (stream(pns_p:pns_p) == pns_opts%decimal_point)
+
+            if (pns_hdp) then
+                pns_p = pns_p + 1
+                pns_bf = pns_p
+                do while (pns_last - pns_p + 1 >= 8)
+                    lpe_val = transfer(stream(pns_p:pns_p+7), 0_i8)
+                    lpe_v1 = lpe_val + LPE_46
+                    lpe_v2 = lpe_val - ZERO8_U64
+                    if (iand(ior(lpe_v1, lpe_v2), LPE_HI) /= 0) exit
+                    lpe_v = lpe_val - ZERO8_U64
+                    lpe_v = lpe_v*10 + ishft(lpe_v, -8)
+                    lpe_v = ishft(iand(lpe_v, LPE_M)*LPE_M1 + iand(ishft(lpe_v,-16), LPE_M)*LPE_M2, -32)
+                    pns_i = pns_i * 100000000_i8 + iand(lpe_v, LPE_FF)
+                    pns_p = pns_p + 8
+                end do
+                do while (pns_p <= pns_last)
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    if (pns_ic < 48 .or. pns_ic > 57) exit
+                    pns_i = pns_i*10 + int(pns_ic-48, i8)
+                    pns_p = pns_p + 1
+                end do
+                pns_exp = int(pns_bf - pns_p, i8)
+                p%frac_start = pns_bf
+                p%frac_len = pns_p - pns_bf
+                pns_dc = pns_dc - pns_exp
+            end if
+
+            if (pns_bj) then
+                if (pns_hdp .and. pns_exp == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            else
+                if (pns_dc == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            end if
+
+            pns_en = 0_i8
+            pns_hse = .false.
+            if (pns_p <= pns_last) then
+                pns_hse = (iand(pns_opts%format, FMT_SCIENTIFIC) /= 0 .and. &
+                           (stream(pns_p:pns_p) == 'e' .or. stream(pns_p:pns_p) == 'E')) .or. &
+                          (iand(pns_opts%format, FMT_FORTRAN) /= 0 .and. &
+                           (stream(pns_p:pns_p) == '+' .or. stream(pns_p:pns_p) == '-' .or. &
+                            stream(pns_p:pns_p) == 'd' .or. stream(pns_p:pns_p) == 'D'))
+            end if
+            if (pns_hse) then
+                pns_le = pns_p
+                if (stream(pns_p:pns_p) == 'e' .or. stream(pns_p:pns_p) == 'E' .or. &
+                    stream(pns_p:pns_p) == 'd' .or. stream(pns_p:pns_p) == 'D') pns_p = pns_p + 1
+                pns_ne = .false.
+                if (pns_p <= pns_last) then
+                    if (stream(pns_p:pns_p) == '-') then
+                        pns_ne = .true.
+                        pns_p = pns_p + 1
+                    else if (stream(pns_p:pns_p) == '+') then
+                        pns_p = pns_p + 1
+                    end if
+                end if
+                pns_hed = .false.
+                if (pns_p <= pns_last) then
+                    pns_ic = iachar(stream(pns_p:pns_p))
+                    pns_hed = (pns_ic >= 48 .and. pns_ic <= 57)
+                end if
+                if (.not. pns_hed) then
+                    if (iand(pns_opts%format, FMT_FIXED) == 0) then
+                        p%last_idx = pns_p
+                        goto 900
+                    end if
+                    pns_p = pns_le
+                else
+                    do while (pns_p <= pns_last)
+                        pns_ic = iachar(stream(pns_p:pns_p))
+                        if (pns_ic < 48 .or. pns_ic > 57) exit
+                        if (pns_en < 268435456_i8) pns_en = 10*pns_en + int(pns_ic-48, i8)
+                        pns_p = pns_p + 1
+                    end do
+                    if (pns_ne) pns_en = -pns_en
+                    pns_exp = pns_exp + pns_en
+                end if
+            else
+                if (iand(pns_opts%format, FMT_SCIENTIFIC) /= 0 .and. &
+                    iand(pns_opts%format, FMT_FIXED) == 0) then
+                    p%last_idx = pns_p
+                    goto 900
+                end if
+            end if
+
+            p%last_idx = pns_p
+            p%valid = .true.
+            p%too_many_digits = .false.
+
+            if (pns_dc > 19) then
+                pns_sp_ = pns_sd
+                do while (pns_sp_ <= pns_last)
+                    if (stream(pns_sp_:pns_sp_) /= '0' .and. &
+                        stream(pns_sp_:pns_sp_) /= pns_opts%decimal_point) exit
+                    if (stream(pns_sp_:pns_sp_) == '0') pns_dc = pns_dc - 1
+                    pns_sp_ = pns_sp_ + 1
+                end do
+                if (pns_dc > 19) then
+                    p%too_many_digits = .true.
+                    pns_i = 0
+                    pns_p = p%int_start
+                    pns_ie = pns_p + p%int_len
+                    do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_ie)
+                        pns_i = pns_i*10 + int( iachar(stream(pns_p:pns_p)) - 48, i8)
+                        pns_p = pns_p + 1
+                    end do
+                    if (ieor(pns_i, SB64) >= ieor(1000000000000000000_i8, SB64)) then
+                        pns_exp = int(pns_eip - pns_p, i8) + pns_en
+                    else
+                        pns_p = p%frac_start
+                        pns_fe = pns_p + p%frac_len
+                        do while (ieor(pns_i, SB64) < ieor(1000000000000000000_i8, SB64) .and. pns_p < pns_fe)
+                            pns_i = pns_i*10 + int( iachar(stream(pns_p:pns_p)) - 48, i8)
+                            pns_p = pns_p + 1
+                        end do
+                        pns_exp = int(p%frac_start - pns_p, i8) + pns_en
+                    end if
+                end if
+            end if
+            p%exponent = pns_exp
+            p%mantissa = pns_i
+900         continue
 
             if (.not. p%valid) then
                 if (p%last_idx <= pos) exit
@@ -2965,9 +4098,17 @@ contains
             res%outcome = OUTCOMES%OK
             res%pos     = p%last_idx
 
+            ! --- Inlined clinger_fast_path_32 ---
             if (.not. p%too_many_digits) then
-                call clinger_fast_path_32(p%mantissa, p%exponent, p%negative, fc_outf, FLOAT_FMT, fc_cfok)
+                fc_cfok = p%exponent >= int(SP_MFP_LO, i8) .and. p%exponent <= int(SP_MFP_HI, i8) .and. &
+                          p%mantissa >= 0 .and. p%mantissa <= SP_MMAX
                 if (fc_cfok) then
+                    if (p%exponent < 0) then
+                        fc_outf = real(p%mantissa, sp) / FLOAT_POW10(-p%exponent)
+                    else
+                        fc_outf = real(p%mantissa, sp) * FLOAT_POW10(p%exponent)
+                    end if
+                    if (p%negative) fc_outf = -fc_outf
                     values(n + 1) = fc_outf
                     n = n + 1
                     pos = res%pos
@@ -2975,9 +4116,97 @@ contains
                 end if
             end if
 
-            ! --- Inlined compute_float ---
-            cf_q = p%exponent; cf_wi = p%mantissa; cf_f = FLOAT_FMT
-#include "compute_float_body.inc"
+            ! === Inlined compute_float (single precision) ===
+            cf_q = p%exponent; cf_wi = p%mantissa
+            cf_w = cf_wi
+            if (cf_w == 0 .or. cf_q < int(SP_SP10, i8)) then
+                cf_am = adjusted_mantissa(0, 0)
+            else if (cf_q > int(SP_LP10, i8)) then
+                cf_am = adjusted_mantissa(0, int(SP_IP, i4))
+            else
+                cf_lz = leadz(cf_w)
+                cf_w = ishft(cf_w, cf_lz)
+
+                cp_idx = 2*int(cf_q + 342_i8) + 1
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+                z128a = transfer([cf_w, 0_i8], z128a)
+                z128b = transfer([POWER5_TABLE(cp_idx), 0_i8], z128b)
+                z128r = z128a * z128b
+                cf_pr = transfer(z128r, cf_pr)
+#else
+                mu_a0 = iand(cf_w, M32); mu_a1 = iand(ishft(cf_w, -32), M32)
+                mu_b0 = iand(POWER5_TABLE(cp_idx), M32)
+                mu_b1 = iand(ishft(POWER5_TABLE(cp_idx), -32), M32)
+                mu_w0 = mu_a0 * mu_b0
+                mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+                mu_w1 = iand(mu_t, M32)
+                mu_w2 = iand(ishft(mu_t, -32), M32)
+                mu_w1 = mu_w1 + mu_a0 * mu_b1
+                cf_pr%lo = cf_w * POWER5_TABLE(cp_idx)
+                cf_pr%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+                if (iand(cf_pr%hi, SP_CPM) == SP_CPM) then
+#if !defined(__INTEL_COMPILER) && !defined(__INTEL_LLVM_COMPILER)
+                    z128b = transfer([POWER5_TABLE(cp_idx + 1), 0_i8], z128b)
+                    z128r = z128a * z128b
+                    cp_sp = transfer(z128r, cp_sp)
+#else
+                    mu_b0 = iand(POWER5_TABLE(cp_idx+1), M32)
+                    mu_b1 = iand(ishft(POWER5_TABLE(cp_idx+1), -32), M32)
+                    mu_w0 = mu_a0 * mu_b0
+                    mu_t = mu_a1*mu_b0 + iand(ishft(mu_w0, -32), M32)
+                    mu_w1 = iand(mu_t, M32)
+                    mu_w2 = iand(ishft(mu_t, -32), M32)
+                    mu_w1 = mu_w1 + mu_a0 * mu_b1
+                    cp_sp%lo = cf_w * POWER5_TABLE(cp_idx+1)
+                    cp_sp%hi = mu_a1*mu_b1 + mu_w2 + iand(ishft(mu_w1, -32), M32)
+#endif
+                    cf_pr%lo = cf_pr%lo + cp_sp%hi
+                    if (ieor(cf_pr%lo, SB64) < ieor(cp_sp%hi, SB64)) cf_pr%hi = cf_pr%hi + 1
+                end if
+
+                cf_ub = int(ishft(cf_pr%hi, -63))
+                cf_sa = cf_ub + 38
+                cf_am%mantissa = ishft(cf_pr%hi, -cf_sa)
+                cf_am%power2 = int(ishft(217706_i8 * int(cf_q, i8), -16), i4) + 190_i4 &
+                             + int(cf_ub, i4) - cf_lz
+
+                if (cf_am%power2 <= 0) then
+                    if (-cf_am%power2 + 1 >= 64) then
+                        cf_am = adjusted_mantissa(0_i8, 0_i4)
+                    else
+                        cf_am%mantissa = ishft(cf_am%mantissa, cf_am%power2 - 1_i4)
+                        cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                        cf_am%mantissa = ishft(cf_am%mantissa, -1)
+                        if (cf_am%mantissa < SP_HB) then
+                            cf_am%power2 = 0
+                        else
+                            cf_am%power2 = 1
+                        end if
+                    end if
+                else
+                    if (iand(cf_pr%lo, not(1_i8)) == 0 .and. &
+                        cf_q >= int(SP_MRT_LO, i8) .and. &
+                        cf_q <= int(SP_MRT_HI, i8) .and. &
+                        iand(cf_am%mantissa, 3_i8) == 1 .and. &
+                        ishft(cf_am%mantissa, cf_sa) == cf_pr%hi) &
+                            cf_am%mantissa = iand(cf_am%mantissa, not(1_i8))
+
+                    cf_am%mantissa = cf_am%mantissa + iand(cf_am%mantissa, 1_i8)
+                    cf_am%mantissa = ishft(cf_am%mantissa, -1)
+
+                    if (cf_am%mantissa >= SP_2HB) then
+                        cf_am%mantissa = SP_HB
+                        cf_am%power2 = cf_am%power2 + 1
+                    end if
+
+                    cf_am%mantissa = iand(cf_am%mantissa, not(SP_HB))
+                    if (cf_am%power2 >= int(SP_IP, i4)) then
+                        cf_am%power2 = int(SP_IP, i4)
+                        cf_am%mantissa = 0
+                    end if
+                end if
+            end if
 
             if (p%too_many_digits .and. cf_am%power2 >= 0) then
                 call compute_float(p%exponent, p%mantissa + 1, FLOAT_FMT, fc_ap)
@@ -2989,10 +4218,14 @@ contains
                 call digit_comp(stream, p, fc_ap, FLOAT_FMT, cf_am)
             end if
 
-            values(n + 1) = am_to_float(p%negative, cf_am)
+            ! --- Inlined am_to_float ---
+            atf_w = int(cf_am%mantissa, i4)
+            atf_w = ior(atf_w, ishft(cf_am%power2, SP_MB))
+            if (p%negative) atf_w = ior(atf_w, ishft(1_i4, 31))
+            values(n + 1) = transfer(atf_w, 0.0_sp)
 
             if ((p%mantissa /= 0 .and. cf_am%mantissa == 0 .and. cf_am%power2 == 0) .or. &
-                cf_am%power2 == int(FLOAT_FMT%inf_power, i4)) then
+                cf_am%power2 == int(SP_IP, i4)) then
                 err = OUTCOMES%OUT_OF_RANGE
                 return
             end if

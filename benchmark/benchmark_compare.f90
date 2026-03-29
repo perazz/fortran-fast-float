@@ -252,17 +252,19 @@ contains
         integer, intent(in) :: nlines, volume, repeat_count
 
         ! Benchmark case indices
-        integer, parameter :: B_RSUB = 1, B_STDLIB = 2
-        integer, parameter :: B_S2R = 3, B_READ = 4
-        integer, parameter :: B_CLOOP = 5, NCASES = 5
+        integer, parameter :: B_RSUB = 1, B_LINE = 2, B_STDLIB = 3
+        integer, parameter :: B_S2R = 4, B_READ = 5
+        integer, parameter :: B_CLOOP = 6, NCASES = 6
 
         character(len=40), parameter :: labels(NCASES) = [ character(len=40) :: &
-            "fortran (fast_float)", &
+            "fortran (fast_float array)", &
+            "fortran (fast_float line)", &
             "fortran (stdlib to_num)", "fortran (str2real)", &
             "fortran (read *)", &
             "ffc via fortran interop" ]
         character(len=24), parameter :: cksum_labels(NCASES) = [ character(len=24) :: &
-            "fast_float bits       = ", &
+            "fast_float arr bits   = ", &
+            "fast_float line bits  = ", &
             "stdlib checksum bits  = ", "str2real checksum bits= ", &
             "read * checksum bits  = ", &
             "ffc interop bits      = " ]
@@ -312,6 +314,10 @@ contains
             xor_checksum(B_RSUB) = ieor(xor_checksum(B_RSUB), transfer(values(i), 0_int64))
         end do
         do i = 1, nlines
+            x_f = parse_double(packed_text(istart(i):iend(i)), f_result)
+            xor_checksum(B_LINE) = ieor(xor_checksum(B_LINE), transfer(x_f, 0_int64))
+        end do
+        do i = 1, nlines
             x_stdlib = 0.0_real64
             x_stdlib = to_num(lines(i)%text, x_stdlib)
             xor_checksum(B_STDLIB) = ieor(xor_checksum(B_STDLIB), transfer(x_stdlib, 0_int64))
@@ -335,6 +341,18 @@ contains
             answer = maxval(values(1:nparse))
             call system_clock(count=count_end)
             call tally(B_RSUB, answer, count_start, count_end, count_rate, &
+                        elapsed_ns, avg_ns, min_ns, checksum)
+        end do
+
+        do r = 1, repeat_count
+            answer = 0.0_real64
+            call system_clock(count=count_start)
+            do i = 1, nlines
+                call parse_double_range_sub(packed_text, istart(i), iend(i), x_f, f_result, DEFAULT_PARSING)
+                if (x_f > answer) answer = x_f
+            end do
+            call system_clock(count=count_end)
+            call tally(B_LINE, answer, count_start, count_end, count_rate, &
                         elapsed_ns, avg_ns, min_ns, checksum)
         end do
 

@@ -74,9 +74,9 @@ if $CC --version 2>&1 | grep -qi clang; then
     CC_IS_CLANG=true
 fi
 
-BASE_FFLAGS="-O3 -cpp -flto -fno-range-check"
+BASE_FFLAGS="-O3 -cpp -fno-range-check"
 BASE_CFLAGS="-O3 -DNDEBUG"
-BASE_LDFLAGS="-O3 -flto"
+BASE_LDFLAGS="-O3"
 
 # Dependency sources
 STDLIB_KINDS="${ROOT_DIR}/build/dependencies/stdlib/src/stdlib_kinds.f90"
