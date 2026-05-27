@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"namespacefast__float__module.html#ae989fabf07ecc6ad52c17d513a0ce11b":[7,0,0,66],
+"namespacefast__float__module.html#aeaf3e1007edfdfc1718a045b2e360394":[7,0,0,62],
 "namespacefast__float__module.html#aec8a2d71b38c42b6fb1a3b3685d3191d":[7,0,0,148],
 "namespacefast__float__module.html#aeef0d85ceaa167bf989a6500a215bfb4":[7,0,0,83],
 "namespacefast__float__module.html#aeef0e8881f4bea6e1d5daa94df6e712d":[7,0,0,74],
@@ -13,11 +15,9 @@ var NAVTREEINDEX1 =
 "namespacefast__float__module.html#af85e454e430fdb85504eca32bbfc0ed9":[7,0,0,203],
 "namespacefast__float__module.html#af869682752534bd0deac3196f2502646":[7,0,0,45],
 "namespacefast__float__module.html#af8ca6a938a2a47c11abe640dc0053736":[7,0,0,125],
-"namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb":[7,0,0,89],
 "namespacefast__float__module.html#afacc75c888ae17df451f32a414a58e71":[7,0,0,179],
 "namespacefast__float__module.html#afb7b1070429e5ef9a84d9e8e011c4f7a":[7,0,0,36],
 "namespacefast__float__module.html#afd483d62bf9f751c8b8e7a86165cf700":[7,0,0,50],
-"namespacefast__float__module.html#afdcd1ffbdb545e3492fa9881251fd5a4":[7,0,0,85],
 "namespacefast__float__module.html#affa7971ebde566ba2c964585a26c959c":[7,0,0,33],
 "namespacefast__float__module.html#affd7bf1cb654c4ab4373a54828155eb3":[7,0,0,124],
 "namespacemembers.html":[7,1,0],

@@ -121,8 +121,8 @@ $(function(){initNavTree('interfacefast__float__module_1_1parse__i32.html',''); 
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a8210634f2eeea2576d1a8cef1ee62f15" id="r_a8210634f2eeea2576d1a8cef1ee62f15"><td class="memItemLeft" align="right" valign="top">pure elemental integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8210634f2eeea2576d1a8cef1ee62f15">parse_i32_pure</a> (str, base)</td></tr>
 <tr class="separator:a8210634f2eeea2576d1a8cef1ee62f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9db1fb6e72f88cf3f4b2a1eb6a5399a9" id="r_a9db1fb6e72f88cf3f4b2a1eb6a5399a9"><td class="memItemLeft" align="right" valign="top">integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9db1fb6e72f88cf3f4b2a1eb6a5399a9">parse_i32_std</a> (str, base, res)</td></tr>
-<tr class="separator:a9db1fb6e72f88cf3f4b2a1eb6a5399a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62d29c3ca2eeed9bbc505c69000eb5bc" id="r_a62d29c3ca2eeed9bbc505c69000eb5bc"><td class="memItemLeft" align="right" valign="top">integer(i4) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62d29c3ca2eeed9bbc505c69000eb5bc">parse_i32_std</a> (str, base, res, o)</td></tr>
+<tr class="separator:a62d29c3ca2eeed9bbc505c69000eb5bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function/Subroutine Documentation</h2>
 <a id="a8210634f2eeea2576d1a8cef1ee62f15" name="a8210634f2eeea2576d1a8cef1ee62f15"></a>
@@ -149,9 +149,9 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="interfacefast__float__module_1_1parse__i32_a8210634f2eeea2576d1a8cef1ee62f15_cgraph.png" border="0" usemap="#ainterfacefast__float__module_1_1parse__i32_a8210634f2eeea2576d1a8cef1ee62f15_cgraph" alt=""/></div>
 <map name="ainterfacefast__float__module_1_1parse__i32_a8210634f2eeea2576d1a8cef1ee62f15_cgraph" id="ainterfacefast__float__module_1_1parse__i32_a8210634f2eeea2576d1a8cef1ee62f15_cgraph">
 <area shape="rect" title=" " alt="" coords="5,269,197,309"/>
-<area shape="rect" href="namespacefast__float__module.html#a805b7010bf5e214929747f2e169364d7" title="Parse a string to a 32&#45;bit integer (subroutine form)." alt="" coords="245,269,392,309"/>
+<area shape="rect" href="namespacefast__float__module.html#a434cd5b411a13c6b824b5081e3662432" title="Parse a string to a 32&#45;bit integer (subroutine form). See parse_i64_sub for the meaning of o." alt="" coords="245,269,392,309"/>
 <area shape="poly" title=" " alt="" coords="197,287,232,287,232,292,197,292"/>
-<area shape="rect" href="namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="440,269,587,309"/>
+<area shape="rect" href="namespacefast__float__module.html#a782cf41bde3ca25a0e0c684d585398de" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="440,269,587,309"/>
 <area shape="poly" title=" " alt="" coords="392,287,426,287,426,292,392,292"/>
 <area shape="rect" href="namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e" title="Map a character to its digit value using the lookup table." alt="" coords="635,117,781,157"/>
 <area shape="poly" title=" " alt="" coords="529,267,573,219,602,192,633,167,642,162,645,166,636,172,605,196,577,222,533,271"/>
@@ -187,8 +187,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a9db1fb6e72f88cf3f4b2a1eb6a5399a9" name="a9db1fb6e72f88cf3f4b2a1eb6a5399a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9db1fb6e72f88cf3f4b2a1eb6a5399a9">&#9670;&#160;</a></span>parse_i32_std()</h2>
+<a id="a62d29c3ca2eeed9bbc505c69000eb5bc" name="a62d29c3ca2eeed9bbc505c69000eb5bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62d29c3ca2eeed9bbc505c69000eb5bc">&#9670;&#160;</a></span>parse_i32_std()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,19 +206,24 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1parse__result.html">parse_result</a>), intent(out)</td>          <td class="paramname"><span class="paramname"><em>res</em></span>&#160;)</td>
+          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1parse__result.html">parse_result</a>), intent(out)</td>          <td class="paramname"><span class="paramname"><em>res</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structfast__float__module_1_1parse__options.html">parse_options</a>), intent(in), optional</td>          <td class="paramname"><span class="paramname"><em>o</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="interfacefast__float__module_1_1parse__i32_a9db1fb6e72f88cf3f4b2a1eb6a5399a9_cgraph.png" border="0" usemap="#ainterfacefast__float__module_1_1parse__i32_a9db1fb6e72f88cf3f4b2a1eb6a5399a9_cgraph" alt=""/></div>
-<map name="ainterfacefast__float__module_1_1parse__i32_a9db1fb6e72f88cf3f4b2a1eb6a5399a9_cgraph" id="ainterfacefast__float__module_1_1parse__i32_a9db1fb6e72f88cf3f4b2a1eb6a5399a9_cgraph">
+<div class="center"><img src="interfacefast__float__module_1_1parse__i32_a62d29c3ca2eeed9bbc505c69000eb5bc_cgraph.png" border="0" usemap="#ainterfacefast__float__module_1_1parse__i32_a62d29c3ca2eeed9bbc505c69000eb5bc_cgraph" alt=""/></div>
+<map name="ainterfacefast__float__module_1_1parse__i32_a62d29c3ca2eeed9bbc505c69000eb5bc_cgraph" id="ainterfacefast__float__module_1_1parse__i32_a62d29c3ca2eeed9bbc505c69000eb5bc_cgraph">
 <area shape="rect" title=" " alt="" coords="5,269,188,309"/>
-<area shape="rect" href="namespacefast__float__module.html#a805b7010bf5e214929747f2e169364d7" title="Parse a string to a 32&#45;bit integer (subroutine form)." alt="" coords="236,269,383,309"/>
+<area shape="rect" href="namespacefast__float__module.html#a434cd5b411a13c6b824b5081e3662432" title="Parse a string to a 32&#45;bit integer (subroutine form). See parse_i64_sub for the meaning of o." alt="" coords="236,269,383,309"/>
 <area shape="poly" title=" " alt="" coords="188,287,222,287,222,292,188,292"/>
-<area shape="rect" href="namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="431,269,577,309"/>
+<area shape="rect" href="namespacefast__float__module.html#a782cf41bde3ca25a0e0c684d585398de" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="431,269,577,309"/>
 <area shape="poly" title=" " alt="" coords="383,287,417,287,417,292,383,292"/>
 <area shape="rect" href="namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e" title="Map a character to its digit value using the lookup table." alt="" coords="625,117,772,157"/>
 <area shape="poly" title=" " alt="" coords="519,267,564,219,593,192,624,167,633,162,635,166,627,172,596,196,567,222,523,271"/>

@@ -31,9 +31,9 @@ var NAVTREE =
     [ "Format options", "index.html#autotoc_md3", null ],
     [ "Building", "index.html#autotoc_md4", null ],
     [ "Benchmarks", "index.html#autotoc_md5", [
-      [ "Random uniform [0,1) – 100k floats, 2.19 MB", "index.html#autotoc_md6", null ],
-      [ "canada.txt – 111k lines, 1.93 MB", "index.html#autotoc_md7", null ],
-      [ "mesh.txt – 73k lines, 0.54 MB", "index.html#autotoc_md8", null ]
+      [ "Random uniform [0,1) – 100k floats", "index.html#autotoc_md6", null ],
+      [ "canada.txt – 111k lines, 2.04 MB", "index.html#autotoc_md7", null ],
+      [ "mesh.txt – 73k lines, 0.61 MB", "index.html#autotoc_md8", null ]
     ] ],
     [ "License", "index.html#autotoc_md9", null ],
     [ "Modules", "namespaces.html", [
@@ -62,7 +62,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"namespacefast__float__module.html#aec8a2d71b38c42b6fb1a3b3685d3191d"
+"namespacefast__float__module.html#ae989fabf07ecc6ad52c17d513a0ce11b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

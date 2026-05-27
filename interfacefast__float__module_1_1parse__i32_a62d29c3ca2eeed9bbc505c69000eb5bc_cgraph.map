@@ -1,8 +1,8 @@
 <map id="fast_float_module::parse_i32::parse_i32_std" name="fast_float_module::parse_i32::parse_i32_std">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,269,188,309"/>
-<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a805b7010bf5e214929747f2e169364d7" title="Parse a string to a 32&#45;bit integer (subroutine form)." alt="" coords="236,269,383,309"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a434cd5b411a13c6b824b5081e3662432" title="Parse a string to a 32&#45;bit integer (subroutine form). See parse_i64_sub for the meaning of o." alt="" coords="236,269,383,309"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,287,222,287,222,292,188,292"/>
-<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="431,269,577,309"/>
+<area shape="rect" id="Node000003" href="$namespacefast__float__module.html#a782cf41bde3ca25a0e0c684d585398de" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="431,269,577,309"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,287,417,287,417,292,383,292"/>
 <area shape="rect" id="Node000004" href="$namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e" title="Map a character to its digit value using the lookup table." alt="" coords="625,117,772,157"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="519,267,564,219,593,192,624,167,633,162,635,166,627,172,596,196,567,222,523,271"/>

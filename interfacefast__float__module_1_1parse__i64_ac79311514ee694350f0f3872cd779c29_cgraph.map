@@ -1,6 +1,6 @@
 <map id="fast_float_module::parse_i64::parse_i64_pure" name="fast_float_module::parse_i64::parse_i64_pure">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,269,197,309"/>
-<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#afa19389ab6d00ac2ae029ddba7f778fb" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="245,269,392,309"/>
+<area shape="rect" id="Node000002" href="$namespacefast__float__module.html#a782cf41bde3ca25a0e0c684d585398de" title="Parse a string to a 64&#45;bit integer (subroutine form)." alt="" coords="245,269,392,309"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,287,232,287,232,292,197,292"/>
 <area shape="rect" id="Node000003" href="$namespacefast__float__module.html#aa691cfaaff3fdcb545d8f272706a457e" title="Map a character to its digit value using the lookup table." alt="" coords="440,117,587,157"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,267,378,219,407,192,438,167,447,162,450,166,442,172,411,196,382,222,338,271"/>
