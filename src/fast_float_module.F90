@@ -2,7 +2,7 @@
 !> @author Federico Perini <federico.perini@gmail.com>
 !> @since  Mon, 10 Mar 2026
 module fast_float_module
-    use iso_fortran_env, only: i1 => int8, i4 => int32, i8 => int64, sp => real32, dp => real64
+    use iso_fortran_env, only: i1 => int8, i4 => int32, i8 => int64, sp => real32, dp => real64, int32, int64, int8, real32, real64
 #if defined(__INTEL_COMPILER) || defined(__INTEL_LLVM_COMPILER)
     ! Intel Fortran does not support 128-bit integers
 #else
@@ -62,7 +62,7 @@ module fast_float_module
 
     integer(i8), parameter :: PRESET_GENERAL = ior(ior(FMT_FIXED, FMT_SCIENTIFIC), FMT_SKIP_WS)
     integer(i8), parameter :: PRESET_JSON    = ior(ior(FMT_JSON, PRESET_GENERAL), FMT_NO_INFNAN)
-    integer(i8), parameter :: PRESET_FORTRAN = ior(FMT_FORTRAN, PRESET_GENERAL)
+    integer(i8), parameter :: PRESET_FORTRAN = ior(ior(FMT_FORTRAN, FMT_ALLOW_PLUS), PRESET_GENERAL)
 
     integer(i4), parameter :: INVALID_AM = -32768_i4
     integer(i8), parameter :: SB64 = ishft(1_i8, 63)
@@ -3779,14 +3779,27 @@ contains
     ! ===== Integer parsing =====
 
     !> Parse a string to a 64-bit integer (subroutine form).
-    elemental subroutine parse_i64_sub(str, base, out, res)
+    !>
+    !> When `o` is supplied, `FMT_SKIP_WS` skips leading whitespace and
+    !> `FMT_ALLOW_PLUS` accepts a leading `+` sign (symmetric to `-`).
+    !> Omitting `o` preserves the historical behavior: no whitespace skipping,
+    !> `-` accepted, `+` rejected.
+    elemental subroutine parse_i64_sub(str, base, out, res, o)
         character(*), intent(in) :: str
         integer, intent(in) :: base
         integer(i8), intent(out) :: out
         type(parse_result), intent(out) :: res
-        integer :: p, la, sn, sd, dc, md, d
-        logical :: ng, hlz
+        type(parse_options), intent(in), optional :: o
+        integer :: p, la, sn, sd, dc, md, d, ic
+        logical :: ng, hlz, skip_ws, allow_plus
         integer(i8) :: i
+
+        skip_ws    = .false.
+        allow_plus = .false.
+        if (present(o)) then
+            skip_ws    = iand(o%format, FMT_SKIP_WS)    /= 0
+            allow_plus = iand(o%format, FMT_ALLOW_PLUS) /= 0
+        end if
 
         out = 0
         la = len(str)
@@ -3796,8 +3809,25 @@ contains
             res%pos = p
             return
         end if
+        if (skip_ws) then
+            do while (p <= la)
+                ic = iachar(str(p:p))
+                if (.not. ((ic >= 9 .and. ic <= 13) .or. ic == 32)) exit
+                p = p + 1
+            end do
+            if (p > la) then
+                res%outcome = OUTCOMES%INVALID_INPUT
+                res%pos = p
+                return
+            end if
+        end if
         ng = str(p:p) == '-'
-        if (ng) p = p + 1
+        if (ng .or. (allow_plus .and. str(p:p) == '+')) p = p + 1
+        if (p > la) then
+            res%outcome = OUTCOMES%INVALID_INPUT
+            res%pos = p
+            return
+        end if
         sn = p
         do while (p <= la)
             if (str(p:p) /= '0') exit
@@ -3852,15 +3882,17 @@ contains
         res%outcome = OUTCOMES%OK
     end subroutine parse_i64_sub
 
-    !> Parse a string to a 32-bit integer (subroutine form).
-    elemental subroutine parse_i32_sub(str, base, out, res)
+    !> Parse a string to a 32-bit integer (subroutine form). See parse_i64_sub
+    !> for the meaning of `o`.
+    elemental subroutine parse_i32_sub(str, base, out, res, o)
         character(*), intent(in) :: str
         integer, intent(in) :: base
         integer(i4), intent(out) :: out
         type(parse_result), intent(out) :: res
+        type(parse_options), intent(in), optional :: o
         integer(i8) :: v
         out = 0
-        call parse_i64_sub(str, base, v, res)
+        call parse_i64_sub(str, base, v, res, o)
         if (.not. res%outcome == OUTCOMES%OK) return
         if (v > int(z'7FFFFFFF', i8) .or. v < int(z'FFFFFFFF80000000', i8)) then
             res%outcome = OUTCOMES%OUT_OF_RANGE
@@ -3878,11 +3910,12 @@ contains
         call parse_i64_sub(str, base, out, res)
     end function parse_i64_pure
 
-    integer(i8) function parse_i64_std(str, base, res) result(out)
+    integer(i8) function parse_i64_std(str, base, res, o) result(out)
         character(*), intent(in) :: str
         integer, intent(in) :: base
         type(parse_result), intent(out) :: res
-        call parse_i64_sub(str, base, out, res)
+        type(parse_options), intent(in), optional :: o
+        call parse_i64_sub(str, base, out, res, o)
     end function parse_i64_std
 
     ! --- parse_i32: pure elemental + standard ---
@@ -3894,11 +3927,12 @@ contains
         call parse_i32_sub(str, base, out, res)
     end function parse_i32_pure
 
-    integer(i4) function parse_i32_std(str, base, res) result(out)
+    integer(i4) function parse_i32_std(str, base, res, o) result(out)
         character(*), intent(in) :: str
         integer, intent(in) :: base
         type(parse_result), intent(out) :: res
-        call parse_i32_sub(str, base, out, res)
+        type(parse_options), intent(in), optional :: o
+        call parse_i32_sub(str, base, out, res, o)
     end function parse_i32_std
     
     ! Outcome comparisons

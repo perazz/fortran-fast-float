@@ -430,7 +430,23 @@ contains
         success = match_i32("7F",         16, 127_int32,        outcomes%OK); if (.not. success) return
         ! Overflow
         success = match_i32("DEADBEEF", 16, 0_int32, outcomes%OUT_OF_RANGE); if (.not. success) return
-        success = match_i64("9999999999999999999", 10, 0_int64, outcomes%OUT_OF_RANGE)
+        success = match_i64("9999999999999999999", 10, 0_int64, outcomes%OUT_OF_RANGE); if (.not. success) return
+        ! Options: PRESET_FORTRAN enables FMT_SKIP_WS and FMT_ALLOW_PLUS, so the
+        ! integer parser tolerates leading whitespace and a leading '+'.
+        block
+            type(parse_options) :: FORT
+            type(parse_result) :: res
+            integer(int64) :: v64
+            integer(int32) :: v32
+            FORT = parse_options(PRESET_FORTRAN, '.')
+            v64 = parse_i64("   +42", 10, res, FORT)
+            success = res%outcome == outcomes%OK .and. v64 == 42_int64; if (.not. success) return
+            v32 = parse_i32("  +1234", 10, res, FORT)
+            success = res%outcome == outcomes%OK .and. v32 == 1234_int32; if (.not. success) return
+            ! Without options, a leading '+' is rejected.
+            v64 = parse_i64("+42", 10, res)
+            success = res%outcome == outcomes%INVALID_INPUT
+        end block
     end function test_integers
 
     logical function test_fp32() result(success)
